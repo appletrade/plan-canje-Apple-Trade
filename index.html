@@ -145,6 +145,28 @@
 <main>
   <section class="products" id="productList"></section>
 </main>
+<!-- ======================
+     FILTROS
+====================== -->
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+
+  <select id="filterLine" onchange="renderProducts()">
+    <option value="">Todas las líneas</option>
+    <option value="12">iPhone 12</option>
+    <option value="13">iPhone 13</option>
+    <option value="14">iPhone 14</option>
+    <option value="15">iPhone 15</option>
+    <option value="16">iPhone 16</option>
+    <option value="17">iPhone 17</option>
+  </select>
+
+  <select id="filterCondition" onchange="renderProducts()">
+    <option value="">Todas las condiciones</option>
+    <option value="Seminuevo">Seminuevo</option>
+    <option value="Nuevo">Nuevo</option>
+  </select>
+
+</div>
 
 <!-- ======================
      MODAL DE COTIZACIÓN
@@ -323,35 +345,56 @@ let INTEREST_6 = 1.55; // 15% interés
   /* ======================
      RENDER PRODUCTOS
   ======================= */
-  products.forEach((p, index) => {
-    const pricing = calculatePrices(p.priceUSD);
+  const filterLine = document.getElementById("filterLine").value;
+const filterCondition = document.getElementById("filterCondition").value;
 
+const filteredProducts = products.filter(p => {
+
+  // Filtro por condición
+  if (filterCondition && p.condition !== filterCondition) {
+    return false;
+  }
+
+  // Filtro por línea (extrae el número del modelo)
+  if (filterLine) {
+    const lineMatch = p.model.match(/\d+/);
+    if (!lineMatch || lineMatch[0] !== filterLine) {
+      return false;
+    }
+  }
+
+  return true;
+});
+
+
+  filteredProducts.forEach((p, index) => {
+    const pricing = calculatePrices(p.priceUSD);
 
     const card = document.createElement("div");
     card.className = "product";
 
     card.innerHTML = `
-  <h3>${p.model} ${p.storage}</h3>
-  <p>${p.condition}</p>
-  <p style="font-size:0.9rem;color:#555">${p.details}</p>
+      <h3>${p.model} ${p.storage}</h3>
+      <p>${p.condition}</p>
+      <p style="font-size:0.9rem;color:#555">${p.details || ""}</p>
 
-  <div class="price">USD ${pricing.usd}</div>
-  <div class="price">ARS ${pricing.ars.toLocaleString()}</div>
+      <div class="price">USD ${pricing.usd}</div>
+      <div class="price">ARS ${pricing.ars.toLocaleString()}</div>
 
-  <div class="installments">
-    3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}
-  </div>
-  <div class="installments">
-    6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
-  </div>
+      <div class="installments">
+        3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}
+      </div>
+      <div class="installments">
+        6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
+      </div>
 
-  <button onclick="openModal(${index})">Cotizar canje</button>
-`;
-
-
+      <button onclick="openModal(${index})">Cotizar canje</button>
+    `;
 
     productList.appendChild(card);
   });
+}
+
 
   /* ======================
      MODAL
