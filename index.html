@@ -355,13 +355,13 @@ const filteredProducts = products.filter(p => {
     return false;
   }
 
-  // Filtro por línea (extrae el número del modelo)
-  if (filterLine) {
-    const lineMatch = p.model.match(/\d+/);
-    if (!lineMatch || lineMatch[0] !== filterLine) {
-      return false;
-    }
+  // Filtro por línea (12 / 13 / 14 / etc)
+if (filterLine) {
+  if (!p.model.includes(`iPhone ${filterLine}`)) {
+    return false;
   }
+}
+
 
   return true;
 });
