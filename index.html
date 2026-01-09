@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cotizador de Canje iPhone</title>
+
+  <!-- ======================
+       ESTILOS GENERALES
+  ======================= -->
+  <style>
+    :root {
+      --primary: #0071e3;
+      --gray: #f5f5f7;
+      --text: #1d1d1f;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--gray);
+      color: var(--text);
+    }
+
+    header {
+      background: white;
+      padding: 20px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .product h3 {
+      margin: 0 0 10px;
+    }
+
+    .price {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .installments {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    /* ======================
+       MODAL
+    ======================= */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+
+    .result {
+      background: var(--gray);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .warning {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 15px;
+    }
+
+    .close {
+      background: #ccc;
+      color: #000;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  Cotizá tu canje de iPhone
+</header>
+
+<main>
+  <section class="products" id="productList"></section>
+</main>
+
+<!-- ======================
+     MODAL DE COTIZACIÓN
+======================= -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h2>Cotización de Canje</h2>
+
+    <label>iPhone que entregás</label>
+    <select id="tradeInSelect"></select>
+
+    <label>iPhone que querés</label>
+    <select id="buySelect"></select>
+
+    <div class="result" id="result"></div>
+
+    <button class="close" onclick="closeModal()">Cerrar</button>
+
+    <div class="warning">
+      * La cotización es estimada y sujeta a revisión del equipo entregado.
+    </div>
+  </div>
+</div>
+
+<!-- ======================
+     JAVASCRIPT
+======================= -->
+<script>
+  /* ======================
+     CONFIGURACIÓN GENERAL
+  ======================= */
+
+  // Tipo de cambio editable
+  const USD_TO_ARS = 1100;
+
+  // Productos disponibles para compra
+  const products = [
+    { model: "iPhone 11", storage: "128GB", condition: "Seminuevo 100%", priceUSD: 450 },
+    { model: "iPhone 11 Pro Max", storage: "256GB", condition: "Seminuevo 100%", priceUSD: 650 },
+    { model: "iPhone 13", storage: "128GB", condition: "Seminuevo 100%", priceUSD: 750 },
+    { model: "iPhone 14 Pro", storage: "256GB", condition: "Seminuevo 100%", priceUSD: 980 }
+  ];
+
+  // Valores estimados de canje
+  const tradeInValues = {
+    "iPhone 11": 300,
+    "iPhone 11 Pro Max": 420,
+    "iPhone 13": 550,
+    "iPhone 14 Pro": 720
+  };
+
+  const productList = document.getElementById("productList");
+  const modal = document.getElementById("modal");
+  const tradeInSelect = document.getElementById("tradeInSelect");
+  const buySelect = document.getElementById("buySelect");
+  const result = document.getElementById("result");
+
+  /* ======================
+     RENDER PRODUCTOS
+  ======================= */
+  products.forEach((p, index) => {
+    const priceARS = p.priceUSD * USD_TO_ARS;
+    const cuotas3 = priceARS / 3;
+    const cuotas6 = priceARS / 6;
+
+    const card = document.createElement("div");
+    card.className = "product";
+
+    card.innerHTML = `
+      <h3>${p.model} ${p.storage}</h3>
+      <p>${p.condition}</p>
+      <div class="price">USD ${p.priceUSD}</div>
+      <div class="price">ARS ${priceARS.toLocaleString()}</div>
+      <div class="installments">3 cuotas: ARS ${cuotas3.toLocaleString()}</div>
+      <div class="installments">6 cuotas: ARS ${cuotas6.toLocaleString()}</div>
+      <button onclick="openModal(${index})">Cotizar canje</button>
+    `;
+
+    productList.appendChild(card);
+  });
+
+  /* ======================
+     MODAL
+  ======================= */
+  function openModal(productIndex) {
+    modal.style.display = "flex";
+    result.innerHTML = "";
+
+    tradeInSelect.innerHTML = `<option value="">Seleccioná tu iPhone</option>`;
+    buySelect.innerHTML = "";
+
+    // Opciones de canje
+    Object.keys(tradeInValues).forEach(model => {
+      tradeInSelect.innerHTML += `<option value="${model}">${model}</option>`;
+    });
+
+    // iPhone seleccionado para compra
+    const selectedProduct = products[productIndex];
+    buySelect.innerHTML = `<option value="${selectedProduct.priceUSD}">
+      ${selectedProduct.model} ${selectedProduct.storage}
+    </option>`;
+  }
+
+  function closeModal() {
+    modal.style.display = "none";
+  }
+
+  tradeInSelect.addEventListener("change", calculate);
+
+  function calculate() {
+    const tradeModel = tradeInSelect.value;
+    if (!tradeModel) return;
+
+    const tradeValueUSD = tradeInValues[tradeModel];
+    const buyPriceUSD = Number(buySelect.value);
+
+    const diffUSD = buyPriceUSD - tradeValueUSD;
+    const diffARS = diffUSD * USD_TO_ARS;
+
+    result.innerHTML = `
+      <strong>Diferencia a pagar:</strong><br><br>
+      USD ${diffUSD}<br>
+      ARS ${diffARS.toLocaleString()}<br><br>
+      3 cuotas: ARS ${(diffARS / 3).toLocaleString()}<br>
+      6 cuotas: ARS ${(diffARS / 6).toLocaleString()}
+    `;
+  }
+</script>
+
+</body>
+</html>
