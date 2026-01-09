@@ -201,11 +201,110 @@ let INTEREST_6 = 1.55; // 15% interés
 
   // Productos disponibles para compra
   const products = [
-    { model: "iPhone 11", storage: "128GB", condition: "Seminuevo 100%", priceUSD: 450 },
-    { model: "iPhone 11 Pro Max", storage: "256GB", condition: "Seminuevo 100%", priceUSD: 650 },
-    { model: "iPhone 13", storage: "128GB", condition: "Seminuevo 100%", priceUSD: 750 },
-    { model: "iPhone 14 Pro", storage: "256GB", condition: "Seminuevo 100%", priceUSD: 980 }
-  ];
+
+  // ===== LINEA 12 =====
+  {
+    model: "iPhone 12 Pro",
+    storage: "128GB",
+    condition: "Seminuevo",
+    details: "Azul · Batería 100%",
+    priceUSD: 350
+  },
+  {
+    model: "iPhone 12 Pro Max",
+    storage: "128GB",
+    condition: "Seminuevo",
+    details: "Blanco · Batería 88%",
+    priceUSD: 365
+  },
+
+  // ===== LINEA 13 =====
+  {
+    model: "iPhone 13 Pro",
+    storage: "128GB",
+    condition: "Seminuevo",
+    details: "Celeste · Batería 100%",
+    priceUSD: 495
+  },
+
+  // ===== LINEA 14 =====
+  {
+    model: "iPhone 14 Plus",
+    storage: "128GB",
+    condition: "Seminuevo",
+    details: "Rojo · Batería 85–86%",
+    priceUSD: 425
+  },
+  {
+    model: "iPhone 14 Plus",
+    storage: "128GB",
+    condition: "Seminuevo",
+    details: "Rojo · Batería 100%",
+    priceUSD: 450
+  },
+  {
+    model: "iPhone 14 Pro",
+    storage: "256GB",
+    condition: "Seminuevo",
+    details: "Negro · Batería 100%",
+    priceUSD: 600
+  },
+  {
+    model: "iPhone 14 Pro Max",
+    storage: "128GB",
+    condition: "Seminuevo",
+    details: "Negro / Dorado · Batería 100%",
+    priceUSD: 625
+  },
+
+  // ===== LINEA 15 =====
+  {
+    model: "iPhone 15",
+    storage: "128GB",
+    condition: "Seminuevo",
+    details: "Celeste · Batería 85%",
+    priceUSD: 495
+  },
+  {
+    model: "iPhone 15",
+    storage: "128GB",
+    condition: "Seminuevo",
+    details: "Negro · Batería 90%",
+    priceUSD: 505
+  },
+  {
+    model: "iPhone 15 Pro",
+    storage: "128GB",
+    condition: "Seminuevo",
+    details: "Azul · Batería 95%",
+    priceUSD: 650
+  },
+  {
+    model: "iPhone 15 Pro Max",
+    storage: "256GB",
+    condition: "Seminuevo",
+    details: "Azul · Batería 88%",
+    priceUSD: 735
+  },
+  {
+    model: "iPhone 15 Pro Max",
+    storage: "256GB",
+    condition: "Seminuevo",
+    details: "Azul · Batería 90–94%",
+    priceUSD: 785
+  },
+
+  // ===== LINEA 16 =====
+  {
+    model: "iPhone 16 Pro",
+    storage: "128GB",
+    condition: "Seminuevo",
+    details: "Blanco · Caja original · Batería 92%",
+    priceUSD: 750
+  }
+
+];
+
 
   // Valores estimados de canje
   const tradeInValues = {
@@ -234,6 +333,7 @@ let INTEREST_6 = 1.55; // 15% interés
     card.innerHTML = `
   <h3>${p.model} ${p.storage}</h3>
   <p>${p.condition}</p>
+  <p style="font-size:0.9rem;color:#555">${p.details}</p>
 
   <div class="price">USD ${pricing.usd}</div>
   <div class="price">ARS ${pricing.ars.toLocaleString()}</div>
@@ -247,6 +347,7 @@ let INTEREST_6 = 1.55; // 15% interés
 
   <button onclick="openModal(${index})">Cotizar canje</button>
 `;
+
 
 
     productList.appendChild(card);
