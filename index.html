@@ -96,6 +96,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
+      z-index: 9999; /* asegura que quede por arriba */
     }
 
     .modal-content {
@@ -133,6 +134,14 @@
       background: #ccc;
       color: #000;
     }
+
+    /* contenedor filtros */
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 
@@ -143,35 +152,39 @@
 </header>
 
 <main>
+
+  <!-- ======================
+       FILTROS
+  ======================= -->
+  <div class="filters">
+    <select id="filterLine">
+      <option value="">Todas las líneas</option>
+      <option value="12">iPhone 12</option>
+      <option value="13">iPhone 13</option>
+      <option value="14">iPhone 14</option>
+      <option value="15">iPhone 15</option>
+      <option value="16">iPhone 16</option>
+      <option value="17">iPhone 17</option>
+    </select>
+
+    <select id="filterCondition">
+      <option value="">Todas las condiciones</option>
+      <option value="Seminuevo">Seminuevo</option>
+      <option value="Nuevo">Nuevo</option>
+    </select>
+
+    <button type="button" id="clearFilters" class="close" style="margin-top:0">
+      Limpiar filtros
+    </button>
+  </div>
+
   <section class="products" id="productList"></section>
 </main>
-<!-- ======================
-     FILTROS
-====================== -->
-<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
-
-  <select id="filterLine" onchange="renderProducts()">
-    <option value="">Todas las líneas</option>
-    <option value="12">iPhone 12</option>
-    <option value="13">iPhone 13</option>
-    <option value="14">iPhone 14</option>
-    <option value="15">iPhone 15</option>
-    <option value="16">iPhone 16</option>
-    <option value="17">iPhone 17</option>
-  </select>
-
-  <select id="filterCondition" onchange="renderProducts()">
-    <option value="">Todas las condiciones</option>
-    <option value="Seminuevo">Seminuevo</option>
-    <option value="Nuevo">Nuevo</option>
-  </select>
-
-</div>
 
 <!-- ======================
      MODAL DE COTIZACIÓN
 ======================= -->
-<div class="modal" id="modal">
+<div class="modal" id="modal" aria-hidden="true">
   <div class="modal-content">
     <h2>Cotización de Canje</h2>
 
@@ -196,139 +209,133 @@
 ======================= -->
 <script>
   /* ======================
-     CONFIGURACIÓN GENERAL
+     CONFIGURACIÓN MASIVA
   ======================= */
-/* ======================
-   CONFIGURACIÓN MASIVA
-====================== */
 
-// Tipo de cambio editable
-let USD_TO_ARS = 1800;
+  // Tipo de cambio editable
+  let USD_TO_ARS = 1800;
 
-// Intereses de cuotas (podés ajustar libremente)
-let INTEREST_3 = 1.55; // 5% interés
-let INTEREST_6 = 1.55; // 15% interés
+  // Intereses de cuotas (multiplicador)
+  // Ej: 1.00 = sin interés, 1.10 = 10% total extra
+  let INTEREST_3 = 1.55;
+  let INTEREST_6 = 1.55;
 
   function calculatePrices(priceUSD) {
-  const priceARS = priceUSD * USD_TO_ARS;
+    const priceARS = priceUSD * USD_TO_ARS;
 
-  return {
-    usd: priceUSD,
-    ars: priceARS,
-    cuotas3: (priceARS * INTEREST_3) / 3,
-    cuotas6: (priceARS * INTEREST_6) / 6
-  };
-}
-
+    return {
+      usd: priceUSD,
+      ars: priceARS,
+      cuotas3: (priceARS * INTEREST_3) / 3,
+      cuotas6: (priceARS * INTEREST_6) / 6
+    };
+  }
 
   // Productos disponibles para compra
   const products = [
+    // ===== LINEA 12 =====
+    {
+      model: "iPhone 12 Pro",
+      storage: "128GB",
+      condition: "Seminuevo",
+      details: "Azul · Batería 100%",
+      priceUSD: 350
+    },
+    {
+      model: "iPhone 12 Pro Max",
+      storage: "128GB",
+      condition: "Seminuevo",
+      details: "Blanco · Batería 88%",
+      priceUSD: 365
+    },
 
-  // ===== LINEA 12 =====
-  {
-    model: "iPhone 12 Pro",
-    storage: "128GB",
-    condition: "Seminuevo",
-    details: "Azul · Batería 100%",
-    priceUSD: 350
-  },
-  {
-    model: "iPhone 12 Pro Max",
-    storage: "128GB",
-    condition: "Seminuevo",
-    details: "Blanco · Batería 88%",
-    priceUSD: 365
-  },
+    // ===== LINEA 13 =====
+    {
+      model: "iPhone 13 Pro",
+      storage: "128GB",
+      condition: "Seminuevo",
+      details: "Celeste · Batería 100%",
+      priceUSD: 495
+    },
 
-  // ===== LINEA 13 =====
-  {
-    model: "iPhone 13 Pro",
-    storage: "128GB",
-    condition: "Seminuevo",
-    details: "Celeste · Batería 100%",
-    priceUSD: 495
-  },
+    // ===== LINEA 14 =====
+    {
+      model: "iPhone 14 Plus",
+      storage: "128GB",
+      condition: "Seminuevo",
+      details: "Rojo · Batería 85–86%",
+      priceUSD: 425
+    },
+    {
+      model: "iPhone 14 Plus",
+      storage: "128GB",
+      condition: "Seminuevo",
+      details: "Rojo · Batería 100%",
+      priceUSD: 450
+    },
+    {
+      model: "iPhone 14 Pro",
+      storage: "256GB",
+      condition: "Seminuevo",
+      details: "Negro · Batería 100%",
+      priceUSD: 600
+    },
+    {
+      model: "iPhone 14 Pro Max",
+      storage: "128GB",
+      condition: "Seminuevo",
+      details: "Negro / Dorado · Batería 100%",
+      priceUSD: 625
+    },
 
-  // ===== LINEA 14 =====
-  {
-    model: "iPhone 14 Plus",
-    storage: "128GB",
-    condition: "Seminuevo",
-    details: "Rojo · Batería 85–86%",
-    priceUSD: 425
-  },
-  {
-    model: "iPhone 14 Plus",
-    storage: "128GB",
-    condition: "Seminuevo",
-    details: "Rojo · Batería 100%",
-    priceUSD: 450
-  },
-  {
-    model: "iPhone 14 Pro",
-    storage: "256GB",
-    condition: "Seminuevo",
-    details: "Negro · Batería 100%",
-    priceUSD: 600
-  },
-  {
-    model: "iPhone 14 Pro Max",
-    storage: "128GB",
-    condition: "Seminuevo",
-    details: "Negro / Dorado · Batería 100%",
-    priceUSD: 625
-  },
+    // ===== LINEA 15 =====
+    {
+      model: "iPhone 15",
+      storage: "128GB",
+      condition: "Seminuevo",
+      details: "Celeste · Batería 85%",
+      priceUSD: 495
+    },
+    {
+      model: "iPhone 15",
+      storage: "128GB",
+      condition: "Seminuevo",
+      details: "Negro · Batería 90%",
+      priceUSD: 505
+    },
+    {
+      model: "iPhone 15 Pro",
+      storage: "128GB",
+      condition: "Seminuevo",
+      details: "Azul · Batería 95%",
+      priceUSD: 650
+    },
+    {
+      model: "iPhone 15 Pro Max",
+      storage: "256GB",
+      condition: "Seminuevo",
+      details: "Azul · Batería 88%",
+      priceUSD: 735
+    },
+    {
+      model: "iPhone 15 Pro Max",
+      storage: "256GB",
+      condition: "Seminuevo",
+      details: "Azul · Batería 90–94%",
+      priceUSD: 785
+    },
 
-  // ===== LINEA 15 =====
-  {
-    model: "iPhone 15",
-    storage: "128GB",
-    condition: "Seminuevo",
-    details: "Celeste · Batería 85%",
-    priceUSD: 495
-  },
-  {
-    model: "iPhone 15",
-    storage: "128GB",
-    condition: "Seminuevo",
-    details: "Negro · Batería 90%",
-    priceUSD: 505
-  },
-  {
-    model: "iPhone 15 Pro",
-    storage: "128GB",
-    condition: "Seminuevo",
-    details: "Azul · Batería 95%",
-    priceUSD: 650
-  },
-  {
-    model: "iPhone 15 Pro Max",
-    storage: "256GB",
-    condition: "Seminuevo",
-    details: "Azul · Batería 88%",
-    priceUSD: 735
-  },
-  {
-    model: "iPhone 15 Pro Max",
-    storage: "256GB",
-    condition: "Seminuevo",
-    details: "Azul · Batería 90–94%",
-    priceUSD: 785
-  },
+    // ===== LINEA 16 =====
+    {
+      model: "iPhone 16 Pro",
+      storage: "128GB",
+      condition: "Seminuevo",
+      details: "Blanco · Caja original · Batería 92%",
+      priceUSD: 750
+    }
+  ];
 
-  // ===== LINEA 16 =====
-  {
-    model: "iPhone 16 Pro",
-    storage: "128GB",
-    condition: "Seminuevo",
-    details: "Blanco · Caja original · Batería 92%",
-    priceUSD: 750
-  }
-
-];
-
-
-  // Valores estimados de canje
+  // Valores estimados de canje (USD)
   const tradeInValues = {
     "iPhone 11": 300,
     "iPhone 11 Pro Max": 420,
@@ -336,76 +343,75 @@ let INTEREST_6 = 1.55; // 15% interés
     "iPhone 14 Pro": 720
   };
 
+  // DOM refs
   const productList = document.getElementById("productList");
   const modal = document.getElementById("modal");
   const tradeInSelect = document.getElementById("tradeInSelect");
   const buySelect = document.getElementById("buySelect");
   const result = document.getElementById("result");
 
+  const filterLineEl = document.getElementById("filterLine");
+  const filterConditionEl = document.getElementById("filterCondition");
+  const clearFiltersBtn = document.getElementById("clearFilters");
+
   /* ======================
      RENDER PRODUCTOS
   ======================= */
- function renderProducts() {
-  productList.innerHTML = "";
+  function renderProducts() {
+    productList.innerHTML = "";
 
-  const filterLine = document.getElementById("filterLine").value;
-  const filterCondition = document.getElementById("filterCondition").value;
+    // Lectura segura: si no hay filtros, queda "" y muestra todo
+    const filterLine = filterLineEl?.value || "";
+    const filterCondition = filterConditionEl?.value || "";
 
-  const filteredProducts = products.filter(p => {
+    const filteredProducts = products.filter(p => {
+      // Filtro por condición
+      if (filterCondition && p.condition !== filterCondition) return false;
 
-    // Filtro por condición
-    if (filterCondition && p.condition !== filterCondition) {
-      return false;
-    }
+      // Filtro por línea (12/13/14/15/16/17)
+      if (filterLine && !p.model.includes(`iPhone ${filterLine}`)) return false;
 
-    // Filtro por línea
-    if (filterLine) {
-      if (!p.model.includes(`iPhone ${filterLine}`)) {
-        return false;
-      }
-    }
+      return true;
+    });
 
-    return true;
-  });
+    filteredProducts.forEach(p => {
+      const pricing = calculatePrices(p.priceUSD);
 
-  // 🔴 ESTE BLOQUE ES EL QUE FALTA O NO SE ESTÁ EJECUTANDO
-  filteredProducts.forEach(p => {
-    const pricing = calculatePrices(p.priceUSD);
+      const card = document.createElement("div");
+      card.className = "product";
 
-    const card = document.createElement("div");
-    card.className = "product";
+      card.innerHTML = `
+        <h3>${p.model} ${p.storage}</h3>
+        <p>${p.condition}</p>
+        <p style="font-size:0.9rem;color:#555">${p.details || ""}</p>
 
-    card.innerHTML = `
-      <h3>${p.model} ${p.storage}</h3>
-      <p>${p.condition}</p>
-      <p style="font-size:0.9rem;color:#555">${p.details || ""}</p>
+        <div class="price">USD ${pricing.usd}</div>
+        <div class="price">ARS ${pricing.ars.toLocaleString()}</div>
 
-      <div class="price">USD ${pricing.usd}</div>
-      <div class="price">ARS ${pricing.ars.toLocaleString()}</div>
+        <div class="installments">
+          3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}
+        </div>
+        <div class="installments">
+          6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
+        </div>
 
-      <div class="installments">
-        3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}
-      </div>
-      <div class="installments">
-        6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
-      </div>
+        <!-- IMPORTANTE: index real del array products (para que el modal funcione con filtros) -->
+        <button onclick="openModal(${products.indexOf(p)})">Cotizar canje</button>
+      `;
 
-      <button onclick="openModal(products.indexOf(p))">
-        Cotizar canje
-      </button>
-    `;
-
-    productList.appendChild(card);
-  });
-}
-
-
+      productList.appendChild(card);
+    });
+  }
 
   /* ======================
      MODAL
   ======================= */
   function openModal(productIndex) {
+    const selectedProduct = products[productIndex];
+    if (!selectedProduct) return; // safety
+
     modal.style.display = "flex";
+    modal.setAttribute("aria-hidden", "false");
     result.innerHTML = "";
 
     tradeInSelect.innerHTML = `<option value="">Seleccioná tu iPhone</option>`;
@@ -417,39 +423,73 @@ let INTEREST_6 = 1.55; // 15% interés
     });
 
     // iPhone seleccionado para compra
-    const selectedProduct = products[productIndex];
-    buySelect.innerHTML = `<option value="${selectedProduct.priceUSD}">
-      ${selectedProduct.model} ${selectedProduct.storage}
-    </option>`;
+    buySelect.innerHTML = `
+      <option value="${selectedProduct.priceUSD}">
+        ${selectedProduct.model} ${selectedProduct.storage}
+      </option>
+    `;
   }
 
   function closeModal() {
     modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+    tradeInSelect.value = "";
+    result.innerHTML = "";
   }
 
+  // Cerrar modal al clickear fuera del contenido
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Cotización al cambiar iPhone entregado
   tradeInSelect.addEventListener("change", calculate);
 
   function calculate() {
     const tradeModel = tradeInSelect.value;
-    if (!tradeModel) return;
+    if (!tradeModel) {
+      result.innerHTML = "";
+      return;
+    }
 
     const tradeValueUSD = tradeInValues[tradeModel];
     const buyPriceUSD = Number(buySelect.value);
 
     const diffUSD = buyPriceUSD - tradeValueUSD;
-const pricing = calculatePrices(diffUSD);
-
+    const pricing = calculatePrices(diffUSD);
 
     result.innerHTML = `
-  <strong>Diferencia a pagar:</strong><br><br>
-  USD ${pricing.usd}<br>
-  ARS ${pricing.ars.toLocaleString()}<br><br>
-  3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}<br>
-  6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
-`;
-
+      <strong>Diferencia a pagar:</strong><br><br>
+      USD ${pricing.usd}<br>
+      ARS ${pricing.ars.toLocaleString()}<br><br>
+      3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}<br>
+      6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
+    `;
   }
+
+  /* ======================
+     EVENTOS FILTROS
+  ======================= */
+  filterLineEl.addEventListener("change", renderProducts);
+  filterConditionEl.addEventListener("change", renderProducts);
+
+  clearFiltersBtn.addEventListener("click", () => {
+    filterLineEl.value = "";
+    filterConditionEl.value = "";
+    renderProducts();
+  });
+
+  /* ======================
+     INICIO
+  ======================= */
+  document.addEventListener("DOMContentLoaded", () => {
+    // Asegura que al entrar se vean TODOS los modelos
+    if (filterLineEl) filterLineEl.value = "";
+    if (filterConditionEl) filterConditionEl.value = "";
+    renderProducts();
+  });
 </script>
 
 </body>
 </html>
+
