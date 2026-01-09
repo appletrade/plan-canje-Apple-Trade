@@ -19,7 +19,6 @@
       --shadow-hover: 0 16px 42px rgba(0,0,0,.10);
 
       --wa:#25D366;
-      --wa-dark:#128C7E;
     }
 
     *{ box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
@@ -44,7 +43,7 @@
     /* filtros */
     .filters{
       display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      margin-bottom:18px;
+      margin-bottom:12px;
     }
     select{
       width:min(420px,100%);
@@ -59,6 +58,21 @@
     select:focus{
       border-color: rgba(0,113,227,.35);
       box-shadow: 0 0 0 4px rgba(0,113,227,.15);
+    }
+
+    /* toolbar: contador + orden */
+    .toolbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin: 6px 0 16px;
+    }
+    .results-count{
+      font-size:.92rem;
+      color: var(--muted);
+      font-weight:650;
     }
 
     .products{
@@ -91,7 +105,7 @@
       line-height:1.25rem;
     }
 
-    /* ✅ reemplaza el badge: condición como texto simple (sin cartel confuso) */
+    /* condición como texto simple */
     .condition-text{
       margin:0 0 6px;
       font-size:.88rem;
@@ -215,38 +229,55 @@
       border-radius:14px;
       margin-top:10px;
       border:1px solid rgba(0,0,0,.06);
+      min-height: 52px;
     }
 
+    /* ✅ acciones del modal */
     .modal-actions{
       display:flex;
-      gap:10px;
+      gap:12px;
       flex-wrap:wrap;
       margin-top:12px;
+      align-items:center;
+      justify-content:flex-start; /* evita estiramientos raros */
     }
 
-    /* ✅ Botón WhatsApp */
+    /* ✅ Botón WhatsApp más chico + icono centrado */
     .wa-btn{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:10px;
-      padding:12px 14px;
+
+      height:44px;                 /* más compacto */
+      padding:0 16px;              /* sin padding vertical */
       border-radius:14px;
+
       text-decoration:none;
       font-weight:800;
+      font-size:.95rem;            /* más chico */
+      line-height:44px;            /* ayuda a centrar texto */
+
       color:white;
       background: var(--wa);
-      box-shadow: 0 14px 26px rgba(37,211,102,.22);
+      box-shadow: 0 10px 22px rgba(37,211,102,.20);
       transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
-      flex:1 1 220px;
+
+      flex: 0 0 auto;              /* NO ocupa toda la fila */
+      min-width: 190px;            /* tamaño consistente */
     }
     .wa-btn:hover{
       transform: translateY(-1px);
-      box-shadow: 0 18px 34px rgba(37,211,102,.28);
+      box-shadow: 0 14px 28px rgba(37,211,102,.26);
       opacity:.98;
     }
     .wa-icon{
-      width:20px; height:20px; display:block;
+      width:18px;
+      height:18px;
+      display:block;               /* evita descentrado */
+      flex: 0 0 18px;              /* reserva espacio fijo */
+      margin:0;
+      transform: translateY(0);    /* por si algún navegador aplica baseline raro */
       fill: white;
     }
 
@@ -276,12 +307,22 @@
     </select>
 
     <select id="filterCondition">
-      <option value="">Nuevo o usado?</option>
+      <option value="">Nuevo o seminuevo</option>
       <option value="Seminuevo">Seminuevo</option>
       <option value="Nuevo">Nuevo</option>
     </select>
 
     <button type="button" id="clearFilters" class="close" style="margin-top:0">Limpiar filtros</button>
+  </div>
+
+  <div class="toolbar">
+    <div id="resultsCount" class="results-count">0 equipos disponibles</div>
+
+    <select id="sortPrice">
+      <option value="">Ordenar por</option>
+      <option value="asc">Precio: menor a mayor</option>
+      <option value="desc">Precio: mayor a menor</option>
+    </select>
   </div>
 
   <section class="products" id="productList"></section>
@@ -299,18 +340,16 @@
 
     <div class="result" id="result"></div>
 
-    <!-- ✅ Acciones: WhatsApp + Cerrar -->
     <div class="modal-actions">
       <a id="whatsappBtn" class="wa-btn" href="#" target="_blank" rel="noopener">
-        <!-- Logo WhatsApp (SVG) -->
-        <svg class="wa-icon" viewBox="0 0 32 32" aria-hidden="true">
+        <svg class="wa-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
           <path d="M19.11 17.53c-.3-.15-1.77-.87-2.05-.97-.28-.1-.48-.15-.68.15-.2.3-.78.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.68-1.64-.93-2.25-.24-.58-.48-.5-.68-.5h-.58c-.2 0-.52.07-.8.37-.28.3-1.05 1.02-1.05 2.5s1.08 2.9 1.23 3.1c.15.2 2.13 3.25 5.15 4.55.72.31 1.28.49 1.72.62.72.23 1.38.2 1.9.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z"/>
-          <path d="M26.7 5.3A14.9 14.9 0 0 0 4.2 25.9L3 30l4.2-1.1A14.9 14.9 0 0 0 26.7 5.3zM16 28.1c-2.4 0-4.7-.6-6.8-1.8l-.49-.29-2.49.65.66-2.43-.32-.5A12.1 12.1 0 1 1 16 28.1z"/>
+          <path d="M26.7 5.3A14.9 14.9 0 0 0 4.2 25.9L3 30l4.2-1.1A14.9 14.9 0 0 0 26.7 5.3zM16 28.1c-2.4 0-4.7-.6-6.8-1.8l-.49-.29-2.49.65.66-2.43-.32-.5A12.1 12.1 0 1 1 16 28.1zM16 6.2a9.8 9.8 0 0 0-8.4 14.8l.4.63-.4 1.5 1.55-.41.6.36A9.8 9.8 0 1 0 16 6.2z"/>
         </svg>
         Canjear Ahora
       </a>
 
-      <button class="close" onclick="closeModal()" style="flex:1 1 160px">Cerrar</button>
+      <button class="close" onclick="closeModal()" style="margin-top:0; height:44px; padding:0 16px;">Cerrar</button>
     </div>
 
     <div class="warning">
@@ -327,10 +366,10 @@
   let INTEREST_3 = 1.55;
   let INTEREST_6 = 1.55;
 
-  /* ✅ PONÉ TU NÚMERO DE WHATSAPP ACÁ (sin +, sin espacios)
-     Ejemplo Argentina: 54911XXXXXXXX
+  /* ✅ PONÉ TU NÚMERO (sin +, sin espacios)
+     Ej: 54911XXXXXXXX
   */
-  const WHATSAPP_NUMBER = "5491171645467";
+  const WHATSAPP_NUMBER = "54911XXXXXXXX";
 
   function calculatePrices(priceUSD) {
     const priceARS = priceUSD * USD_TO_ARS;
@@ -399,9 +438,7 @@
     if (!details) return [];
     const lower = details.toLowerCase();
     const found = [];
-    Object.keys(COLOR_MAP).forEach(c => {
-      if (lower.includes(c)) found.push(c);
-    });
+    Object.keys(COLOR_MAP).forEach(c => { if (lower.includes(c)) found.push(c); });
     found.sort((a,b) => lower.indexOf(a) - lower.indexOf(b));
     return [...new Set(found)];
   }
@@ -434,9 +471,11 @@
   const filterLineEl = document.getElementById("filterLine");
   const filterConditionEl = document.getElementById("filterCondition");
   const clearFiltersBtn = document.getElementById("clearFilters");
+  const sortPriceEl = document.getElementById("sortPrice");
+  const resultsCountEl = document.getElementById("resultsCount");
 
   let currentBuyProductIndex = null;
-  let lastPricing = null; // guarda la última diferencia calculada
+  let lastPricing = null;
 
   /* ======================
      RENDER
@@ -446,12 +485,19 @@
 
     const filterLine = filterLineEl?.value || "";
     const filterCondition = filterConditionEl?.value || "";
+    const sortValue = sortPriceEl?.value || "";
 
-    const filteredProducts = products.filter(p => {
+    let filteredProducts = products.filter(p => {
       if (filterCondition && p.condition !== filterCondition) return false;
       if (filterLine && !p.model.includes(`iPhone ${filterLine}`)) return false;
       return true;
     });
+
+    // ordenar
+    if (sortValue === "asc") filteredProducts.sort((a,b) => a.priceUSD - b.priceUSD);
+    if (sortValue === "desc") filteredProducts.sort((a,b) => b.priceUSD - a.priceUSD);
+
+    if (resultsCountEl) resultsCountEl.textContent = `${filteredProducts.length} equipos disponibles`;
 
     filteredProducts.forEach(p => {
       const pricing = calculatePrices(p.priceUSD);
@@ -508,7 +554,6 @@
       </option>
     `;
 
-    // WhatsApp deshabilitado hasta que haya cálculo
     updateWhatsAppLink();
   }
 
@@ -521,10 +566,7 @@
     lastPricing = null;
   }
 
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
-  });
-
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   tradeInSelect.addEventListener("change", calculate);
 
   function calculate() {
@@ -559,7 +601,6 @@
      WHATSAPP
   ======================= */
   function updateWhatsAppLink() {
-    // Si no configuraste el número, deja el botón inactivo pero visible
     if (!WHATSAPP_NUMBER || WHATSAPP_NUMBER.includes("X")) {
       whatsappBtn.href = "#";
       whatsappBtn.style.opacity = "0.6";
@@ -568,7 +609,6 @@
       return;
     }
 
-    // Si no hay cálculo todavía, no dejamos enviar
     if (!lastPricing || currentBuyProductIndex === null) {
       whatsappBtn.href = "#";
       whatsappBtn.style.opacity = "0.7";
@@ -593,7 +633,6 @@
 ¿Me ayudás a avanzar con el canje?`;
 
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-
     whatsappBtn.href = url;
     whatsappBtn.style.opacity = "1";
     whatsappBtn.style.pointerEvents = "auto";
@@ -601,20 +640,23 @@
   }
 
   /* ======================
-     FILTROS
+     FILTROS / ORDEN
   ======================= */
   filterLineEl.addEventListener("change", renderProducts);
   filterConditionEl.addEventListener("change", renderProducts);
+  sortPriceEl.addEventListener("change", renderProducts);
 
   clearFiltersBtn.addEventListener("click", () => {
     filterLineEl.value = "";
     filterConditionEl.value = "";
+    sortPriceEl.value = "";
     renderProducts();
   });
 
   document.addEventListener("DOMContentLoaded", () => {
     filterLineEl.value = "";
     filterConditionEl.value = "";
+    sortPriceEl.value = "";
     renderProducts();
   });
 </script>
