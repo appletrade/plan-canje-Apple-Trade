@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cotizador de Canje iPhone</title>
+  <title>Apple Trade — Canje iPhone</title>
 
   <style>
     :root{
@@ -15,16 +15,11 @@
 
       --usd:#16a34a;
 
-      /* sombras premium */
       --shadow: 0 10px 26px rgba(0,0,0,.06);
       --shadow-hover: 0 16px 42px rgba(0,0,0,.10);
 
-      /* badges */
-      --badge-semi-bg: rgba(22,163,74,.12);
-      --badge-semi-fg: #15803d;
-
-      --badge-new-bg: rgba(0,113,227,.12);
-      --badge-new-fg: #005bb5;
+      --wa:#25D366;
+      --wa-dark:#128C7E;
     }
 
     *{ box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
@@ -38,7 +33,7 @@
       padding:18px 20px;
       text-align:center;
       font-weight:650;
-      font-size:1.35rem;
+      font-size:1.15rem;
       position:sticky;
       top:0;
       z-index:50;
@@ -89,34 +84,20 @@
       border-color: rgba(0,0,0,.12);
     }
 
-    .top-row{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:6px;
-    }
-
     .product h3{
-      margin:0;
+      margin:0 0 6px;
       font-size:1.05rem;
       letter-spacing:-.2px;
       line-height:1.25rem;
     }
 
-    .badges{
-      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
+    /* ✅ reemplaza el badge: condición como texto simple (sin cartel confuso) */
+    .condition-text{
+      margin:0 0 6px;
+      font-size:.88rem;
+      color: var(--muted);
+      font-weight:650;
     }
-    .badge{
-      font-size:.78rem;
-      font-weight:750;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(0,0,0,.06);
-      white-space:nowrap;
-    }
-    .badge.semi{ background:var(--badge-semi-bg); color:var(--badge-semi-fg); }
-    .badge.new{ background:var(--badge-new-bg); color:var(--badge-new-fg); }
 
     .details{
       margin:8px 0 10px;
@@ -125,12 +106,12 @@
       line-height:1.25rem;
     }
 
-    /* chips de color (bolita + texto) */
+    /* chips de color */
     .color-chips{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
-      margin:6px 0 10px;
+      margin:8px 0 6px;
     }
     .chip{
       display:inline-flex;
@@ -197,7 +178,7 @@
     .cw-celeste{ color:#0ea5e9; }
     .cw-rojo{ color:#ef4444; }
     .cw-negro{ color:#111827; }
-    .cw-blanco{ color:#64748b; } /* visible sobre blanco */
+    .cw-blanco{ color:#64748b; }
     .cw-dorado{ color:#b45309; }
     .cw-gris{ color:#6b7280; }
     .cw-plata{ color:#94a3b8; }
@@ -235,6 +216,40 @@
       margin-top:10px;
       border:1px solid rgba(0,0,0,.06);
     }
+
+    .modal-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    /* ✅ Botón WhatsApp */
+    .wa-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:14px;
+      text-decoration:none;
+      font-weight:800;
+      color:white;
+      background: var(--wa);
+      box-shadow: 0 14px 26px rgba(37,211,102,.22);
+      transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+      flex:1 1 220px;
+    }
+    .wa-btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px rgba(37,211,102,.28);
+      opacity:.98;
+    }
+    .wa-icon{
+      width:20px; height:20px; display:block;
+      fill: white;
+    }
+
     .warning{
       font-size:.85rem;
       color:#6b7280;
@@ -244,7 +259,9 @@
 </head>
 
 <body>
-<header>Cotizá tu canje de iPhone</header>
+<header>
+  Renová tu iPhone en Apple Trade con la mejor cotización.
+</header>
 
 <main>
   <div class="filters">
@@ -259,7 +276,7 @@
     </select>
 
     <select id="filterCondition">
-      <option value="">Nuevo o usado?s</option>
+      <option value="">Nuevo o usado?</option>
       <option value="Seminuevo">Seminuevo</option>
       <option value="Nuevo">Nuevo</option>
     </select>
@@ -282,7 +299,19 @@
 
     <div class="result" id="result"></div>
 
-    <button class="close" onclick="closeModal()">Cerrar</button>
+    <!-- ✅ Acciones: WhatsApp + Cerrar -->
+    <div class="modal-actions">
+      <a id="whatsappBtn" class="wa-btn" href="#" target="_blank" rel="noopener">
+        <!-- Logo WhatsApp (SVG) -->
+        <svg class="wa-icon" viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M19.11 17.53c-.3-.15-1.77-.87-2.05-.97-.28-.1-.48-.15-.68.15-.2.3-.78.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.68-1.64-.93-2.25-.24-.58-.48-.5-.68-.5h-.58c-.2 0-.52.07-.8.37-.28.3-1.05 1.02-1.05 2.5s1.08 2.9 1.23 3.1c.15.2 2.13 3.25 5.15 4.55.72.31 1.28.49 1.72.62.72.23 1.38.2 1.9.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z"/>
+          <path d="M26.7 5.3A14.9 14.9 0 0 0 4.2 25.9L3 30l4.2-1.1A14.9 14.9 0 0 0 26.7 5.3zM16 28.1c-2.4 0-4.7-.6-6.8-1.8l-.49-.29-2.49.65.66-2.43-.32-.5A12.1 12.1 0 1 1 16 28.1z"/>
+        </svg>
+        Canjear Ahora
+      </a>
+
+      <button class="close" onclick="closeModal()" style="flex:1 1 160px">Cerrar</button>
+    </div>
 
     <div class="warning">
       * La cotización es estimada y sujeta a revisión del equipo entregado.
@@ -297,6 +326,11 @@
   let USD_TO_ARS = 1800;
   let INTEREST_3 = 1.55;
   let INTEREST_6 = 1.55;
+
+  /* ✅ PONÉ TU NÚMERO DE WHATSAPP ACÁ (sin +, sin espacios)
+     Ejemplo Argentina: 54911XXXXXXXX
+  */
+  const WHATSAPP_NUMBER = "5491171645467";
 
   function calculatePrices(priceUSD) {
     const priceARS = priceUSD * USD_TO_ARS;
@@ -337,8 +371,6 @@
   /* ======================
      COLORES: palabras + chips
   ======================= */
-
-  // color -> clase palabra (cw-*) y color -> color del dot
   const COLOR_MAP = {
     azul:   { wordClass: "cw-azul",   dot: "#2563eb" },
     celeste:{ wordClass: "cw-celeste",dot: "#0ea5e9" },
@@ -352,43 +384,31 @@
     morado: { wordClass: "cw-morado", dot: "#7c3aed" }
   };
 
-  // Envuelve palabras de color dentro del string con spans coloreados
   function colorizeDetails(details) {
     if (!details) return "";
     let out = details;
-
     Object.keys(COLOR_MAP).forEach(colorWord => {
       const cls = COLOR_MAP[colorWord].wordClass;
       const re = new RegExp(`\\b${colorWord}\\b`, "gi");
       out = out.replace(re, (match) => `<span class="color-word ${cls}">${match}</span>`);
     });
-
     return out;
   }
 
-  // Extrae colores presentes en details (devuelve array único en orden de aparición)
   function extractColors(details) {
     if (!details) return [];
     const lower = details.toLowerCase();
-
-    // buscamos en orden de aparición real recorriendo tokens
-    // (simple y robusto para "Negro / Dorado · ...")
     const found = [];
     Object.keys(COLOR_MAP).forEach(c => {
       if (lower.includes(c)) found.push(c);
     });
-
-    // ordenar según primera posición encontrada
     found.sort((a,b) => lower.indexOf(a) - lower.indexOf(b));
-
-    // unique
     return [...new Set(found)];
   }
 
   function renderColorChips(details) {
     const colors = extractColors(details);
     if (!colors.length) return "";
-
     return `
       <div class="color-chips">
         ${colors.map(c => `
@@ -409,20 +429,18 @@
   const tradeInSelect = document.getElementById("tradeInSelect");
   const buySelect = document.getElementById("buySelect");
   const result = document.getElementById("result");
+  const whatsappBtn = document.getElementById("whatsappBtn");
 
   const filterLineEl = document.getElementById("filterLine");
   const filterConditionEl = document.getElementById("filterCondition");
   const clearFiltersBtn = document.getElementById("clearFilters");
 
+  let currentBuyProductIndex = null;
+  let lastPricing = null; // guarda la última diferencia calculada
+
   /* ======================
      RENDER
   ======================= */
-  function conditionBadge(condition){
-    const c = (condition || "").toLowerCase();
-    if (c.includes("nuevo")) return `<span class="badge new">Nuevo</span>`;
-    return `<span class="badge semi">Seminuevo</span>`;
-  }
-
   function renderProducts() {
     productList.innerHTML = "";
 
@@ -443,15 +461,10 @@
 
       card.innerHTML = `
         <div>
-          <div class="top-row">
-            <h3>${p.model} ${p.storage}</h3>
-            <div class="badges">
-              ${conditionBadge(p.condition)}
-            </div>
-          </div>
+          <h3>${p.model} ${p.storage}</h3>
+          <p class="condition-text">${p.condition}</p>
 
           ${renderColorChips(p.details)}
-
           <p class="details">${colorizeDetails(p.details || "")}</p>
 
           <div class="price price-usd">USD ${pricing.usd}</div>
@@ -475,6 +488,9 @@
     const selectedProduct = products[productIndex];
     if (!selectedProduct) return;
 
+    currentBuyProductIndex = productIndex;
+    lastPricing = null;
+
     modal.style.display = "flex";
     modal.setAttribute("aria-hidden", "false");
     result.innerHTML = "";
@@ -491,6 +507,9 @@
         ${selectedProduct.model} ${selectedProduct.storage}
       </option>
     `;
+
+    // WhatsApp deshabilitado hasta que haya cálculo
+    updateWhatsAppLink();
   }
 
   function closeModal() {
@@ -498,6 +517,8 @@
     modal.setAttribute("aria-hidden", "true");
     tradeInSelect.value = "";
     result.innerHTML = "";
+    currentBuyProductIndex = null;
+    lastPricing = null;
   }
 
   modal.addEventListener("click", (e) => {
@@ -508,13 +529,20 @@
 
   function calculate() {
     const tradeModel = tradeInSelect.value;
-    if (!tradeModel) { result.innerHTML = ""; return; }
+    if (!tradeModel) {
+      result.innerHTML = "";
+      lastPricing = null;
+      updateWhatsAppLink();
+      return;
+    }
 
     const tradeValueUSD = tradeInValues[tradeModel];
     const buyPriceUSD = Number(buySelect.value);
 
     const diffUSD = buyPriceUSD - tradeValueUSD;
     const pricing = calculatePrices(diffUSD);
+
+    lastPricing = { tradeModel, tradeValueUSD, buyPriceUSD, diffUSD, pricing };
 
     result.innerHTML = `
       <strong>Diferencia a pagar:</strong><br><br>
@@ -523,6 +551,53 @@
       3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}<br>
       6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
     `;
+
+    updateWhatsAppLink();
+  }
+
+  /* ======================
+     WHATSAPP
+  ======================= */
+  function updateWhatsAppLink() {
+    // Si no configuraste el número, deja el botón inactivo pero visible
+    if (!WHATSAPP_NUMBER || WHATSAPP_NUMBER.includes("X")) {
+      whatsappBtn.href = "#";
+      whatsappBtn.style.opacity = "0.6";
+      whatsappBtn.style.pointerEvents = "none";
+      whatsappBtn.title = "Configurá WHATSAPP_NUMBER en el código";
+      return;
+    }
+
+    // Si no hay cálculo todavía, no dejamos enviar
+    if (!lastPricing || currentBuyProductIndex === null) {
+      whatsappBtn.href = "#";
+      whatsappBtn.style.opacity = "0.7";
+      whatsappBtn.style.pointerEvents = "none";
+      whatsappBtn.title = "Seleccioná tu iPhone para calcular la diferencia";
+      return;
+    }
+
+    const buy = products[currentBuyProductIndex];
+    const msg =
+`Hola! Quiero canjear mi iPhone.
+
+📲 Entrego: ${lastPricing.tradeModel} (valor estimado USD ${lastPricing.tradeValueUSD})
+✅ Quiero: ${buy.model} ${buy.storage} (${buy.details})
+
+💰 Diferencia estimada:
+- USD ${lastPricing.pricing.usd}
+- ARS ${lastPricing.pricing.ars.toLocaleString()}
+- 3 cuotas: ARS ${lastPricing.pricing.cuotas3.toLocaleString()}
+- 6 cuotas: ARS ${lastPricing.pricing.cuotas6.toLocaleString()}
+
+¿Me ayudás a avanzar con el canje?`;
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+
+    whatsappBtn.href = url;
+    whatsappBtn.style.opacity = "1";
+    whatsappBtn.style.pointerEvents = "auto";
+    whatsappBtn.title = "Abrir WhatsApp";
   }
 
   /* ======================
