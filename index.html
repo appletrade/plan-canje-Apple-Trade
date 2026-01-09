@@ -176,9 +176,28 @@
   /* ======================
      CONFIGURACIÓN GENERAL
   ======================= */
+/* ======================
+   CONFIGURACIÓN MASIVA
+====================== */
 
-  // Tipo de cambio editable
-  const USD_TO_ARS = 1100;
+// Tipo de cambio editable
+let USD_TO_ARS = 1100;
+
+// Intereses de cuotas (podés ajustar libremente)
+let INTEREST_3 = 1.05; // 5% interés
+let INTEREST_6 = 1.15; // 15% interés
+
+  function calculatePrices(priceUSD) {
+  const priceARS = priceUSD * USD_TO_ARS;
+
+  return {
+    usd: priceUSD,
+    ars: priceARS,
+    cuotas3: (priceARS * INTEREST_3) / 3,
+    cuotas6: (priceARS * INTEREST_6) / 6
+  };
+}
+
 
   // Productos disponibles para compra
   const products = [
@@ -206,22 +225,29 @@
      RENDER PRODUCTOS
   ======================= */
   products.forEach((p, index) => {
-    const priceARS = p.priceUSD * USD_TO_ARS;
-    const cuotas3 = priceARS / 3;
-    const cuotas6 = priceARS / 6;
+    const pricing = calculatePrices(p.priceUSD);
+
 
     const card = document.createElement("div");
     card.className = "product";
 
     card.innerHTML = `
-      <h3>${p.model} ${p.storage}</h3>
-      <p>${p.condition}</p>
-      <div class="price">USD ${p.priceUSD}</div>
-      <div class="price">ARS ${priceARS.toLocaleString()}</div>
-      <div class="installments">3 cuotas: ARS ${cuotas3.toLocaleString()}</div>
-      <div class="installments">6 cuotas: ARS ${cuotas6.toLocaleString()}</div>
-      <button onclick="openModal(${index})">Cotizar canje</button>
-    `;
+  <h3>${p.model} ${p.storage}</h3>
+  <p>${p.condition}</p>
+
+  <div class="price">USD ${pricing.usd}</div>
+  <div class="price">ARS ${pricing.ars.toLocaleString()}</div>
+
+  <div class="installments">
+    3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}
+  </div>
+  <div class="installments">
+    6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
+  </div>
+
+  <button onclick="openModal(${index})">Cotizar canje</button>
+`;
+
 
     productList.appendChild(card);
   });
@@ -262,15 +288,17 @@
     const buyPriceUSD = Number(buySelect.value);
 
     const diffUSD = buyPriceUSD - tradeValueUSD;
-    const diffARS = diffUSD * USD_TO_ARS;
+const pricing = calculatePrices(diffUSD);
+
 
     result.innerHTML = `
-      <strong>Diferencia a pagar:</strong><br><br>
-      USD ${diffUSD}<br>
-      ARS ${diffARS.toLocaleString()}<br><br>
-      3 cuotas: ARS ${(diffARS / 3).toLocaleString()}<br>
-      6 cuotas: ARS ${(diffARS / 6).toLocaleString()}
-    `;
+  <strong>Diferencia a pagar:</strong><br><br>
+  USD ${pricing.usd}<br>
+  ARS ${pricing.ars.toLocaleString()}<br><br>
+  3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}<br>
+  6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
+`;
+
   }
 </script>
 
