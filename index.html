@@ -345,29 +345,31 @@ let INTEREST_6 = 1.55; // 15% interés
   /* ======================
      RENDER PRODUCTOS
   ======================= */
+ function renderProducts() {
+  productList.innerHTML = "";
+
   const filterLine = document.getElementById("filterLine").value;
-const filterCondition = document.getElementById("filterCondition").value;
+  const filterCondition = document.getElementById("filterCondition").value;
 
-const filteredProducts = products.filter(p => {
+  const filteredProducts = products.filter(p => {
 
-  // Filtro por condición
-  if (filterCondition && p.condition !== filterCondition) {
-    return false;
-  }
+    // Filtro por condición
+    if (filterCondition && p.condition !== filterCondition) {
+      return false;
+    }
 
-  // Filtro por línea (12 / 13 / 14 / etc)
-if (filterLine) {
-  if (!p.model.includes(`iPhone ${filterLine}`)) {
-    return false;
-  }
-}
+    // Filtro por línea
+    if (filterLine) {
+      if (!p.model.includes(`iPhone ${filterLine}`)) {
+        return false;
+      }
+    }
 
+    return true;
+  });
 
-  return true;
-});
-
-
-  filteredProducts.forEach((p, index) => {
+  // 🔴 ESTE BLOQUE ES EL QUE FALTA O NO SE ESTÁ EJECUTANDO
+  filteredProducts.forEach(p => {
     const pricing = calculatePrices(p.priceUSD);
 
     const card = document.createElement("div");
@@ -388,12 +390,15 @@ if (filterLine) {
         6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
       </div>
 
-      <button onclick="openModal(${index})">Cotizar canje</button>
+      <button onclick="openModal(products.indexOf(p))">
+        Cotizar canje
+      </button>
     `;
 
     productList.appendChild(card);
   });
 }
+
 
 
   /* ======================
