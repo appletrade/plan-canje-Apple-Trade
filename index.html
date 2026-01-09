@@ -5,14 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cotizador de Canje iPhone</title>
 
-  <!-- ======================
-       ESTILOS GENERALES
-  ======================= -->
   <style>
     :root {
       --primary: #0071e3;
       --gray: #f5f5f7;
       --text: #1d1d1f;
+
+      /* nuevos */
+      --muted: #6e6e73;
+      --card-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      --card-shadow-hover: 0 14px 38px rgba(0,0,0,0.10);
+      --border: rgba(0,0,0,0.08);
+      --usd-green: #16a34a; /* verde elegante */
     }
 
     * {
@@ -27,11 +31,17 @@
     }
 
     header {
-      background: white;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
       padding: 20px;
       text-align: center;
-      font-weight: 600;
-      font-size: 1.4rem;
+      font-weight: 650;
+      font-size: 1.35rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
 
     main {
@@ -40,50 +50,143 @@
       margin: auto;
     }
 
+    /* contenedor filtros */
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      align-items: center;
+    }
+
+    select {
+      width: min(420px, 100%);
+      padding: 12px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      outline: none;
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+    }
+    select:focus {
+      border-color: rgba(0,113,227,0.35);
+      box-shadow: 0 0 0 4px rgba(0,113,227,0.15);
+    }
+
     .products {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
+      gap: 18px;
     }
 
     .product {
       background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      border-radius: 16px;
+      padding: 18px 18px 16px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .product:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--card-shadow-hover);
+      border-color: rgba(0,0,0,0.12);
     }
 
     .product h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: -0.2px;
+    }
+
+    .meta {
+      color: var(--muted);
+      margin: 0 0 8px;
+      font-size: 0.95rem;
+    }
+
+    .details {
       margin: 0 0 10px;
+      font-size: 0.92rem;
+      color: #515154;
+      line-height: 1.25rem;
     }
 
     .price {
-      font-size: 1.2rem;
-      font-weight: bold;
+      font-size: 1.1rem;
+      font-weight: 750;
+      margin-top: 2px;
+    }
+
+    /* USD en verde */
+    .price-usd {
+      color: var(--usd-green);
+      font-weight: 800;
+    }
+
+    .price-ars {
+      color: var(--text);
+      font-weight: 750;
     }
 
     .installments {
       font-size: 0.9rem;
       color: #555;
+      margin-top: 4px;
     }
 
     button {
-      margin-top: 15px;
-      padding: 12px;
+      margin-top: 14px;
+      padding: 12px 14px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       background: var(--primary);
       color: white;
       font-size: 1rem;
+      font-weight: 650;
       cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,113,227,0.18);
+      transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
     }
 
     button:hover {
-      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(0,113,227,0.22);
+      opacity: 0.98;
     }
+
+    .close {
+      background: #e5e5ea;
+      color: #111;
+      box-shadow: none;
+    }
+    .close:hover {
+      box-shadow: none;
+      transform: translateY(-1px);
+    }
+
+    /* ======================
+       COLOR CHIPS (palabras coloreadas)
+    ======================= */
+    .color-chip {
+      font-weight: 750;
+    }
+    .color-azul { color: #2563eb; }
+    .color-celeste { color: #0ea5e9; }
+    .color-rojo { color: #ef4444; }
+    .color-negro { color: #111827; }
+    .color-blanco { color: #64748b; }  /* blanco visible sobre fondo blanco */
+    .color-dorado { color: #b45309; }
+    .color-gris { color: #6b7280; }
+    .color-plata { color: #94a3b8; }
+    .color-verde { color: #16a34a; }
+    .color-morado { color: #7c3aed; }
 
     /* ======================
        MODAL
@@ -91,56 +194,42 @@
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.55);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      z-index: 9999; /* asegura que quede por arriba */
+      z-index: 9999;
     }
 
     .modal-content {
       background: white;
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 20px;
-      max-width: 500px;
+      max-width: 520px;
       width: 100%;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.25);
     }
 
     .modal-content h2 {
       margin-top: 0;
-    }
-
-    select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
+      letter-spacing: -0.2px;
     }
 
     .result {
-      background: var(--gray);
-      padding: 15px;
-      border-radius: 8px;
+      background: #f6f7fb;
+      padding: 14px;
+      border-radius: 12px;
       margin-top: 10px;
+      border: 1px solid rgba(0,0,0,0.06);
     }
 
     .warning {
-      font-size: 0.8rem;
-      color: #666;
-      margin-top: 15px;
-    }
-
-    .close {
-      background: #ccc;
-      color: #000;
-    }
-
-    /* contenedor filtros */
-    .filters {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 14px;
     }
   </style>
 </head>
@@ -153,9 +242,6 @@
 
 <main>
 
-  <!-- ======================
-       FILTROS
-  ======================= -->
   <div class="filters">
     <select id="filterLine">
       <option value="">Filtrá por modelo</option>
@@ -181,9 +267,6 @@
   <section class="products" id="productList"></section>
 </main>
 
-<!-- ======================
-     MODAL DE COTIZACIÓN
-======================= -->
 <div class="modal" id="modal" aria-hidden="true">
   <div class="modal-content">
     <h2>Cotización de Canje</h2>
@@ -204,25 +287,17 @@
   </div>
 </div>
 
-<!-- ======================
-     JAVASCRIPT
-======================= -->
 <script>
   /* ======================
      CONFIGURACIÓN MASIVA
   ======================= */
-
-  // Tipo de cambio editable
   let USD_TO_ARS = 1800;
 
-  // Intereses de cuotas (multiplicador)
-  // Ej: 1.00 = sin interés, 1.10 = 10% total extra
   let INTEREST_3 = 1.55;
   let INTEREST_6 = 1.55;
 
   function calculatePrices(priceUSD) {
     const priceARS = priceUSD * USD_TO_ARS;
-
     return {
       usd: priceUSD,
       ars: priceARS,
@@ -231,111 +306,25 @@
     };
   }
 
-  // Productos disponibles para compra
+  /* ======================
+     STOCK
+  ======================= */
   const products = [
-    // ===== LINEA 12 =====
-    {
-      model: "iPhone 12 Pro",
-      storage: "128GB",
-      condition: "Seminuevo",
-      details: "Azul · Batería 100%",
-      priceUSD: 350
-    },
-    {
-      model: "iPhone 12 Pro Max",
-      storage: "128GB",
-      condition: "Seminuevo",
-      details: "Blanco · Batería 88%",
-      priceUSD: 365
-    },
-
-    // ===== LINEA 13 =====
-    {
-      model: "iPhone 13 Pro",
-      storage: "128GB",
-      condition: "Seminuevo",
-      details: "Celeste · Batería 100%",
-      priceUSD: 495
-    },
-
-    // ===== LINEA 14 =====
-    {
-      model: "iPhone 14 Plus",
-      storage: "128GB",
-      condition: "Seminuevo",
-      details: "Rojo · Batería 85–86%",
-      priceUSD: 425
-    },
-    {
-      model: "iPhone 14 Plus",
-      storage: "128GB",
-      condition: "Seminuevo",
-      details: "Rojo · Batería 100%",
-      priceUSD: 450
-    },
-    {
-      model: "iPhone 14 Pro",
-      storage: "256GB",
-      condition: "Seminuevo",
-      details: "Negro · Batería 100%",
-      priceUSD: 600
-    },
-    {
-      model: "iPhone 14 Pro Max",
-      storage: "128GB",
-      condition: "Seminuevo",
-      details: "Negro / Dorado · Batería 100%",
-      priceUSD: 625
-    },
-
-    // ===== LINEA 15 =====
-    {
-      model: "iPhone 15",
-      storage: "128GB",
-      condition: "Seminuevo",
-      details: "Celeste · Batería 85%",
-      priceUSD: 495
-    },
-    {
-      model: "iPhone 15",
-      storage: "128GB",
-      condition: "Seminuevo",
-      details: "Negro · Batería 90%",
-      priceUSD: 505
-    },
-    {
-      model: "iPhone 15 Pro",
-      storage: "128GB",
-      condition: "Seminuevo",
-      details: "Azul · Batería 95%",
-      priceUSD: 650
-    },
-    {
-      model: "iPhone 15 Pro Max",
-      storage: "256GB",
-      condition: "Seminuevo",
-      details: "Azul · Batería 88%",
-      priceUSD: 735
-    },
-    {
-      model: "iPhone 15 Pro Max",
-      storage: "256GB",
-      condition: "Seminuevo",
-      details: "Azul · Batería 90–94%",
-      priceUSD: 785
-    },
-
-    // ===== LINEA 16 =====
-    {
-      model: "iPhone 16 Pro",
-      storage: "128GB",
-      condition: "Seminuevo",
-      details: "Blanco · Caja original · Batería 92%",
-      priceUSD: 750
-    }
+    { model: "iPhone 12 Pro", storage: "128GB", condition: "Seminuevo", details: "Azul · Batería 100%", priceUSD: 350 },
+    { model: "iPhone 12 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Blanco · Batería 88%", priceUSD: 365 },
+    { model: "iPhone 13 Pro", storage: "128GB", condition: "Seminuevo", details: "Celeste · Batería 100%", priceUSD: 495 },
+    { model: "iPhone 14 Plus", storage: "128GB", condition: "Seminuevo", details: "Rojo · Batería 85–86%", priceUSD: 425 },
+    { model: "iPhone 14 Plus", storage: "128GB", condition: "Seminuevo", details: "Rojo · Batería 100%", priceUSD: 450 },
+    { model: "iPhone 14 Pro", storage: "256GB", condition: "Seminuevo", details: "Negro · Batería 100%", priceUSD: 600 },
+    { model: "iPhone 14 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Negro / Dorado · Batería 100%", priceUSD: 625 },
+    { model: "iPhone 15", storage: "128GB", condition: "Seminuevo", details: "Celeste · Batería 85%", priceUSD: 495 },
+    { model: "iPhone 15", storage: "128GB", condition: "Seminuevo", details: "Negro · Batería 90%", priceUSD: 505 },
+    { model: "iPhone 15 Pro", storage: "128GB", condition: "Seminuevo", details: "Azul · Batería 95%", priceUSD: 650 },
+    { model: "iPhone 15 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 88%", priceUSD: 735 },
+    { model: "iPhone 15 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 90–94%", priceUSD: 785 },
+    { model: "iPhone 16 Pro", storage: "128GB", condition: "Seminuevo", details: "Blanco · Caja original · Batería 92%", priceUSD: 750 }
   ];
 
-  // Valores estimados de canje (USD)
   const tradeInValues = {
     "iPhone 11": 300,
     "iPhone 11 Pro Max": 420,
@@ -343,7 +332,43 @@
     "iPhone 14 Pro": 720
   };
 
-  // DOM refs
+  /* ======================
+     HELPERS: colorear texto de colores
+  ======================= */
+
+  // Mapeo de palabras de color -> clase CSS
+  const COLOR_CLASS_MAP = {
+    "azul": "color-azul",
+    "celeste": "color-celeste",
+    "rojo": "color-rojo",
+    "negro": "color-negro",
+    "blanco": "color-blanco",
+    "dorado": "color-dorado",
+    "gris": "color-gris",
+    "plata": "color-plata",
+    "verde": "color-verde",
+    "morado": "color-morado"
+  };
+
+  // Envuelve palabras de color dentro del string con spans coloreados
+  function colorizeDetails(details) {
+    if (!details) return "";
+
+    let out = details;
+
+    // Reemplazo "palabra" por span. Se hace por palabras completas, case-insensitive.
+    Object.keys(COLOR_CLASS_MAP).forEach(colorWord => {
+      const cls = COLOR_CLASS_MAP[colorWord];
+      const re = new RegExp(`\\b${colorWord}\\b`, "gi");
+      out = out.replace(re, (match) => `<span class="color-chip ${cls}">${match}</span>`);
+    });
+
+    return out;
+  }
+
+  /* ======================
+     DOM refs
+  ======================= */
   const productList = document.getElementById("productList");
   const modal = document.getElementById("modal");
   const tradeInSelect = document.getElementById("tradeInSelect");
@@ -360,17 +385,12 @@
   function renderProducts() {
     productList.innerHTML = "";
 
-    // Lectura segura: si no hay filtros, queda "" y muestra todo
     const filterLine = filterLineEl?.value || "";
     const filterCondition = filterConditionEl?.value || "";
 
     const filteredProducts = products.filter(p => {
-      // Filtro por condición
       if (filterCondition && p.condition !== filterCondition) return false;
-
-      // Filtro por línea (12/13/14/15/16/17)
       if (filterLine && !p.model.includes(`iPhone ${filterLine}`)) return false;
-
       return true;
     });
 
@@ -382,11 +402,12 @@
 
       card.innerHTML = `
         <h3>${p.model} ${p.storage}</h3>
-        <p>${p.condition}</p>
-        <p style="font-size:0.9rem;color:#555">${p.details || ""}</p>
+        <p class="meta">${p.condition}</p>
 
-        <div class="price">USD ${pricing.usd}</div>
-        <div class="price">ARS ${pricing.ars.toLocaleString()}</div>
+        <p class="details">${colorizeDetails(p.details)}</p>
+
+        <div class="price price-usd">USD ${pricing.usd}</div>
+        <div class="price price-ars">ARS ${pricing.ars.toLocaleString()}</div>
 
         <div class="installments">
           3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}
@@ -395,7 +416,6 @@
           6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
         </div>
 
-        <!-- IMPORTANTE: index real del array products (para que el modal funcione con filtros) -->
         <button onclick="openModal(${products.indexOf(p)})">Cotizar canje</button>
       `;
 
@@ -408,7 +428,7 @@
   ======================= */
   function openModal(productIndex) {
     const selectedProduct = products[productIndex];
-    if (!selectedProduct) return; // safety
+    if (!selectedProduct) return;
 
     modal.style.display = "flex";
     modal.setAttribute("aria-hidden", "false");
@@ -417,12 +437,10 @@
     tradeInSelect.innerHTML = `<option value="">Seleccioná tu iPhone</option>`;
     buySelect.innerHTML = "";
 
-    // Opciones de canje
     Object.keys(tradeInValues).forEach(model => {
       tradeInSelect.innerHTML += `<option value="${model}">${model}</option>`;
     });
 
-    // iPhone seleccionado para compra
     buySelect.innerHTML = `
       <option value="${selectedProduct.priceUSD}">
         ${selectedProduct.model} ${selectedProduct.storage}
@@ -437,12 +455,10 @@
     result.innerHTML = "";
   }
 
-  // Cerrar modal al clickear fuera del contenido
   modal.addEventListener("click", (e) => {
     if (e.target === modal) closeModal();
   });
 
-  // Cotización al cambiar iPhone entregado
   tradeInSelect.addEventListener("change", calculate);
 
   function calculate() {
@@ -460,7 +476,7 @@
 
     result.innerHTML = `
       <strong>Diferencia a pagar:</strong><br><br>
-      USD ${pricing.usd}<br>
+      <span style="color: var(--usd-green); font-weight:800;">USD ${pricing.usd}</span><br>
       ARS ${pricing.ars.toLocaleString()}<br><br>
       3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}<br>
       6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
@@ -479,11 +495,7 @@
     renderProducts();
   });
 
-  /* ======================
-     INICIO
-  ======================= */
   document.addEventListener("DOMContentLoaded", () => {
-    // Asegura que al entrar se vean TODOS los modelos
     if (filterLineEl) filterLineEl.value = "";
     if (filterConditionEl) filterConditionEl.value = "";
     renderProducts();
@@ -492,4 +504,3 @@
 
 </body>
 </html>
-
