@@ -6,242 +6,247 @@
   <title>Cotizador de Canje iPhone</title>
 
   <style>
-    :root {
-      --primary: #0071e3;
-      --gray: #f5f5f7;
-      --text: #1d1d1f;
+    :root{
+      --primary:#0071e3;
+      --bg:#f5f5f7;
+      --text:#1d1d1f;
+      --muted:#6e6e73;
+      --border:rgba(0,0,0,.08);
 
-      /* nuevos */
-      --muted: #6e6e73;
-      --card-shadow: 0 10px 30px rgba(0,0,0,0.06);
-      --card-shadow-hover: 0 14px 38px rgba(0,0,0,0.10);
-      --border: rgba(0,0,0,0.08);
-      --usd-green: #16a34a; /* verde elegante */
+      --usd:#16a34a;
+
+      /* sombras premium */
+      --shadow: 0 10px 26px rgba(0,0,0,.06);
+      --shadow-hover: 0 16px 42px rgba(0,0,0,.10);
+
+      /* badges */
+      --badge-semi-bg: rgba(22,163,74,.12);
+      --badge-semi-fg: #15803d;
+
+      --badge-new-bg: rgba(0,113,227,.12);
+      --badge-new-fg: #005bb5;
     }
 
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+    *{ box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+    body{ margin:0; background:var(--bg); color:var(--text); }
 
-    body {
-      margin: 0;
-      background: var(--gray);
-      color: var(--text);
-    }
-
-    header {
-      background: rgba(255,255,255,0.9);
+    header{
+      background: rgba(255,255,255,.85);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      padding: 20px;
-      text-align: center;
-      font-weight: 650;
-      font-size: 1.35rem;
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      border-bottom:1px solid var(--border);
+      padding:18px 20px;
+      text-align:center;
+      font-weight:650;
+      font-size:1.35rem;
+      position:sticky;
+      top:0;
+      z-index:50;
     }
 
-    main {
-      padding: 20px;
-      max-width: 1200px;
-      margin: auto;
+    main{ padding:20px; max-width:1200px; margin:auto; }
+
+    /* filtros */
+    .filters{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin-bottom:18px;
+    }
+    select{
+      width:min(420px,100%);
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#fff;
+      outline:none;
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    select:focus{
+      border-color: rgba(0,113,227,.35);
+      box-shadow: 0 0 0 4px rgba(0,113,227,.15);
     }
 
-    /* contenedor filtros */
-    .filters {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-      align-items: center;
+    .products{
+      display:grid;
+      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+      gap:18px;
     }
 
-    select {
-      width: min(420px, 100%);
-      padding: 12px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #fff;
-      outline: none;
-      color: var(--text);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
-    }
-    select:focus {
-      border-color: rgba(0,113,227,0.35);
-      box-shadow: 0 0 0 4px rgba(0,113,227,0.15);
-    }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 18px;
-    }
-
-    .product {
-      background: white;
-      border-radius: 16px;
-      padding: 18px 18px 16px;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+    .product{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      box-shadow: var(--shadow);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
-
-    .product:hover {
+    .product:hover{
       transform: translateY(-3px);
-      box-shadow: var(--card-shadow-hover);
-      border-color: rgba(0,0,0,0.12);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(0,0,0,.12);
     }
 
-    .product h3 {
-      margin: 0 0 8px;
-      font-size: 1.05rem;
-      letter-spacing: -0.2px;
+    .top-row{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:6px;
     }
 
-    .meta {
-      color: var(--muted);
-      margin: 0 0 8px;
-      font-size: 0.95rem;
+    .product h3{
+      margin:0;
+      font-size:1.05rem;
+      letter-spacing:-.2px;
+      line-height:1.25rem;
     }
 
-    .details {
-      margin: 0 0 10px;
-      font-size: 0.92rem;
-      color: #515154;
-      line-height: 1.25rem;
+    .badges{
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .badge{
+      font-size:.78rem;
+      font-weight:750;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,.06);
+      white-space:nowrap;
+    }
+    .badge.semi{ background:var(--badge-semi-bg); color:var(--badge-semi-fg); }
+    .badge.new{ background:var(--badge-new-bg); color:var(--badge-new-fg); }
+
+    .details{
+      margin:8px 0 10px;
+      font-size:.92rem;
+      color:#515154;
+      line-height:1.25rem;
     }
 
-    .price {
-      font-size: 1.1rem;
-      font-weight: 750;
-      margin-top: 2px;
+    /* chips de color (bolita + texto) */
+    .color-chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin:6px 0 10px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(245,245,247,.7);
+      font-size:.82rem;
+      color:#2b2b2f;
+      font-weight:650;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      border:1px solid rgba(0,0,0,.15);
+      box-shadow: 0 1px 2px rgba(0,0,0,.10) inset;
     }
 
-    /* USD en verde */
-    .price-usd {
-      color: var(--usd-green);
-      font-weight: 800;
+    /* USD verde */
+    .price{
+      font-size:1.1rem;
+      font-weight:800;
+      margin-top:2px;
+    }
+    .price-usd{ color:var(--usd); }
+    .price-ars{ color:var(--text); font-weight:750; }
+
+    .installments{
+      font-size:.9rem;
+      color:#555;
+      margin-top:4px;
     }
 
-    .price-ars {
-      color: var(--text);
-      font-weight: 750;
-    }
-
-    .installments {
-      font-size: 0.9rem;
-      color: #555;
-      margin-top: 4px;
-    }
-
-    button {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border: none;
-      border-radius: 12px;
-      background: var(--primary);
-      color: white;
-      font-size: 1rem;
-      font-weight: 650;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(0,113,227,0.18);
+    button{
+      margin-top:14px;
+      padding:12px 14px;
+      border:none;
+      border-radius:14px;
+      background:var(--primary);
+      color:#fff;
+      font-size:1rem;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: 0 14px 26px rgba(0,113,227,.20);
       transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
     }
-
-    button:hover {
+    button:hover{
       transform: translateY(-1px);
-      box-shadow: 0 14px 26px rgba(0,113,227,0.22);
-      opacity: 0.98;
+      box-shadow: 0 18px 34px rgba(0,113,227,.24);
+      opacity:.98;
     }
 
-    .close {
-      background: #e5e5ea;
-      color: #111;
-      box-shadow: none;
+    .close{
+      background:#e5e5ea;
+      color:#111;
+      box-shadow:none;
     }
-    .close:hover {
-      box-shadow: none;
-      transform: translateY(-1px);
+    .close:hover{ box-shadow:none; }
+
+    /* Coloreo de palabras en details */
+    .color-word{ font-weight:800; }
+    .cw-azul{ color:#2563eb; }
+    .cw-celeste{ color:#0ea5e9; }
+    .cw-rojo{ color:#ef4444; }
+    .cw-negro{ color:#111827; }
+    .cw-blanco{ color:#64748b; } /* visible sobre blanco */
+    .cw-dorado{ color:#b45309; }
+    .cw-gris{ color:#6b7280; }
+    .cw-plata{ color:#94a3b8; }
+    .cw-verde{ color:#16a34a; }
+    .cw-morado{ color:#7c3aed; }
+
+    /* modal */
+    .modal{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:9999;
+    }
+    .modal-content{
+      background:#fff;
+      border-radius:18px;
+      padding:20px;
+      max-width:540px;
+      width:100%;
+      box-shadow: 0 30px 90px rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.25);
+    }
+    .modal-content h2{
+      margin:0 0 12px;
+      letter-spacing:-.2px;
     }
 
-    /* ======================
-       COLOR CHIPS (palabras coloreadas)
-    ======================= */
-    .color-chip {
-      font-weight: 750;
+    .result{
+      background:#f6f7fb;
+      padding:14px;
+      border-radius:14px;
+      margin-top:10px;
+      border:1px solid rgba(0,0,0,.06);
     }
-    .color-azul { color: #2563eb; }
-    .color-celeste { color: #0ea5e9; }
-    .color-rojo { color: #ef4444; }
-    .color-negro { color: #111827; }
-    .color-blanco { color: #64748b; }  /* blanco visible sobre fondo blanco */
-    .color-dorado { color: #b45309; }
-    .color-gris { color: #6b7280; }
-    .color-plata { color: #94a3b8; }
-    .color-verde { color: #16a34a; }
-    .color-morado { color: #7c3aed; }
-
-    /* ======================
-       MODAL
-    ======================= */
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 9999;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      max-width: 520px;
-      width: 100%;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.25);
-      border: 1px solid rgba(255,255,255,0.25);
-    }
-
-    .modal-content h2 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      letter-spacing: -0.2px;
-    }
-
-    .result {
-      background: #f6f7fb;
-      padding: 14px;
-      border-radius: 12px;
-      margin-top: 10px;
-      border: 1px solid rgba(0,0,0,0.06);
-    }
-
-    .warning {
-      font-size: 0.85rem;
-      color: #6b7280;
-      margin-top: 14px;
+    .warning{
+      font-size:.85rem;
+      color:#6b7280;
+      margin-top:14px;
     }
   </style>
 </head>
 
 <body>
-
-<header>
-  Cotizá tu canje de iPhone
-</header>
+<header>Cotizá tu canje de iPhone</header>
 
 <main>
-
   <div class="filters">
     <select id="filterLine">
       <option value="">Filtrá por modelo</option>
@@ -259,9 +264,7 @@
       <option value="Nuevo">Nuevo</option>
     </select>
 
-    <button type="button" id="clearFilters" class="close" style="margin-top:0">
-      Limpiar filtros
-    </button>
+    <button type="button" id="clearFilters" class="close" style="margin-top:0">Limpiar filtros</button>
   </div>
 
   <section class="products" id="productList"></section>
@@ -292,7 +295,6 @@
      CONFIGURACIÓN MASIVA
   ======================= */
   let USD_TO_ARS = 1800;
-
   let INTEREST_3 = 1.55;
   let INTEREST_6 = 1.55;
 
@@ -333,37 +335,70 @@
   };
 
   /* ======================
-     HELPERS: colorear texto de colores
+     COLORES: palabras + chips
   ======================= */
 
-  // Mapeo de palabras de color -> clase CSS
-  const COLOR_CLASS_MAP = {
-    "azul": "color-azul",
-    "celeste": "color-celeste",
-    "rojo": "color-rojo",
-    "negro": "color-negro",
-    "blanco": "color-blanco",
-    "dorado": "color-dorado",
-    "gris": "color-gris",
-    "plata": "color-plata",
-    "verde": "color-verde",
-    "morado": "color-morado"
+  // color -> clase palabra (cw-*) y color -> color del dot
+  const COLOR_MAP = {
+    azul:   { wordClass: "cw-azul",   dot: "#2563eb" },
+    celeste:{ wordClass: "cw-celeste",dot: "#0ea5e9" },
+    rojo:   { wordClass: "cw-rojo",   dot: "#ef4444" },
+    negro:  { wordClass: "cw-negro",  dot: "#111827" },
+    blanco: { wordClass: "cw-blanco", dot: "#e5e7eb" },
+    dorado: { wordClass: "cw-dorado", dot: "#d97706" },
+    gris:   { wordClass: "cw-gris",   dot: "#6b7280" },
+    plata:  { wordClass: "cw-plata",  dot: "#cbd5e1" },
+    verde:  { wordClass: "cw-verde",  dot: "#16a34a" },
+    morado: { wordClass: "cw-morado", dot: "#7c3aed" }
   };
 
   // Envuelve palabras de color dentro del string con spans coloreados
   function colorizeDetails(details) {
     if (!details) return "";
-
     let out = details;
 
-    // Reemplazo "palabra" por span. Se hace por palabras completas, case-insensitive.
-    Object.keys(COLOR_CLASS_MAP).forEach(colorWord => {
-      const cls = COLOR_CLASS_MAP[colorWord];
+    Object.keys(COLOR_MAP).forEach(colorWord => {
+      const cls = COLOR_MAP[colorWord].wordClass;
       const re = new RegExp(`\\b${colorWord}\\b`, "gi");
-      out = out.replace(re, (match) => `<span class="color-chip ${cls}">${match}</span>`);
+      out = out.replace(re, (match) => `<span class="color-word ${cls}">${match}</span>`);
     });
 
     return out;
+  }
+
+  // Extrae colores presentes en details (devuelve array único en orden de aparición)
+  function extractColors(details) {
+    if (!details) return [];
+    const lower = details.toLowerCase();
+
+    // buscamos en orden de aparición real recorriendo tokens
+    // (simple y robusto para "Negro / Dorado · ...")
+    const found = [];
+    Object.keys(COLOR_MAP).forEach(c => {
+      if (lower.includes(c)) found.push(c);
+    });
+
+    // ordenar según primera posición encontrada
+    found.sort((a,b) => lower.indexOf(a) - lower.indexOf(b));
+
+    // unique
+    return [...new Set(found)];
+  }
+
+  function renderColorChips(details) {
+    const colors = extractColors(details);
+    if (!colors.length) return "";
+
+    return `
+      <div class="color-chips">
+        ${colors.map(c => `
+          <span class="chip" title="Color ${c}">
+            <span class="dot" style="background:${COLOR_MAP[c].dot}"></span>
+            <span>${c.charAt(0).toUpperCase()+c.slice(1)}</span>
+          </span>
+        `).join("")}
+      </div>
+    `;
   }
 
   /* ======================
@@ -380,8 +415,14 @@
   const clearFiltersBtn = document.getElementById("clearFilters");
 
   /* ======================
-     RENDER PRODUCTOS
+     RENDER
   ======================= */
+  function conditionBadge(condition){
+    const c = (condition || "").toLowerCase();
+    if (c.includes("nuevo")) return `<span class="badge new">Nuevo</span>`;
+    return `<span class="badge semi">Seminuevo</span>`;
+  }
+
   function renderProducts() {
     productList.innerHTML = "";
 
@@ -401,19 +442,23 @@
       card.className = "product";
 
       card.innerHTML = `
-        <h3>${p.model} ${p.storage}</h3>
-        <p class="meta">${p.condition}</p>
+        <div>
+          <div class="top-row">
+            <h3>${p.model} ${p.storage}</h3>
+            <div class="badges">
+              ${conditionBadge(p.condition)}
+            </div>
+          </div>
 
-        <p class="details">${colorizeDetails(p.details)}</p>
+          ${renderColorChips(p.details)}
 
-        <div class="price price-usd">USD ${pricing.usd}</div>
-        <div class="price price-ars">ARS ${pricing.ars.toLocaleString()}</div>
+          <p class="details">${colorizeDetails(p.details || "")}</p>
 
-        <div class="installments">
-          3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}
-        </div>
-        <div class="installments">
-          6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
+          <div class="price price-usd">USD ${pricing.usd}</div>
+          <div class="price price-ars">ARS ${pricing.ars.toLocaleString()}</div>
+
+          <div class="installments">3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}</div>
+          <div class="installments">6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}</div>
         </div>
 
         <button onclick="openModal(${products.indexOf(p)})">Cotizar canje</button>
@@ -463,10 +508,7 @@
 
   function calculate() {
     const tradeModel = tradeInSelect.value;
-    if (!tradeModel) {
-      result.innerHTML = "";
-      return;
-    }
+    if (!tradeModel) { result.innerHTML = ""; return; }
 
     const tradeValueUSD = tradeInValues[tradeModel];
     const buyPriceUSD = Number(buySelect.value);
@@ -476,7 +518,7 @@
 
     result.innerHTML = `
       <strong>Diferencia a pagar:</strong><br><br>
-      <span style="color: var(--usd-green); font-weight:800;">USD ${pricing.usd}</span><br>
+      <span style="color:var(--usd); font-weight:900;">USD ${pricing.usd}</span><br>
       ARS ${pricing.ars.toLocaleString()}<br><br>
       3 cuotas: ARS ${pricing.cuotas3.toLocaleString()}<br>
       6 cuotas: ARS ${pricing.cuotas6.toLocaleString()}
@@ -484,7 +526,7 @@
   }
 
   /* ======================
-     EVENTOS FILTROS
+     FILTROS
   ======================= */
   filterLineEl.addEventListener("change", renderProducts);
   filterConditionEl.addEventListener("change", renderProducts);
@@ -496,11 +538,10 @@
   });
 
   document.addEventListener("DOMContentLoaded", () => {
-    if (filterLineEl) filterLineEl.value = "";
-    if (filterConditionEl) filterConditionEl.value = "";
+    filterLineEl.value = "";
+    filterConditionEl.value = "";
     renderProducts();
   });
 </script>
-
 </body>
 </html>
