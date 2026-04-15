@@ -152,6 +152,44 @@
       height: 1px;
       background: var(--border);
     }
+    .condition-btns {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .condition-btn {
+      margin: 0;
+      padding: 11px 24px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
+      white-space: nowrap;
+    }
+    .condition-btn:hover {
+      border-color: rgba(0,113,227,.35);
+      color: var(--primary);
+      transform: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      opacity: 1;
+    }
+    .condition-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(0,113,227,.28);
+    }
+    .condition-btn.active:hover {
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(0,113,227,.32);
+    }
     .results-count{
       font-size:.92rem;
       color: var(--muted);
@@ -670,11 +708,11 @@
       <option value="16">iPhone 16</option>
       <option value="17">iPhone 17</option>
     </select>
-    <select id="filterCondition">
-      <option value="">Nuevo o seminuevo</option>
-      <option value="Seminuevo">Seminuevo</option>
-      <option value="Nuevo">Nuevo</option>
-    </select>
+    <div class="condition-btns" id="filterCondition" data-value="">
+      <button type="button" class="condition-btn active" data-value="">Todos</button>
+      <button type="button" class="condition-btn" data-value="Seminuevo">Seminuevo</button>
+      <button type="button" class="condition-btn" data-value="Nuevo en caja sellada">Nuevo en caja sellada</button>
+    </div>
     <button type="button" id="clearFilters" class="close" style="margin-top:0">Limpiar filtros</button>
   </div>
 
@@ -761,7 +799,6 @@
     { model: "iPhone 14 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Negro / Violeta · Batería 100%",                            priceUSD: 585 },
     { model: "iPhone 14 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Blanco · Batería 85%",                                      priceUSD: 600, badges: ["Con caja original"] },
     { model: "iPhone 14 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Violeta · Batería 100%",                                    priceUSD: 620 },
-    { model: "iPhone 15",         storage: "128GB", condition: "Seminuevo", details: "Rosa · Batería 100%",                                       priceUSD: 500 },
     { model: "iPhone 15",         storage: "256GB", condition: "Seminuevo", details: "Rosa · Batería 100%",                                       priceUSD: 550 },
     { model: "iPhone 15 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Azul / Negro · Batería 85-89%",                              priceUSD: 660 },
     { model: "iPhone 15 Pro Max", storage: "512GB", condition: "Seminuevo", details: "Azul · Batería 86%",                                         priceUSD: 690, badges: ["Con caja original"] },
@@ -769,6 +806,15 @@
     { model: "iPhone 16",         storage: "128GB", condition: "Seminuevo", details: "Blanco / Negro · Batería 100%",               priceUSD: 650, badges: ["Garantía de Apple"] },
     { model: "iPhone 17",         storage: "256GB", condition: "Seminuevo", details: "Negro / Lavanda · Batería 100%", priceUSD: 810,  badges: ["Con caja original", "Garantía de Apple"] },
     { model: "iPhone 17 Pro",     storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 100%",                                      priceUSD: 1160, badges: ["Con caja original", "Garantía de Apple"] },
+    { model: "iPhone 13", storage: "128GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 520, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
+    { model: "iPhone 15", storage: "128GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 710, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
+    { model: "iPhone 16", storage: "128GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 810, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
+    { model: "iPhone 17", storage: "256GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 930, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
+    { model: "iPhone 17 E", storage: "256GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 720, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
+    { model: "iPhone 17 Pro", storage: "256GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 1370, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
+    { model: "iPhone 17 Pro Max", storage: "256GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 1500, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
+    { model: "iPhone 17 Pro Max", storage: "512GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 1750, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
+    { model: "iPhone 17 Pro Max", storage: "1TB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 1920, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
   ];
 
   /* ======================
@@ -880,6 +926,8 @@
       "con caja original":     { bg: "#e0f2fe", color: "#0369a1" },
       "garantía de apple":     { bg: "#dcfce7", color: "#15803d" },
       "pantalla reemplazada":  { bg: "#fef9c3", color: "#854d0e" },
+      "a pedido con seña de $50":     { bg: "#f0f0f5", color: "#3730a3" },
+      "1 año de garantía de apple": { bg: "#dcfce7", color: "#15803d" },
     };
     return badges.map(b => {
       const key = b.toLowerCase();
@@ -928,11 +976,11 @@
     productList.innerHTML = "";
 
     const filterLine      = filterLineEl?.value || "";
-    const filterCondition = filterConditionEl?.value || "";
+    const filterCondition = filterConditionEl?.dataset.value || "";
     const sortValue       = sortPriceEl?.value || "";
 
     let filteredProducts = products.filter(p => {
-      if (filterCondition && p.condition !== filterCondition) return false;
+      if (filterCondition && !p.condition.startsWith(filterCondition)) return false;
       if (filterLine && !p.model.includes(`iPhone ${filterLine}`)) return false;
       return true;
     });
@@ -969,16 +1017,18 @@
     // Usamos un Map para mantener el orden de aparición
     const groups = new Map();
     filteredProducts.forEach(p => {
-      if (!groups.has(p.model)) groups.set(p.model, []);
-      groups.get(p.model).push(p);
+      const groupKey = p.model + '||' + p.condition;
+      if (!groups.has(groupKey)) groups.set(groupKey, []);
+      groups.get(groupKey).push(p);
     });
 
-    groups.forEach((variants, modelName) => {
+    groups.forEach((variants, groupKey) => {
+      const modelName = groupKey.split('||')[0];
       // Variante activa inicial: la primera del grupo
       const first   = variants[0];
       const pricing = calculatePrices(first.priceUSD);
       const realIdx = products.indexOf(first);
-      const badgeClass = first.condition === "Nuevo" ? "nuevo" : "seminuevo";
+      const badgeClass = first.condition.startsWith("Nuevo") ? "nuevo" : "seminuevo";
 
       const waMsg0 = encodeURIComponent("Hola! Me interesa comprar: " + first.model + " " + first.storage + " (" + first.details + ") — USD " + first.priceUSD);
       const waUrl0 = "https://wa.me/5491171645467?text=" + waMsg0;
@@ -1096,7 +1146,8 @@
 
   function clearAllFilters() {
     filterLineEl.value = "";
-    filterConditionEl.value = "";
+    filterConditionEl.dataset.value = "";
+    filterConditionEl.querySelectorAll(".condition-btn").forEach(b => b.classList.toggle("active", b.dataset.value === ""));
     sortPriceEl.value = "";
     renderProducts();
   }
@@ -1261,13 +1312,20 @@
      FILTROS / ORDEN
   ======================= */
   filterLineEl.addEventListener("change", renderProducts);
-  filterConditionEl.addEventListener("change", renderProducts);
+  filterConditionEl.addEventListener("click", function(e) {
+    const btn = e.target.closest(".condition-btn");
+    if (!btn) return;
+    filterConditionEl.dataset.value = btn.dataset.value;
+    filterConditionEl.querySelectorAll(".condition-btn").forEach(b => b.classList.toggle("active", b === btn));
+    renderProducts();
+  });
   sortPriceEl.addEventListener("change", renderProducts);
   clearFiltersBtn.addEventListener("click", clearAllFilters);
 
   document.addEventListener("DOMContentLoaded", () => {
     filterLineEl.value = "";
-    filterConditionEl.value = "";
+    filterConditionEl.dataset.value = "";
+    filterConditionEl.querySelectorAll(".condition-btn").forEach(b => b.classList.toggle("active", b.dataset.value === ""));
     sortPriceEl.value = "";
     renderProducts();
   });
