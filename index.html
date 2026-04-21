@@ -134,6 +134,87 @@
       flex-wrap:wrap;
       margin: 6px 0 16px;
     }
+    /* =============================================
+       BANNER CÓMO FUNCIONA
+    ============================================= */
+    .how-banner {
+      position: relative;
+      background: linear-gradient(135deg, #0071e3 0%, #0858c6 100%);
+      border-radius: 18px;
+      padding: 22px 24px 24px;
+      margin-bottom: 24px;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0,113,227,.22);
+    }
+    .how-banner-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: rgba(255,255,255,.18);
+      color: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s;
+    }
+    .how-banner-close:hover { background: rgba(255,255,255,.3); }
+    .how-banner-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0 0 14px;
+      letter-spacing: -.2px;
+      padding-right: 30px;
+    }
+    .how-banner-flows {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .how-flow {
+      background: rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 14px;
+      backdrop-filter: blur(10px);
+    }
+    .how-flow-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: .92rem;
+      margin-bottom: 8px;
+    }
+    .how-flow-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: rgba(255,255,255,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .88rem;
+    }
+    .how-flow-steps {
+      font-size: .82rem;
+      line-height: 1.5;
+      opacity: .95;
+      margin: 0;
+      padding-left: 16px;
+    }
+    .how-flow-steps li { margin-bottom: 2px; }
+    @media (max-width: 560px) {
+      .how-banner { padding: 18px 16px 20px; }
+      .how-banner-flows { grid-template-columns: 1fr; gap: 10px; }
+      .how-banner-title { font-size: 1rem; }
+    }
+
     .section-title {
       display: flex;
       align-items: center;
@@ -723,6 +804,35 @@
       <option value="asc">Precio: menor a mayor</option>
       <option value="desc">Precio: mayor a menor</option>
     </select>
+  </div>
+
+  <div class="how-banner" id="howBanner">
+    <button type="button" class="how-banner-close" id="howBannerClose" aria-label="Cerrar">✕</button>
+    <h2 class="how-banner-title">¿Cómo funciona?</h2>
+    <div class="how-banner-flows">
+      <div class="how-flow">
+        <div class="how-flow-head">
+          <span class="how-flow-icon">🛒</span>
+          Comprar
+        </div>
+        <ol class="how-flow-steps">
+          <li>Elegí el iPhone que querés</li>
+          <li>Tocá <strong>Comprar ahora</strong></li>
+          <li>Coordinamos entrega y pago</li>
+        </ol>
+      </div>
+      <div class="how-flow">
+        <div class="how-flow-head">
+          <span class="how-flow-icon">🔄</span>
+          Canjear
+        </div>
+        <ol class="how-flow-steps">
+          <li>Elegí el iPhone que querés</li>
+          <li>Tocá <strong>Canjear ahora</strong> y cargá tu equipo actual</li>
+          <li>Te mostramos la diferencia a pagar</li>
+        </ol>
+      </div>
+    </div>
   </div>
 
   <h2 class="section-title">Stock disponible</h2>
@@ -1330,6 +1440,11 @@
     filterConditionEl.querySelectorAll(".condition-btn").forEach(b => b.classList.toggle("active", b.dataset.value === ""));
     sortPriceEl.value = "";
     renderProducts();
+  });
+
+  // Cerrar banner "Cómo funciona"
+  document.getElementById("howBannerClose").addEventListener("click", function() {
+    document.getElementById("howBanner").style.display = "none";
   });
 </script>
 </body>
