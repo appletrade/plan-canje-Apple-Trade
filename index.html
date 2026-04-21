@@ -215,6 +215,40 @@
       .how-banner-title { font-size: 1rem; }
     }
 
+    /* Flecha animada "scroll hacia abajo" — solo mobile */
+    .scroll-hint {
+      display: none;
+      text-align: center;
+      margin: 8px 0 12px;
+      color: var(--primary);
+      font-size: .82rem;
+      font-weight: 600;
+      animation: scrollHintFade 4s ease-in-out 8s forwards;
+    }
+    .scroll-hint-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      margin-top: 4px;
+      animation: scrollBounce 1.6s ease-in-out infinite;
+      box-shadow: 0 4px 12px rgba(0,113,227,.28);
+    }
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(8px); }
+    }
+    @keyframes scrollHintFade {
+      to { opacity: 0; visibility: hidden; height: 0; margin: 0; }
+    }
+    @media (max-width: 560px) {
+      .scroll-hint { display: block; }
+    }
+
     .section-title {
       display: flex;
       align-items: center;
@@ -835,6 +869,15 @@
     </div>
   </div>
 
+  <div class="scroll-hint" id="scrollHint">
+    Desliz&aacute; para ver los equipos
+    <div class="scroll-hint-arrow" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </div>
+
   <h2 class="section-title">Stock disponible</h2>
   <section class="products" id="productList"></section>
 </main>
@@ -1446,6 +1489,14 @@
   document.getElementById("howBannerClose").addEventListener("click", function() {
     document.getElementById("howBanner").style.display = "none";
   });
+
+  // Ocultar scroll hint cuando el usuario ya scrolleó
+  (function() {
+    const hint = document.getElementById("scrollHint");
+    if (!hint) return;
+    const hide = () => { hint.style.display = "none"; window.removeEventListener("scroll", hide); };
+    window.addEventListener("scroll", hide, { once: true, passive: true });
+  })();
 </script>
 </body>
 </html>
