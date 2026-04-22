@@ -215,39 +215,6 @@
       .how-banner-title { font-size: 1rem; }
     }
 
-    /* Flecha animada "scroll hacia abajo" — solo mobile */
-    .scroll-hint {
-      display: none;
-      text-align: center;
-      margin: 8px 0 12px;
-      color: var(--primary);
-      font-size: .82rem;
-      font-weight: 600;
-      animation: scrollHintFade 4s ease-in-out 8s forwards;
-    }
-    .scroll-hint-arrow {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: #fff;
-      margin-top: 4px;
-      animation: scrollBounce 1.6s ease-in-out infinite;
-      box-shadow: 0 4px 12px rgba(0,113,227,.28);
-    }
-    @keyframes scrollBounce {
-      0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(8px); }
-    }
-    @keyframes scrollHintFade {
-      to { opacity: 0; visibility: hidden; height: 0; margin: 0; }
-    }
-    @media (max-width: 560px) {
-      .scroll-hint { display: block; }
-    }
 
     .section-title {
       display: flex;
@@ -869,14 +836,6 @@
     </div>
   </div>
 
-  <div class="scroll-hint" id="scrollHint">
-    Desliz&aacute; para ver los equipos
-    <div class="scroll-hint-arrow" aria-hidden="true">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9"/>
-      </svg>
-    </div>
-  </div>
 
   <h2 class="section-title">Stock disponible</h2>
   <section class="products" id="productList"></section>
@@ -940,14 +899,12 @@
   const products = [
     { model: "iPhone 11",         storage: "128GB", condition: "Seminuevo", details: "Violeta · Batería 100%",                                      priceUSD: 240 },
     { model: "iPhone 13",         storage: "128GB", condition: "Seminuevo", details: "Negro · Batería 85-89%",                    priceUSD: 330 },
-    { model: "iPhone 13",         storage: "128GB", condition: "Seminuevo", details: "Rosa / Negro · Batería 90-92%",                                     priceUSD: 345 },
+    { model: "iPhone 13",         storage: "128GB", condition: "Seminuevo", details: "Negro · Batería 90-92%",                                     priceUSD: 345 },
     { model: "iPhone 13",         storage: "128GB", condition: "Seminuevo", details: "Verde / Negro / Rosa · Batería 100%",                        priceUSD: 355 },
     { model: "iPhone 13 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Celeste · Batería 93%",                                     priceUSD: 480 },
     { model: "iPhone 13 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Celeste · Batería 100%",                                    priceUSD: 490 },
     { model: "iPhone 13 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Gris · Batería 100%",                                       priceUSD: 500 },
-    { model: "iPhone 14 Pro",     storage: "128GB", condition: "Seminuevo", details: "Violeta · Batería 100%",                                       priceUSD: 500 },
-    { model: "iPhone 14 Pro",     storage: "256GB", condition: "Seminuevo", details: "Violeta · Batería 92%",                                        priceUSD: 510 },
-    { model: "iPhone 14 Pro",     storage: "256GB", condition: "Seminuevo", details: "Violeta / Dorado · Batería 100%",                              priceUSD: 550 },
+    { model: "iPhone 14 Pro",     storage: "256GB", condition: "Seminuevo", details: "Violeta · Batería 100%",                                      priceUSD: 550 },
     { model: "iPhone 14 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Violeta · Batería 86%",                                      priceUSD: 520, badges: ["Pantalla reemplazada"] },
     { model: "iPhone 14 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Negro / Violeta · Batería 83-86%",                          priceUSD: 550 },
     { model: "iPhone 14 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Negro · Batería 90%",                                      priceUSD: 570 },
@@ -955,8 +912,9 @@
     { model: "iPhone 14 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Blanco · Batería 85%",                                      priceUSD: 600, badges: ["Con caja original"] },
     { model: "iPhone 15 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Negro · Batería 89%",                                        priceUSD: 660 },
     { model: "iPhone 15 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 91%",                                         priceUSD: 680 },
+    { model: "iPhone 15 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 100%",                                        priceUSD: 695 },
     { model: "iPhone 16",         storage: "128GB", condition: "Seminuevo", details: "Rosa / Blanco / Azul · Batería 90+",                priceUSD: 620 },
-    { model: "iPhone 16",         storage: "128GB", condition: "Seminuevo", details: "Blanco / Negro · Batería 100%",               priceUSD: 650, badges: ["Garantía de Apple"] },
+    { model: "iPhone 16",         storage: "128GB", condition: "Seminuevo", details: "Blanco · Batería 100%",                                      priceUSD: 650, badges: ["Garantía de Apple"] },
     { model: "iPhone 16 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Gris · Batería 92%",                                        priceUSD: 890 },
     { model: "iPhone 17",         storage: "256GB", condition: "Seminuevo", details: "Negro · Batería 100%", priceUSD: 800,  badges: ["Garantía de Apple"] },
     { model: "iPhone 17 Pro",     storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 100%",                                      priceUSD: 1160, badges: ["Con caja original", "Garantía de Apple"] },
@@ -1490,13 +1448,6 @@
     document.getElementById("howBanner").style.display = "none";
   });
 
-  // Ocultar scroll hint cuando el usuario ya scrolleó
-  (function() {
-    const hint = document.getElementById("scrollHint");
-    if (!hint) return;
-    const hide = () => { hint.style.display = "none"; window.removeEventListener("scroll", hide); };
-    window.addEventListener("scroll", hide, { once: true, passive: true });
-  })();
 </script>
 </body>
 </html>
