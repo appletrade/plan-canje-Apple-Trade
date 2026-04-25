@@ -876,7 +876,7 @@
      CONFIGURACIÓN
      Editá estos valores cuando cambien
   ======================= */
-  let USD_TO_ARS = 1430;
+  let USD_TO_ARS = 1440;
   let INTEREST_3 = 1.376;
   let INTEREST_6 = 1.484;
 
@@ -897,32 +897,34 @@
      STOCK — agregá o editá productos acá
   ======================= */
   const products = [
-    { model: "iPhone 11",         storage: "128GB", condition: "Seminuevo", details: "Violeta · Batería 100%",                                      priceUSD: 240 },
+    { model: "iPhone 11",         storage: "128GB", condition: "Seminuevo", details: "Violeta / Rojo · Batería 100%",                               priceUSD: 240 },
     { model: "iPhone 13",         storage: "128GB", condition: "Seminuevo", details: "Negro · Batería 85-89%",                    priceUSD: 330 },
     { model: "iPhone 13",         storage: "128GB", condition: "Seminuevo", details: "Verde · Batería 100%",                                       priceUSD: 370, badges: ["Con caja original"] },
+    { model: "iPhone 13",         storage: "256GB", condition: "Seminuevo", details: "Blanco · Batería 100%",                                      priceUSD: 370 },
+    { model: "iPhone 13 Pro",     storage: "128GB", condition: "Seminuevo", details: "Gris · Batería 100%",                                       priceUSD: 430 },
+    { model: "iPhone 13 Pro",     storage: "256GB", condition: "Seminuevo", details: "Gris · Batería 100%",                                       priceUSD: 450 },
     { model: "iPhone 13 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Celeste · Batería 93%",                                     priceUSD: 480 },
     { model: "iPhone 13 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Celeste · Batería 100%",                                    priceUSD: 490 },
     { model: "iPhone 13 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Gris · Batería 100%",                                       priceUSD: 500 },
-    { model: "iPhone 14 Pro",     storage: "256GB", condition: "Seminuevo", details: "Violeta · Batería 100%",                                      priceUSD: 550 },
     { model: "iPhone 14 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Violeta · Batería 86%",                                      priceUSD: 520, badges: ["Pantalla reemplazada"] },
+    { model: "iPhone 14 Pro",     storage: "256GB", condition: "Seminuevo", details: "Violeta · Batería 92%",                                      priceUSD: 530 },
+    { model: "iPhone 14 Pro",     storage: "256GB", condition: "Seminuevo", details: "Violeta · Batería 100%",                                      priceUSD: 550 },
     { model: "iPhone 14 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Negro / Violeta · Batería 83-86%",                          priceUSD: 550 },
     { model: "iPhone 14 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Negro · Batería 90%",                                      priceUSD: 570 },
     { model: "iPhone 14 Pro Max", storage: "128GB", condition: "Seminuevo", details: "Negro / Violeta · Batería 100%",                            priceUSD: 585 },
     { model: "iPhone 14 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Blanco · Batería 85%",                                      priceUSD: 600, badges: ["Con caja original"] },
-    { model: "iPhone 15 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Negro · Batería 89%",                                        priceUSD: 660 },
-    { model: "iPhone 15 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 91%",                                         priceUSD: 680 },
-    { model: "iPhone 15 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 100%",                                        priceUSD: 695 },
     { model: "iPhone 16",         storage: "128GB", condition: "Seminuevo", details: "Rosa / Blanco / Azul · Batería 90+",                priceUSD: 620 },
-    { model: "iPhone 16 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Gris · Batería 92%",                                        priceUSD: 890 },
+    { model: "iPhone 15 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 100%",                                        priceUSD: 695 },
     { model: "iPhone 17",         storage: "256GB", condition: "Seminuevo", details: "Negro · Batería 100%", priceUSD: 800,  badges: ["Garantía de Apple"] },
+    { model: "iPhone 16 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Gris · Batería 92%",                                        priceUSD: 890 },
     { model: "iPhone 17 Pro",     storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 100%",                                      priceUSD: 1160, badges: ["Con caja original", "Garantía de Apple"] },
+    { model: "iPhone 17 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 100%",                                      priceUSD: 1380, badges: ["Con caja original", "Garantía de Apple"] },
     { model: "iPhone 13", storage: "128GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 520, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
     { model: "iPhone 15", storage: "128GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 710, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
+    { model: "iPhone 17 E", storage: "256GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 720, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
     { model: "iPhone 16", storage: "128GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 810, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
     { model: "iPhone 17", storage: "256GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 930, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
-    { model: "iPhone 17 E", storage: "256GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 720, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
     { model: "iPhone 17 Pro", storage: "256GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 1370, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
-    { model: "iPhone 17 Pro Max", storage: "256GB", condition: "Seminuevo", details: "Azul · Batería 100%",                                      priceUSD: 1380, badges: ["Con caja original", "Garantía de Apple"] },
     { model: "iPhone 17 Pro Max", storage: "256GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 1500, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
     { model: "iPhone 17 Pro Max", storage: "512GB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 1750, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
     { model: "iPhone 17 Pro Max", storage: "1TB", condition: "Nuevo en caja sellada", details: "A pedido", priceUSD: 1920, badges: ["A pedido con seña de $50", "1 año de garantía de Apple"] },
