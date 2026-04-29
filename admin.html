@@ -244,7 +244,7 @@ tbody td{padding:10px 12px;vertical-align:middle;}
             <div class="form-group">
               <label class="form-label">Storage</label>
               <select class="form-select form-input" id="newStorage">
-                <option>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option>
+                <option>64GB</option><option>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option><option>2TB</option>
               </select>
             </div>
             <div class="form-group">
@@ -271,6 +271,10 @@ tbody td{padding:10px 12px;vertical-align:middle;}
               <button class="badge-preset" onclick="addBadge('1 año de garantía de Apple')">1 año de garantía</button>
               <button class="badge-preset" onclick="addBadge('Pantalla reemplazada')">Pantalla reemplazada</button>
               <button class="badge-preset" onclick="addBadge('A pedido con seña de $50')">A pedido con seña</button>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:6px;">
+              <input class="form-input" id="customBadge" placeholder="Badge personalizado..." style="flex:1;font-size:.82rem;padding:7px 10px;">
+              <button class="btn btn-ghost" style="padding:7px 12px;font-size:.82rem;" onclick="addCustomBadge()">+ Agregar</button>
             </div>
             <div class="badges-input" id="badgesContainer"></div>
           </div>
@@ -446,6 +450,14 @@ function removeProduct(i) {
 }
 
 // ── BADGES ────────────────────────────────────────────────
+function addCustomBadge() {
+  const input = document.getElementById('customBadge');
+  const text = input.value.trim();
+  if (!text) return;
+  addBadge(text);
+  input.value = '';
+}
+
 function addBadge(text) {
   if (pendingBadges.includes(text)) return;
   pendingBadges.push(text);
