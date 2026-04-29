@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Apple Trade — Admin</title>
+<style>
+:root {
+  --bg: #0f0f10;
+  --surface: #1a1a1c;
+  --surface2: #242426;
+  --border: #2e2e30;
+  --primary: #0a84ff;
+  --primary-dim: rgba(10,132,255,.15);
+  --green: #30d158;
+  --red: #ff453a;
+  --yellow: #ffd60a;
+  --text: #f5f5f7;
+  --muted: #8e8e93;
+  --radius: 14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;min-height:100vh;}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:40px 36px;width:100%;max-width:380px;text-align:center;}
+.login-logo{font-size:1.6rem;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.03em;}
+.login-logo span{color:var(--primary);}
+.login-sub{font-size:.85rem;color:var(--muted);margin-bottom:28px;}
+.login-input{width:100%;padding:13px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:.95rem;margin-bottom:12px;outline:none;transition:border-color .15s;}
+.login-input:focus{border-color:var(--primary);}
+.login-btn{width:100%;padding:13px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.login-btn:hover{opacity:.85;}
+.login-err{font-size:.82rem;color:var(--red);margin-top:10px;display:none;}
+
+/* LAYOUT */
+.app{display:none;min-height:100vh;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:var(--surface);border-right:1px solid var(--border);padding:24px 0;display:flex;flex-direction:column;z-index:100;}
+.sidebar-logo{padding:0 20px 24px;font-size:1.1rem;font-weight:800;letter-spacing:-.02em;border-bottom:1px solid var(--border);margin-bottom:8px;}
+.sidebar-logo span{color:var(--primary);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:.88rem;font-weight:500;color:var(--muted);cursor:pointer;transition:all .15s;border-radius:0;}
+.nav-item:hover{color:var(--text);background:var(--surface2);}
+.nav-item.active{color:var(--primary);background:var(--primary-dim);}
+.nav-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);}
+.logout-btn{font-size:.82rem;color:var(--muted);cursor:pointer;transition:color .15s;}
+.logout-btn:hover{color:var(--red);}
+
+.main{margin-left:220px;padding:32px 28px;min-height:100vh;}
+.page-title{font-size:1.5rem;font-weight:800;letter-spacing:-.03em;margin-bottom:4px;}
+.page-sub{font-size:.85rem;color:var(--muted);margin-bottom:28px;}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;}
+.card-title{font-size:.95rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title svg{width:16px;height:16px;stroke:var(--primary);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* FORM ELEMENTS */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-label{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.form-input{padding:10px 13px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:.9rem;outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:var(--primary);}
+.form-select{padding:10px 13px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:.9rem;outline:none;cursor:pointer;appearance:none;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:10px;border:none;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .15s;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{opacity:.85;}
+.btn-success{background:var(--green);color:#000;}
+.btn-success:hover{opacity:.85;}
+.btn-danger{background:rgba(255,69,58,.15);color:var(--red);border:1px solid rgba(255,69,58,.3);}
+.btn-danger:hover{background:rgba(255,69,58,.25);}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--muted);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* STATUS */
+.status-bar{padding:12px 16px;border-radius:10px;font-size:.85rem;font-weight:600;margin-bottom:16px;display:none;}
+.status-bar.success{background:rgba(48,209,88,.15);color:var(--green);border:1px solid rgba(48,209,88,.3);}
+.status-bar.error{background:rgba(255,69,58,.15);color:var(--red);border:1px solid rgba(255,69,58,.3);}
+.status-bar.loading{background:rgba(10,132,255,.15);color:var(--primary);border:1px solid rgba(10,132,255,.3);}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;margin-top:16px;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+thead th{padding:10px 12px;text-align:left;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
+tbody tr:hover{background:var(--surface2);}
+tbody td{padding:10px 12px;vertical-align:middle;}
+.td-model{font-weight:600;color:var(--text);}
+.td-price{font-weight:700;color:var(--primary);}
+.td-condition{font-size:.75rem;font-weight:700;padding:3px 8px;border-radius:999px;}
+.td-condition.semi{background:rgba(48,209,88,.15);color:var(--green);}
+.td-condition.nuevo{background:rgba(10,132,255,.15);color:var(--primary);}
+.td-actions{display:flex;gap:6px;}
+.btn-sm{padding:5px 10px;font-size:.75rem;border-radius:7px;}
+
+/* ADD ROW FORM */
+.add-row{background:var(--surface2);border:1.5px dashed var(--border);border-radius:var(--radius);padding:20px;margin-top:16px;}
+.add-row-title{font-size:.85rem;font-weight:700;color:var(--muted);margin-bottom:14px;}
+.add-form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:14px;}
+
+/* BADGE INPUT */
+.badges-input{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);min-height:40px;cursor:text;}
+.badge-tag{display:inline-flex;align-items:center;gap:4px;background:var(--primary-dim);color:var(--primary);padding:3px 8px;border-radius:999px;font-size:.75rem;font-weight:700;}
+.badge-tag button{background:none;border:none;color:inherit;cursor:pointer;font-size:.9rem;line-height:1;padding:0;}
+.badge-preset{font-size:.75rem;color:var(--muted);padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .15s;}
+.badge-preset:hover{border-color:var(--primary);color:var(--primary);}
+
+/* LOADING OVERLAY */
+.loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.loading-overlay.show{display:flex;}
+.loading-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* SECTIONS */
+.section{display:none;}
+.section.active{display:block;}
+
+@media(max-width:640px){
+  .sidebar{width:100%;height:auto;position:static;flex-direction:row;padding:12px 16px;flex-wrap:wrap;gap:4px;}
+  .sidebar-logo{display:none;}
+  .nav-item{padding:8px 12px;font-size:.8rem;}
+  .main{margin-left:0;padding:20px 16px;}
+  .add-form-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+</div>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">Apple<span>Trade</span></div>
+    <div class="login-sub">Panel de administración</div>
+    <input type="password" class="login-input" id="pwInput" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Ingresar</button>
+    <div class="login-err" id="loginErr">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="appWrap">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">Apple<span>Trade</span></div>
+    <div class="nav-item active" onclick="showSection('config')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 0 0 4.93 19.07"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Configuración
+    </div>
+    <div class="nav-item" onclick="showSection('stock')">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Stock
+    </div>
+    <div class="nav-item" onclick="showSection('tradein')">
+      <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      Trade-in
+    </div>
+    <div class="sidebar-footer">
+      <div class="logout-btn" onclick="doLogout()">← Cerrar sesión</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- SECCIÓN CONFIG -->
+    <div class="section active" id="sec-config">
+      <div class="page-title">Configuración</div>
+      <div class="page-sub">Tipo de cambio e intereses de cuotas</div>
+      <div id="statusConfig" class="status-bar"></div>
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Valores actuales
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Dólar (USD → ARS)</label>
+            <input type="number" class="form-input" id="cfgUSD" placeholder="1455">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Interés 3 cuotas</label>
+            <input type="number" step="0.001" class="form-input" id="cfgINT3" placeholder="1.376">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Interés 6 cuotas</label>
+            <input type="number" step="0.001" class="form-input" id="cfgINT6" placeholder="1.484">
+          </div>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px;align-items:center;">
+          <button class="btn btn-success" onclick="saveConfig()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Guardar cambios
+          </button>
+          <span style="font-size:.8rem;color:var(--muted)" id="cfgLastSaved"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN STOCK -->
+    <div class="section" id="sec-stock">
+      <div class="page-title">Stock</div>
+      <div class="page-sub">iPhones disponibles para la venta</div>
+      <div id="statusStock" class="status-bar"></div>
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Equipos en venta
+          <span style="margin-left:auto;font-size:.78rem;font-weight:500;color:var(--muted)" id="stockCount"></span>
+        </div>
+        <div class="table-wrap">
+          <table id="stockTable">
+            <thead>
+              <tr>
+                <th>Modelo</th>
+                <th>Storage</th>
+                <th>Condición</th>
+                <th>Detalles</th>
+                <th>USD</th>
+                <th>Badges</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="stockBody"></tbody>
+          </table>
+        </div>
+
+        <!-- AGREGAR EQUIPO -->
+        <div class="add-row">
+          <div class="add-row-title">+ Agregar equipo</div>
+          <div class="add-form-grid">
+            <div class="form-group">
+              <label class="form-label">Modelo</label>
+              <input class="form-input" id="newModel" placeholder="iPhone 16 Pro">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Storage</label>
+              <select class="form-select form-input" id="newStorage">
+                <option>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Condición</label>
+              <select class="form-select form-input" id="newCondition">
+                <option value="Seminuevo">Seminuevo</option>
+                <option value="Nuevo en caja sellada">Nuevo en caja sellada</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Detalles (color · batería)</label>
+              <input class="form-input" id="newDetails" placeholder="Negro · Batería 95%">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Precio USD</label>
+              <input type="number" class="form-input" id="newPrice" placeholder="650">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:12px;">
+            <label class="form-label">Badges</label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;">
+              <button class="badge-preset" onclick="addBadge('Con caja original')">Con caja original</button>
+              <button class="badge-preset" onclick="addBadge('Garantía de Apple')">Garantía de Apple</button>
+              <button class="badge-preset" onclick="addBadge('1 año de garantía de Apple')">1 año de garantía</button>
+              <button class="badge-preset" onclick="addBadge('Pantalla reemplazada')">Pantalla reemplazada</button>
+              <button class="badge-preset" onclick="addBadge('A pedido con seña de $50')">A pedido con seña</button>
+            </div>
+            <div class="badges-input" id="badgesContainer"></div>
+          </div>
+          <button class="btn btn-primary" onclick="addProduct()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Agregar al stock
+          </button>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;justify-content:flex-end;">
+        <button class="btn btn-success" onclick="saveStock()" id="btnSaveStock" disabled>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Guardar todos los cambios
+        </button>
+      </div>
+    </div>
+
+    <!-- SECCIÓN TRADE-IN -->
+    <div class="section" id="sec-tradein">
+      <div class="page-title">Valores Trade-in</div>
+      <div class="page-sub">Cotizaciones por modelo, storage y batería</div>
+      <div id="statusTrade" class="status-bar"></div>
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          Cotizador rápido
+        </div>
+        <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px;">Buscá un modelo para editar su valor de canje.</p>
+        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+          <input class="form-input" id="tradeSearch" placeholder="Buscar modelo... ej: iPhone 15 Pro" oninput="filterTradeTable()" style="flex:1;min-width:200px;">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Modelo + Storage</th><th>Batería mín.</th><th>Batería máx.</th><th>Valor USD</th></tr>
+            </thead>
+            <tbody id="tradeBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxEnAatZ9Pya0q6qUtefWXBvGwqMt0IwfpYs2vo9XSCuy8vAqZip-_ml2f3PPhV7yGk-g/exec";
+const PASSWORD = "Budin2026";
+
+let stockData = [];
+let tradeData = {};
+let pendingBadges = [];
+let stockModified = false;
+
+// ── AUTH ──────────────────────────────────────────────────
+function doLogin() {
+  const pw = document.getElementById('pwInput').value;
+  if (pw === PASSWORD) {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('appWrap').style.display = 'block';
+    loadAll();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+  }
+}
+
+function doLogout() {
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('appWrap').style.display = 'none';
+  document.getElementById('pwInput').value = '';
+}
+
+// ── NAVIGATION ────────────────────────────────────────────
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── LOAD ALL ──────────────────────────────────────────────
+async function loadAll() {
+  showLoading(true);
+  try {
+    const res  = await fetch(API_URL + '?action=all');
+    const data = await res.json();
+
+    // Config
+    if (data.config) {
+      const usd  = parseFloat(data.config.usd_ars);
+      const int3 = parseFloat(data.config.interes_3);
+      const int6 = parseFloat(data.config.interes_6);
+      document.getElementById('cfgUSD').value  = usd;
+      document.getElementById('cfgINT3').value = int3 > 10 ? int3/1000 : int3;
+      document.getElementById('cfgINT6').value = int6 > 10 ? int6/1000 : int6;
+    }
+
+    // Stock
+    if (data.stock) {
+      stockData = data.stock;
+      renderStockTable();
+    }
+
+    // TradeIn
+    if (data.tradein) {
+      tradeData = data.tradein;
+      renderTradeTable();
+    }
+  } catch(e) {
+    showStatus('statusConfig', 'error', 'Error al conectar con la API: ' + e.message);
+  }
+  showLoading(false);
+}
+
+// ── CONFIG ────────────────────────────────────────────────
+async function saveConfig() {
+  const usd  = parseFloat(document.getElementById('cfgUSD').value);
+  const int3 = parseFloat(document.getElementById('cfgINT3').value);
+  const int6 = parseFloat(document.getElementById('cfgINT6').value);
+  if (!usd || !int3 || !int6) { showStatus('statusConfig','error','Completá todos los campos'); return; }
+
+  showLoading(true);
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action:'updateConfig', password:PASSWORD, data:{ usd_ars:usd, interes_3:int3, interes_6:int6 }})
+    });
+    const json = await res.json();
+    if (json.ok) {
+      showStatus('statusConfig','success','✅ Configuración guardada correctamente');
+      document.getElementById('cfgLastSaved').textContent = 'Guardado ' + new Date().toLocaleTimeString('es-AR');
+    } else {
+      showStatus('statusConfig','error', json.error || 'Error al guardar');
+    }
+  } catch(e) {
+    showStatus('statusConfig','error','Error de conexión: ' + e.message);
+  }
+  showLoading(false);
+}
+
+// ── STOCK TABLE ───────────────────────────────────────────
+function renderStockTable() {
+  const body = document.getElementById('stockBody');
+  body.innerHTML = '';
+  stockData.forEach((p, i) => {
+    const tr = document.createElement('tr');
+    const cond = p.condition === 'Seminuevo' ? 'semi' : 'nuevo';
+    const condLabel = p.condition === 'Seminuevo' ? 'Seminuevo' : 'Sellado';
+    const badgeStr = (p.badges || []).join(', ');
+    tr.innerHTML = `
+      <td class="td-model">${p.model}</td>
+      <td>${p.storage}</td>
+      <td><span class="td-condition ${cond}">${condLabel}</span></td>
+      <td style="font-size:.8rem;color:var(--muted);max-width:180px;">${p.details}</td>
+      <td class="td-price">$${p.priceUSD}</td>
+      <td style="font-size:.75rem;color:var(--muted);max-width:140px;">${badgeStr || '—'}</td>
+      <td><div class="td-actions">
+        <button class="btn btn-danger btn-sm" onclick="removeProduct(${i})">Quitar</button>
+      </div></td>
+    `;
+    body.appendChild(tr);
+  });
+  document.getElementById('stockCount').textContent = stockData.length + ' equipos';
+}
+
+function removeProduct(i) {
+  if (!confirm(`¿Quitar "${stockData[i].model} ${stockData[i].storage}"?`)) return;
+  stockData.splice(i, 1);
+  renderStockTable();
+  stockModified = true;
+  document.getElementById('btnSaveStock').disabled = false;
+}
+
+// ── BADGES ────────────────────────────────────────────────
+function addBadge(text) {
+  if (pendingBadges.includes(text)) return;
+  pendingBadges.push(text);
+  renderBadgeContainer();
+}
+
+function removeBadge(text) {
+  pendingBadges = pendingBadges.filter(b => b !== text);
+  renderBadgeContainer();
+}
+
+function renderBadgeContainer() {
+  const c = document.getElementById('badgesContainer');
+  c.innerHTML = pendingBadges.map(b =>
+    `<span class="badge-tag">${b}<button onclick="removeBadge('${b}')">×</button></span>`
+  ).join('');
+}
+
+// ── ADD PRODUCT ───────────────────────────────────────────
+function addProduct() {
+  const model     = document.getElementById('newModel').value.trim();
+  const storage   = document.getElementById('newStorage').value;
+  const condition = document.getElementById('newCondition').value;
+  const details   = document.getElementById('newDetails').value.trim();
+  const price     = parseFloat(document.getElementById('newPrice').value);
+
+  if (!model || !details || !price) { alert('Completá modelo, detalles y precio'); return; }
+
+  stockData.push({ model, storage, condition, details, priceUSD: price, badges: [...pendingBadges] });
+  renderStockTable();
+
+  // Limpiar form
+  document.getElementById('newModel').value = '';
+  document.getElementById('newDetails').value = '';
+  document.getElementById('newPrice').value = '';
+  pendingBadges = [];
+  renderBadgeContainer();
+
+  stockModified = true;
+  document.getElementById('btnSaveStock').disabled = false;
+  showStatus('statusStock', 'success', '✅ Equipo agregado. Recordá guardar los cambios.');
+}
+
+// ── SAVE STOCK ────────────────────────────────────────────
+async function saveStock() {
+  showLoading(true);
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action:'updateStock', password:PASSWORD, data: stockData })
+    });
+    const json = await res.json();
+    if (json.ok) {
+      showStatus('statusStock','success','✅ Stock guardado correctamente. Los cambios ya se ven en la página.');
+      stockModified = false;
+      document.getElementById('btnSaveStock').disabled = true;
+    } else {
+      showStatus('statusStock','error', json.error || 'Error al guardar');
+    }
+  } catch(e) {
+    showStatus('statusStock','error','Error de conexión: ' + e.message);
+  }
+  showLoading(false);
+}
+
+// ── TRADE-IN TABLE ────────────────────────────────────────
+function renderTradeTable(filter = '') {
+  const body = document.getElementById('tradeBody');
+  body.innerHTML = '';
+  const fLow = filter.toLowerCase();
+  Object.entries(tradeData).forEach(([key, ranges]) => {
+    if (fLow && !key.toLowerCase().includes(fLow)) return;
+    ranges.forEach((r, ri) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="td-model">${ri === 0 ? key : ''}</td>
+        <td>${r.min}%</td>
+        <td>${r.max}%</td>
+        <td><input type="number" value="${r.val}" 
+          style="width:80px;padding:5px 8px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:.85rem;"
+          onchange="updateTradeVal('${key}',${ri},this.value)"></td>
+      `;
+      body.appendChild(tr);
+    });
+  });
+}
+
+function filterTradeTable() {
+  renderTradeTable(document.getElementById('tradeSearch').value);
+}
+
+function updateTradeVal(key, ri, val) {
+  tradeData[key][ri].val = parseFloat(val);
+}
+
+// ── HELPERS ───────────────────────────────────────────────
+function showStatus(id, type, msg) {
+  const el = document.getElementById(id);
+  el.className = 'status-bar ' + type;
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 5000);
+}
+
+function showLoading(show) {
+  document.getElementById('loadingOverlay').classList.toggle('show', show);
+}
+</script>
+</body>
+</html>
