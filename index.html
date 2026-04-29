@@ -1113,7 +1113,7 @@ function renderProducts(filter){
           : `<div class="pc-storage">${f.storage}</div>
              <div class="pc-battery">${(f.details.match(/Bater[íi]a[^·]*/i)||[''])[0].trim()}</div>`
         }
-        ${colorHTML?`<div style="margin-top:8px;font-size:.8rem;color:var(--muted);">${colorHTML}</div>`:''}
+        ${colorHTML?`<div class="pc-colors" style="margin-top:8px;font-size:.8rem;color:var(--muted);">${colorHTML}</div>`:''}
       </div>
       <div class="pc-body">
         <div class="pc-price-label">Precio contado</div>
@@ -1151,6 +1151,10 @@ function updateCard(select){
   card.querySelector('.pc-btn-buy').dataset.wa=waMsg;
   card.querySelector('.pc-btn-canje').dataset.model=v.model+' '+v.storage;
   card.querySelector('.pc-btn-canje').dataset.price=v.priceUSD;
+  // Actualizar colores
+  const newColorHTML = getColorDots(v.details);
+  const colorDiv = card.querySelector('.pc-colors');
+  if (colorDiv) colorDiv.innerHTML = newColorHTML;
   // Actualizar badges
   const badgesHTML=(v.badges||[]).map(b=>{
     const style = BADGE_COLORS[b.toLowerCase()] || "background:#fff8e1;color:#f57f17";
