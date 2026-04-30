@@ -828,12 +828,12 @@ async function loadFromAPI() {
     if (data.tradein && Object.keys(data.tradein).length) {
       tradeInTable = data.tradein;
     }
+
+    // Re-renderizar silenciosamente con datos actualizados
+    renderProducts(activeModel);
   } catch(e) {
     console.warn('API no disponible, usando datos locales:', e.message);
   }
-  // Renderizar después de cargar (o con fallback local)
-  renderProducts('all');
-  buildModelGrid();
 }
 
 function buildModelGrid(){
@@ -1253,7 +1253,11 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 
-// Iniciar carga desde API
+// Renderizar inmediatamente con datos locales (sin esperar la API)
+renderProducts('all');
+buildModelGrid();
+
+// Actualizar en segundo plano con datos de Sheets
 loadFromAPI();
 </script>
 </body>
