@@ -227,7 +227,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Modelo</th><th>GB</th><th>Color</th><th>Batería</th><th>USD</th><th>Estado</th><th>Observaciones</th><th></th></tr></thead>
+            <thead><tr><th>Modelo</th><th>Color</th><th>Batería</th><th>USD</th><th>Estado</th><th>Observaciones</th><th></th></tr></thead>
             <tbody id="stockBody"></tbody>
           </table>
         </div>
@@ -432,17 +432,16 @@ function renderStockTable(rows){
     const globalIdx=stockData.indexOf(p);
     const tr=document.createElement('tr');
     tr.innerHTML=`
-      <td class="td-model">${p.model}</td>
-      <td>${p.storage}</td>
-      <td>${p.color||'—'}</td>
-      <td>${p.battery||'—'}</td>
+      <td class="td-model">${p.model} ${p.storage}</td>
+      <td><input class="inline-edit" style="width:90px;" value="${p.color||''}" onchange="stockData[${globalIdx}].color=this.value;stockModified=true;document.getElementById('btnSaveStock').disabled=false;"></td>
+      <td><input class="inline-edit" style="width:90px;" value="${p.battery||''}" onchange="stockData[${globalIdx}].battery=this.value;stockModified=true;document.getElementById('btnSaveStock').disabled=false;"></td>
       <td class="td-price"><input class="inline-edit" type="number" value="${p.priceUSD}" onchange="stockData[${globalIdx}].priceUSD=parseInt(this.value);stockModified=true;document.getElementById('btnSaveStock').disabled=false;updateSummary();"></td>
       <td>
         <select class="form-select" style="padding:4px 8px;font-size:.78rem;border-radius:7px;" onchange="stockData[${globalIdx}].estado=this.value;stockModified=true;document.getElementById('btnSaveStock').disabled=false;updateSummary();">
           ${['Stock en Banfield','Stock en CABA','En el técnico','Reservado','Vendido'].map(e=>`<option${p.estado===e?' selected':''}>${e}</option>`).join('')}
         </select>
       </td>
-      <td style="font-size:.78rem;color:var(--muted);max-width:160px;">${p.observaciones||'—'}</td>
+      <td><input class="inline-edit" style="width:130px;" value="${p.observaciones||''}" onchange="stockData[${globalIdx}].observaciones=this.value;stockModified=true;document.getElementById('btnSaveStock').disabled=false;"></td>
       <td><div class="td-actions">
         <button class="btn btn-danger btn-sm" onclick="removeProduct(${globalIdx})">✕</button>
       </div></td>
