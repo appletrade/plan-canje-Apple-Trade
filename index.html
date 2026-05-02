@@ -304,6 +304,23 @@ section{padding:80px 20px;}
   .cta-final-btns .btn-primary,.cta-final-btns .btn-secondary{max-width:100%;}
 }
 </style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2494826524302407');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -1018,6 +1035,7 @@ function showResult(){
   // Mensaje genérico del botón principal (sin modelo destino)
   const msgGen = `Hola! Quiero canjear mi iPhone.\n📲 Entrego: ${selModel} ${selStorage} · Batería ${batLabel} (valor estimado USD ${finalVal})\n¿Me ayudás a avanzar con el canje?`;
   document.getElementById('resultWA').href=`https://wa.me/${WA}?text=${encodeURIComponent(msgGen)}`;
+  document.getElementById('resultWA').onclick=function(){fbq('track','Contact',{content_name:'Canje wizard'});};
 
   [1,2,3,4].forEach(i=>{document.getElementById('pane'+i).classList.remove('active'); document.getElementById('wp'+i).classList.add('done'); document.getElementById('wp'+i).classList.remove('active');});
   document.getElementById('paneResult').classList.add('active');
@@ -1025,6 +1043,7 @@ function showResult(){
 }
 
 function sendCanjeWA(destModel, destStorage, destDetails, destPrice, tradeVal){
+  fbq('track','Contact',{content_name:'Canje',content_category:destModel+' '+destStorage,value:destPrice,currency:'USD'});
   const td = window._tradeData || {};
   const diff = destPrice - tradeVal;
   const diffARS = diff * USD;
@@ -1272,6 +1291,7 @@ function calcModal(){
   const waBtn=document.getElementById('modalWA');
   waBtn.href='https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
   waBtn.style.display='flex';
+  waBtn.onclick=function(){fbq('track','Contact',{content_name:'Canje modal'});};
 }
 
 function closeModal(){
