@@ -718,7 +718,7 @@ function openSaleModal(idx){
   document.getElementById('saleModalSub').textContent=p.model+' '+p.storage+' USD '+p.priceUSD;
   document.getElementById('saleInfoBar').innerHTML='<strong>'+p.model+' '+p.storage+'</strong> '+( p.color||'')+' '+(p.battery||'')+' <strong>USD '+p.priceUSD+'</strong> '+p.condition;
   var today=new Date();
-  var g=new Date(today);g.setDate(g.getDate()+90);
+  var g=new Date(today);g.setMonth(g.getMonth()+1);
   var s=new Date(today);s.setFullYear(s.getFullYear()+1);
   document.getElementById('saleGarantia').value=g.toISOString().split('T')[0];
   document.getElementById('saleSeguimiento').value=s.toISOString().split('T')[0];
@@ -927,7 +927,7 @@ function showLoading(show){document.getElementById('loadingOverlay').classList.t
       <div class="form-group"><label class="form-label">Nombre y apellido *</label><input class="form-input" id="saleNombre" placeholder="Juan Perez"></div>
       <div class="form-group"><label class="form-label">WhatsApp *</label><input class="form-input" id="saleWA" placeholder="1134567890" type="tel"></div>
       <div class="form-group"><label class="form-label">Instagram (opcional)</label><input class="form-input" id="saleIG" placeholder="@juanperez"></div>
-      <div class="form-group"><label class="form-label">Barrio / Zona</label><input class="form-input" id="saleZona" placeholder="Banfield, Lanus..."></div>
+      <div class="form-group"><label class="form-label">IMEI</label><input class="form-input" id="saleZona" placeholder="353xxxxxxxxxxxxx" type="text" inputmode="numeric" maxlength="17"></div>
     </div>
     <div class="form-group" style="margin-top:12px;"><label class="form-label">Origen del cliente</label>
       <select class="form-select form-input" id="saleCanal">
@@ -961,7 +961,7 @@ function showLoading(show){document.getElementById('loadingOverlay').classList.t
       </div>
       <div class="form-group"><label class="form-label">Forma de pago</label>
         <select class="form-select form-input" id="salePago">
-          <option>Contado USD</option><option>Contado ARS</option><option>3 cuotas</option><option>6 cuotas</option><option>Mixto</option>
+          <option>Contado USD</option><option>Contado ARS</option><option>Tarjeta</option><option>Transferencia</option><option>USDT</option><option>Mixto</option>
         </select>
       </div>
     </div>
