@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Apple Trade — Admin</title>
 <style>
-:root{--bg:#0f0f10;--surface:#1a1a1c;--surface2:#242426;--border:#2e2e30;--primary:#0a84ff;--primary-dim:rgba(10,132,255,.15);--green:#30d158;--red:#ff453a;--yellow:#ffd60a;--orange:#ff9f0a;--purple:#bf5af2;--teal:#5ac8fa;--text:#f5f5f7;--muted:#8e8e93;--radius:14px;}
+:root{--bg:#0f0f10;--surface:#1a1a1c;--surface2:#242426;--border:#2e2e30;--primary:#0a84ff;--primary-dim:rgba(10,132,255,.15);--green:#30d158;--red:#ff453a;--yellow:#ffd60a;--orange:#ff9f0a;--purple:#bf5af2;--text:#f5f5f7;--muted:#8e8e93;--radius:14px;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;min-height:100vh;}
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
@@ -96,32 +96,26 @@ tbody td{padding:8px 10px;vertical-align:middle;}
 .summary-label{font-size:.75rem;color:var(--muted);margin-top:2px;}
 .inline-edit{width:70px;padding:4px 7px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:.82rem;}
 .inline-edit:focus{outline:none;border-color:var(--primary);}
-/* Battery input with prefix/suffix */
+/* Battery input */
 .bat-wrap{display:flex;align-items:center;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);overflow:hidden;transition:border-color .15s;}
 .bat-wrap:focus-within{border-color:var(--primary);}
 .bat-affix{padding:0 8px;font-size:.85rem;color:var(--muted);white-space:nowrap;user-select:none;}
 .bat-input{flex:1;min-width:0;padding:10px 4px;border:none;background:transparent;color:var(--text);font-size:.9rem;outline:none;text-align:center;width:44px;}
 .bat-input::-webkit-inner-spin-button,.bat-input::-webkit-outer-spin-button{-webkit-appearance:none;}
 .bat-input[type=number]{-moz-appearance:textfield;}
-/* Bulk add rows table */
-.bulk-rows-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:12px;}
-.bulk-rows-table th{padding:6px 8px;text-align:left;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);}
-.bulk-rows-table td{padding:5px 4px;vertical-align:middle;}
-.bulk-rows-table tr:not(:last-child) td{border-bottom:1px solid rgba(46,46,48,.6);}
-.btn-icon{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:6px;transition:all .15s;}
-.btn-icon:hover{color:var(--red);background:rgba(255,69,58,.12);}
 /* Summary card colors */
 .summary-card.s-banfield .summary-num{color:#30d158;}
 .summary-card.s-caba .summary-num{color:#4da3ff;}
 .summary-card.s-tecnico .summary-num{color:#ff9f0a;}
 .summary-card.s-reservado .summary-num{color:#bf5af2;}
 .summary-card.s-vendido .summary-num{color:#ff6961;}
-/* Sales section */
-.sales-table-wrap{overflow-x:auto;}
-.alert-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;}
-.alert-red{background:#ff453a;}
-.alert-yellow{background:#ffd60a;}
-.alert-green{background:#30d158;}
+/* Bulk add rows */
+.bulk-rows-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:12px;}
+.bulk-rows-table th{padding:6px 8px;text-align:left;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);}
+.bulk-rows-table td{padding:5px 4px;vertical-align:middle;}
+.bulk-rows-table tr:not(:last-child) td{border-bottom:1px solid rgba(46,46,48,.6);}
+.btn-icon{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:6px;transition:all .15s;}
+.btn-icon:hover{color:var(--red);background:rgba(255,69,58,.12);}
 /* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;}
 .modal-overlay.show{display:flex;}
@@ -132,7 +126,6 @@ tbody td{padding:8px 10px;vertical-align:middle;}
 .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .modal-grid.col3{grid-template-columns:1fr 1fr 1fr;}
 .modal-footer{display:flex;gap:10px;margin-top:24px;justify-content:flex-end;}
-.toggle-group{display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);}
 .toggle-switch{position:relative;width:40px;height:22px;cursor:pointer;}
 .toggle-switch input{opacity:0;width:0;height:0;}
 .toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:999px;transition:.2s;}
@@ -142,6 +135,9 @@ tbody td{padding:8px 10px;vertical-align:middle;}
 #tradeBlock{display:none;}
 .sale-info-bar{background:rgba(10,132,255,.08);border:1px solid rgba(10,132,255,.2);border-radius:10px;padding:12px 16px;font-size:.83rem;margin-bottom:4px;}
 .sale-info-bar strong{color:var(--primary);}
+.alert-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;}
+.alert-red{background:#ff453a;}.alert-yellow{background:#ffd60a;}.alert-green{background:#30d158;}
+.sales-table-wrap{overflow-x:auto;}
 .empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:.9rem;}
 .empty-state .empty-icon{font-size:2rem;margin-bottom:10px;}
 @media(max-width:768px){
@@ -304,9 +300,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
               <select class="form-select form-input" id="newStorage"><option>64GB</option><option selected>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option><option>2TB</option></select>
             </div>
             <div class="form-group"><label class="form-label">Color</label><input class="form-input" id="newColor" placeholder="Negro"></div>
-            <div class="form-group"><label class="form-label">Batería</label>
-              <div class="bat-wrap"><span class="bat-affix">Batería</span><input class="bat-input" id="newBattery" type="number" min="50" max="100" placeholder="95"><span class="bat-affix">%</span></div>
-            </div>
+            <div class="form-group"><label class="form-label">Batería</label><div class="bat-wrap"><span class="bat-affix">Batería</span><input class="bat-input" id="newBattery" type="number" min="50" max="100" placeholder="95"><span class="bat-affix">%</span></div></div>
             <div class="form-group"><label class="form-label">Precio USD</label><input type="number" class="form-input" id="newPrice" placeholder="650"></div>
             <div class="form-group"><label class="form-label">Condición</label>
               <select class="form-select form-input" id="newCondition"><option value="Seminuevo">Seminuevo</option><option value="Nuevo en caja sellada">Nuevo en caja sellada</option></select>
@@ -335,55 +329,97 @@ tbody td{padding:8px 10px;vertical-align:middle;}
           </div>
           <button class="btn btn-primary" onclick="addProduct()">+ Agregar al stock</button>
         </div>
-        <!-- Carga masiva -->
-        <div class="add-row" style="margin-top:16px;border-color:rgba(48,209,88,.3);background:rgba(48,209,88,.04);">
-          <div class="add-row-title" style="color:#30d158;display:flex;align-items:center;gap:8px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Carga masiva — varios equipos a la vez
-          </div>
-          <p style="font-size:.78rem;color:var(--muted);margin-bottom:14px;">Completá los campos comunes arriba y hacé clic en "+ Fila" para agregar variantes. Todos comparten modelo, condición y estado.</p>
+      </div>
 
-          <!-- Campos comunes -->
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px;">
-            <div class="form-group"><label class="form-label">Modelo</label>
-              <select class="form-select form-input" id="bmModel">
-                <optgroup label="iPhone 11"><option>iPhone 11</option><option>iPhone 11 Pro</option><option>iPhone 11 Pro Max</option></optgroup>
-                <optgroup label="iPhone 12"><option>iPhone 12</option><option>iPhone 12 Pro</option><option>iPhone 12 Pro Max</option></optgroup>
-                <optgroup label="iPhone 13"><option>iPhone 13</option><option>iPhone 13 Pro</option><option>iPhone 13 Pro Max</option></optgroup>
-                <optgroup label="iPhone 14"><option>iPhone 14</option><option>iPhone 14 Plus</option><option>iPhone 14 Pro</option><option>iPhone 14 Pro Max</option></optgroup>
-                <optgroup label="iPhone 15"><option>iPhone 15</option><option>iPhone 15 Plus</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option></optgroup>
-                <optgroup label="iPhone 16"><option>iPhone 16</option><option>iPhone 16 E</option><option>iPhone 16 Plus</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option></optgroup>
-                <optgroup label="iPhone 17"><option>iPhone 17</option><option>iPhone 17 Air</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option></optgroup>
-              </select>
-            </div>
-            <div class="form-group"><label class="form-label">Condición</label>
-              <select class="form-select form-input" id="bmCondition"><option value="Seminuevo">Seminuevo</option><option value="Nuevo en caja sellada">Nuevo en caja sellada</option></select>
-            </div>
-            <div class="form-group"><label class="form-label">Estado inicial</label>
-              <select class="form-select form-input" id="bmEstado">
-                <option>Stock en Banfield</option><option>Stock en CABA</option><option>En el técnico</option><option>Reservado</option>
-              </select>
-            </div>
+      <!-- Carga masiva -->
+      <div class="add-row" style="margin-top:0;border-color:rgba(48,209,88,.3);background:rgba(48,209,88,.04);">
+        <div class="add-row-title" style="color:#30d158;display:flex;align-items:center;gap:8px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Carga masiva — varios equipos a la vez
+        </div>
+        <p style="font-size:.78rem;color:var(--muted);margin-bottom:14px;">Elegí el modelo común, agregá filas por variante y confirmá todo junto.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px;">
+          <div class="form-group"><label class="form-label">Modelo</label>
+            <select class="form-select form-input" id="bmModel">
+              <optgroup label="iPhone 11"><option>iPhone 11</option><option>iPhone 11 Pro</option><option>iPhone 11 Pro Max</option></optgroup>
+              <optgroup label="iPhone 12"><option>iPhone 12</option><option>iPhone 12 Pro</option><option>iPhone 12 Pro Max</option></optgroup>
+              <optgroup label="iPhone 13"><option>iPhone 13</option><option>iPhone 13 Pro</option><option>iPhone 13 Pro Max</option></optgroup>
+              <optgroup label="iPhone 14"><option>iPhone 14</option><option>iPhone 14 Plus</option><option>iPhone 14 Pro</option><option>iPhone 14 Pro Max</option></optgroup>
+              <optgroup label="iPhone 15"><option>iPhone 15</option><option>iPhone 15 Plus</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option></optgroup>
+              <optgroup label="iPhone 16"><option>iPhone 16</option><option>iPhone 16 E</option><option>iPhone 16 Plus</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option></optgroup>
+              <optgroup label="iPhone 17"><option>iPhone 17</option><option>iPhone 17 Air</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option></optgroup>
+            </select>
           </div>
-
-          <!-- Tabla de filas -->
-          <div style="overflow-x:auto;">
-            <table class="bulk-rows-table">
-              <thead><tr>
-                <th>Storage</th><th>Color</th><th>Batería</th><th>Precio USD</th><th>Observaciones</th><th></th>
-              </tr></thead>
-              <tbody id="bmBody"></tbody>
-            </table>
+          <div class="form-group"><label class="form-label">Condicion</label>
+            <select class="form-select form-input" id="bmCondition"><option value="Seminuevo">Seminuevo</option><option value="Nuevo en caja sellada">Nuevo en caja sellada</option></select>
           </div>
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-            <button class="btn btn-ghost btn-sm" onclick="bmAddRow()">+ Fila</button>
-            <button class="btn btn-sm" style="background:rgba(48,209,88,.15);color:#30d158;border:1px solid rgba(48,209,88,.3);" onclick="bmConfirm()">✓ Agregar todos al stock</button>
-            <span style="font-size:.78rem;color:var(--muted);" id="bmStatus"></span>
+          <div class="form-group"><label class="form-label">Estado inicial</label>
+            <select class="form-select form-input" id="bmEstado">
+              <option>Stock en Banfield</option><option>Stock en CABA</option><option>En el tecnico</option><option>Reservado</option>
+            </select>
           </div>
         </div>
+        <div style="overflow-x:auto;">
+          <table class="bulk-rows-table">
+            <thead><tr><th>Storage</th><th>Color</th><th>Bateria</th><th>Precio USD</th><th>Observaciones</th><th></th></tr></thead>
+            <tbody id="bmBody"></tbody>
+          </table>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm" onclick="bmAddRow()">+ Fila</button>
+          <button class="btn btn-sm" style="background:rgba(48,209,88,.15);color:#30d158;border:1px solid rgba(48,209,88,.3);" onclick="bmConfirm()">Agregar todos al stock</button>
+          <span style="font-size:.78rem;color:var(--muted);" id="bmStatus"></span>
+        </div>
       </div>
-        <button class="btn btn-ghost" onclick="loadAll()">↺ Recargar desde Sheets</button>
-        <button class="btn btn-success" onclick="saveStock()" id="btnSaveStock" disabled>✓ Guardar todos los cambios</button>
+
+      <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn btn-ghost" onclick="loadAll()">Recargar desde Sheets</button>
+        <button class="btn btn-success" onclick="saveStock()" id="btnSaveStock" disabled>Guardar todos los cambios</button>
+      </div>
+    </div>
+
+    <!-- VENTAS -->
+    <div class="section" id="sec-ventas">
+      <div class="page-title">Ventas</div>
+      <div class="page-sub">Historial de ventas y seguimiento de clientes</div>
+      <div id="statusVentas" class="status-bar"></div>
+      <div class="stock-summary">
+        <div class="summary-card"><div class="summary-num" id="sumTotalVentas">0</div><div class="summary-label">Total vendido</div></div>
+        <div class="summary-card"><div class="summary-num" id="sumVentasMes">0</div><div class="summary-label">Este mes</div></div>
+        <div class="summary-card" style="border-color:rgba(255,69,58,.3);"><div class="summary-num" style="color:#ff6961;" id="sumSeguimientosVencidos">0</div><div class="summary-label">Seguimientos vencidos</div></div>
+        <div class="summary-card" style="border-color:rgba(255,214,10,.3);"><div class="summary-num" style="color:#ffd60a;" id="sumSeguimientosProximos">0</div><div class="summary-label">Proximos 7 dias</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Filtros</div>
+        <div class="filter-row">
+          <div class="form-group"><label class="form-label">Buscar</label><input class="form-input" id="salesSearch" placeholder="nombre, modelo, WA..." oninput="renderSalesTable()"></div>
+          <div class="form-group"><label class="form-label">Sucursal</label>
+            <select class="form-select form-input" id="salesSucursal" onchange="renderSalesTable()">
+              <option value="">Todas</option><option>Banfield</option><option>CABA</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Mes</label><input class="form-input" id="salesMes" type="month" onchange="renderSalesTable()"></div>
+          <div class="form-group"><label class="form-label">Seguimiento</label>
+            <select class="form-select form-input" id="salesAlerta" onchange="renderSalesTable()">
+              <option value="">Todos</option><option value="red">Vencidos</option><option value="yellow">Esta semana</option>
+            </select>
+          </div>
+          <div style="align-self:flex-end;display:flex;gap:8px;">
+            <button class="btn btn-ghost" onclick="clearSalesFilters()">Limpiar</button>
+            <button class="btn btn-primary" onclick="exportSalesCSV()">CSV</button>
+          </div>
+        </div>
+        <div class="sales-table-wrap">
+          <table>
+            <thead><tr>
+              <th>Fecha</th><th>Cliente</th><th>WhatsApp</th><th>Origen</th>
+              <th>Equipo</th><th>USD</th><th>Pago</th><th>Sucursal</th>
+              <th>Canje</th><th>Garantia</th><th>Seguimiento</th><th>Notas</th>
+            </tr></thead>
+            <tbody id="salesBody"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:10px;font-size:.8rem;color:var(--muted)" id="salesCount"></div>
       </div>
     </div>
 
@@ -402,160 +438,6 @@ tbody td{padding:8px 10px;vertical-align:middle;}
       </div>
     </div>
 
-    <!-- VENTAS -->
-    <div class="section" id="sec-ventas">
-      <div class="page-title">Ventas</div>
-      <div class="page-sub">Historial de ventas y seguimiento de clientes</div>
-      <div id="statusVentas" class="status-bar"></div>
-
-      <!-- Resumen ventas -->
-      <div class="stock-summary" id="salesSummary">
-        <div class="summary-card"><div class="summary-num" id="sumTotalVentas">—</div><div class="summary-label">Total vendido</div></div>
-        <div class="summary-card"><div class="summary-num" id="sumVentasMes">—</div><div class="summary-label">Este mes</div></div>
-        <div class="summary-card" style="border-color:rgba(255,69,58,.3);"><div class="summary-num" style="color:#ff6961;" id="sumSeguimientosVencidos">—</div><div class="summary-label">🔴 Seguimientos vencidos</div></div>
-        <div class="summary-card" style="border-color:rgba(255,214,10,.3);"><div class="summary-num" style="color:#ffd60a;" id="sumSeguimientosProximos">—</div><div class="summary-label">🟡 Próximos 7 días</div></div>
-      </div>
-
-      <!-- Filtros ventas -->
-      <div class="card">
-        <div class="card-title"><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Filtros</div>
-        <div class="filter-row">
-          <div class="form-group"><label class="form-label">Buscar</label><input class="form-input" id="salesSearch" placeholder="nombre, modelo, WA..." oninput="renderSalesTable()"></div>
-          <div class="form-group"><label class="form-label">Sucursal</label>
-            <select class="form-select form-input" id="salesSucursal" onchange="renderSalesTable()">
-              <option value="">Todas</option><option>Banfield</option><option>CABA</option>
-            </select>
-          </div>
-          <div class="form-group"><label class="form-label">Mes</label>
-            <input class="form-input" id="salesMes" type="month" onchange="renderSalesTable()">
-          </div>
-          <div class="form-group"><label class="form-label">Seguimiento</label>
-            <select class="form-select form-input" id="salesAlerta" onchange="renderSalesTable()">
-              <option value="">Todos</option><option value="red">🔴 Vencidos</option><option value="yellow">🟡 Esta semana</option>
-            </select>
-          </div>
-          <div style="align-self:flex-end;display:flex;gap:8px;">
-            <button class="btn btn-ghost" onclick="clearSalesFilters()">Limpiar</button>
-            <button class="btn btn-primary" onclick="exportSalesCSV()">↓ CSV</button>
-          </div>
-        </div>
-        <div class="sales-table-wrap">
-          <table>
-            <thead><tr>
-              <th>Fecha</th><th>Cliente</th><th>WhatsApp</th><th>Canal</th>
-              <th>Equipo vendido</th><th>Precio USD</th><th>Pago</th><th>Sucursal</th>
-              <th>Canje</th><th>Garantía</th><th>Seguimiento</th><th>Notas</th>
-            </tr></thead>
-            <tbody id="salesBody"></tbody>
-          </table>
-        </div>
-        <div style="margin-top:10px;font-size:.8rem;color:var(--muted)" id="salesCount"></div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- MODAL REGISTRAR VENTA -->
-<div class="modal-overlay" id="saleModal">
-  <div class="modal-box">
-    <div class="modal-title">Registrar venta</div>
-    <div class="modal-sub" id="saleModalSub">—</div>
-
-    <div class="sale-info-bar" id="saleInfoBar"></div>
-
-    <div class="modal-section">👤 Cliente</div>
-    <div class="modal-grid">
-      <div class="form-group"><label class="form-label">Nombre y apellido *</label><input class="form-input" id="saleNombre" placeholder="Juan Pérez"></div>
-      <div class="form-group"><label class="form-label">WhatsApp *</label><input class="form-input" id="saleWA" placeholder="1134567890" type="tel"></div>
-      <div class="form-group"><label class="form-label">Instagram (opcional)</label><input class="form-input" id="saleIG" placeholder="@juanperez"></div>
-      <div class="form-group"><label class="form-label">Barrio / Zona</label><input class="form-input" id="saleZona" placeholder="Banfield, Lanús..."></div>
-    </div>
-    <div class="form-group" style="margin-top:12px;"><label class="form-label">Origen del cliente</label>
-      <select class="form-select form-input" id="saleCanal">
-        <option value="">— Seleccionar —</option>
-        <optgroup label="📢 Publicidad paga">
-          <option>Publicidad — TikTok Ads</option>
-          <option>Publicidad — Meta Ads (Instagram/Facebook)</option>
-          <option>Publicidad — WhatsApp Ads</option>
-        </optgroup>
-        <optgroup label="📱 Orgánico">
-          <option>Orgánico — TikTok</option>
-          <option>Orgánico — Instagram</option>
-          <option>Orgánico — WhatsApp directo</option>
-          <option>Orgánico — Local físico (pasó por ahí)</option>
-        </optgroup>
-        <optgroup label="🤝 Recomendación">
-          <option>Recomendado por cliente</option>
-          <option>Recomendado por conocido</option>
-        </optgroup>
-        <optgroup label="🔁 Cliente anterior">
-          <option>Cliente anterior — recompra</option>
-          <option>Cliente anterior — upgrade (canje propio)</option>
-        </optgroup>
-        <option>Otro</option>
-      </select>
-    </div>
-
-    <div class="modal-section">💰 Venta</div>
-    <div class="modal-grid">
-      <div class="form-group"><label class="form-label">Sucursal</label>
-        <select class="form-select form-input" id="saleSucursal">
-          <option>Banfield</option><option>CABA</option>
-        </select>
-      </div>
-      <div class="form-group"><label class="form-label">Forma de pago</label>
-        <select class="form-select form-input" id="salePago">
-          <option>Contado USD</option><option>Contado ARS</option><option>3 cuotas</option><option>6 cuotas</option><option>Mixto</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="modal-section" style="margin-top:16px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span>🔄 Incluye canje</span>
-        <label class="toggle-switch"><input type="checkbox" id="toggleCanje" onchange="toggleCanjeBlock(this.checked)"><span class="toggle-slider"></span></label>
-      </div>
-    </div>
-
-    <div id="tradeBlock">
-      <div class="modal-grid col3" style="margin-top:12px;">
-        <div class="form-group"><label class="form-label">Modelo canjeado</label>
-          <select class="form-select form-input" id="tradeModelo">
-            <option value="">— Seleccionar —</option>
-            <optgroup label="iPhone 11"><option>iPhone 11 128GB</option><option>iPhone 11 Pro 256GB</option><option>iPhone 11 Pro Max 256GB</option></optgroup>
-            <optgroup label="iPhone 12"><option>iPhone 12 128GB</option><option>iPhone 12 Pro 256GB</option><option>iPhone 12 Pro Max 256GB</option></optgroup>
-            <optgroup label="iPhone 13"><option>iPhone 13 128GB</option><option>iPhone 13 256GB</option><option>iPhone 13 Pro 256GB</option><option>iPhone 13 Pro Max 256GB</option></optgroup>
-            <optgroup label="iPhone 14"><option>iPhone 14 128GB</option><option>iPhone 14 256GB</option><option>iPhone 14 Pro 256GB</option><option>iPhone 14 Pro Max 256GB</option></optgroup>
-            <optgroup label="iPhone 15"><option>iPhone 15 128GB</option><option>iPhone 15 Pro 256GB</option><option>iPhone 15 Pro Max 256GB</option></optgroup>
-            <optgroup label="iPhone 16"><option>iPhone 16 128GB</option><option>iPhone 16 Pro 256GB</option><option>iPhone 16 Pro Max 256GB</option></optgroup>
-          </select>
-        </div>
-        <div class="form-group"><label class="form-label">Batería %</label>
-          <div class="bat-wrap"><span class="bat-affix">Batería</span><input class="bat-input" id="tradeBateria" type="number" min="50" max="100" placeholder="87"><span class="bat-affix">%</span></div>
-        </div>
-        <div class="form-group"><label class="form-label">Valor canje USD</label><input class="form-input" id="tradeValor" type="number" placeholder="300"></div>
-      </div>
-      <div class="form-group" style="margin-top:12px;"><label class="form-label">Estado del equipo recibido</label>
-        <select class="form-select form-input" id="tradeEstadoRecibido">
-          <option>Excelente (10/10)</option><option>Muy bueno (8-9/10)</option><option>Bueno (6-7/10)</option><option>Regular (con detalles)</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="modal-section">📋 Postventa</div>
-    <div class="modal-grid">
-      <div class="form-group"><label class="form-label">Garantía hasta</label><input class="form-input" id="saleGarantia" type="date"></div>
-      <div class="form-group"><label class="form-label">Seguimiento (upgrade)</label><input class="form-input" id="saleSeguimiento" type="date"></div>
-    </div>
-    <div class="form-group" style="margin-top:12px;"><label class="form-label">Notas internas</label>
-      <textarea class="form-input" id="saleNotas" rows="2" placeholder="Cualquier detalle relevante..." style="resize:vertical;font-family:inherit;"></textarea>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeSaleModal()">Cancelar</button>
-      <button class="btn btn-success" onclick="confirmSale()">✓ Confirmar venta</button>
-    </div>
   </div>
 </div>
 
@@ -563,15 +445,16 @@ tbody td{padding:8px 10px;vertical-align:middle;}
 const API_URL  = "https://script.google.com/macros/s/AKfycbyTHEhZ0jhCjyzd9wJHWIoHxy2SyeotOpHZcaljLHGcOae-eRbWydVftIjRGCSh9PEduw/exec";
 const PASSWORD = "Budin2026";
 
-let stockData  = [];
-let tradeData  = {};
-let salesData  = [];
+let stockData     = [];
+let tradeData     = {};
+let salesData     = [];
 let pendingBadges = [];
 let stockModified = false;
 let filteredRows  = [];
 let pendingSaleIdx = null;
+let bmRows        = [];
 
-// ── AUTH ──────────────────────────────────────────────────
+// AUTH
 function doLogin(){
   if(document.getElementById('pwInput').value===PASSWORD){
     document.getElementById('loginWrap').style.display='none';
@@ -586,7 +469,6 @@ function doLogout(){
   document.getElementById('loginWrap').style.display='flex';
   document.getElementById('appWrap').style.display='none';
 }
-
 function showSection(id,el){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -595,7 +477,7 @@ function showSection(id,el){
   if(id==='ventas'){ renderSalesTable(); updateSalesSummary(); }
 }
 
-// ── LOAD ──────────────────────────────────────────────────
+// LOAD
 async function loadAll(){
   showLoading(true);
   try {
@@ -609,7 +491,6 @@ async function loadAll(){
       document.getElementById('cfgINT3').value=i3>10?i3/1000:i3;
       document.getElementById('cfgINT6').value=i6>10?i6/1000:i6;
     }
-    // Cargar stock raw para el admin
     const resRaw = await fetch(API_URL+'?action=stockraw');
     const rawData = await resRaw.json();
     if(rawData && rawData.length) stockData = rawData;
@@ -622,40 +503,40 @@ async function loadAll(){
   showLoading(false);
 }
 
-// ── CONFIG ────────────────────────────────────────────────
+// CONFIG
 async function saveConfig(){
   const usd=parseFloat(document.getElementById('cfgUSD').value);
   const i3=parseFloat(document.getElementById('cfgINT3').value);
   const i6=parseFloat(document.getElementById('cfgINT6').value);
-  if(!usd||!i3||!i6){showStatus('statusConfig','error','Completá todos los campos');return;}
+  if(!usd||!i3||!i6){showStatus('statusConfig','error','Completa todos los campos');return;}
   showLoading(true);
   try{
     const res=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'updateConfig',password:PASSWORD,data:{usd_ars:usd,interes_3:i3,interes_6:i6}})});
     const json=await res.json();
-    if(json.ok){ showStatus('statusConfig','success','✅ Configuración guardada'); document.getElementById('cfgLastSaved').textContent='Guardado '+new Date().toLocaleTimeString('es-AR'); }
+    if(json.ok){ showStatus('statusConfig','success','Configuracion guardada'); document.getElementById('cfgLastSaved').textContent='Guardado '+new Date().toLocaleTimeString('es-AR'); }
     else showStatus('statusConfig','error',json.error||'Error');
   }catch(e){showStatus('statusConfig','error',e.message);}
   showLoading(false);
 }
 
-// ── SUMMARY ───────────────────────────────────────────────
+// SUMMARY
 function updateSummary(){
-  const counts={banfield:0,caba:0,tecnico:0,reservado:0,vendido:0};
+  const c={banfield:0,caba:0,tecnico:0,reservado:0,vendido:0};
   stockData.forEach(p=>{
-    if(p.estado==='Stock en Banfield') counts.banfield++;
-    else if(p.estado==='Stock en CABA') counts.caba++;
-    else if(p.estado==='En el técnico') counts.tecnico++;
-    else if(p.estado==='Reservado') counts.reservado++;
-    else if(p.estado==='Vendido') counts.vendido++;
+    if(p.estado==='Stock en Banfield') c.banfield++;
+    else if(p.estado==='Stock en CABA') c.caba++;
+    else if(p.estado==='En el tecnico'||p.estado==='En el técnico') c.tecnico++;
+    else if(p.estado==='Reservado') c.reservado++;
+    else if(p.estado==='Vendido') c.vendido++;
   });
-  document.getElementById('sumBanfield').textContent=counts.banfield;
-  document.getElementById('sumCABA').textContent=counts.caba;
-  document.getElementById('sumTecnico').textContent=counts.tecnico;
-  document.getElementById('sumReservado').textContent=counts.reservado;
-  document.getElementById('sumVendido').textContent=counts.vendido;
+  document.getElementById('sumBanfield').textContent=c.banfield;
+  document.getElementById('sumCABA').textContent=c.caba;
+  document.getElementById('sumTecnico').textContent=c.tecnico;
+  document.getElementById('sumReservado').textContent=c.reservado;
+  document.getElementById('sumVendido').textContent=c.vendido;
 }
 
-// ── FILTERS ───────────────────────────────────────────────
+// FILTERS
 function applyFilters(){
   const search=(document.getElementById('filterSearch').value||'').toLowerCase();
   const estado=document.getElementById('filterEstado').value;
@@ -676,462 +557,457 @@ function clearFilters(){
   renderStockTable(stockData);
 }
 
-// ── STOCK TABLE ───────────────────────────────────────────
+// STOCK TABLE
 function estadoBadge(estado){
-  const map={'Stock en Banfield':'banfield','Stock en CABA':'caba','En el técnico':'tecnico','Reservado':'reservado','Vendido':'vendido'};
-  return `<span class="estado-badge estado-${map[estado]||'reservado'}">${estado}</span>`;
+  const map={'Stock en Banfield':'banfield','Stock en CABA':'caba','En el tecnico':'tecnico','En el técnico':'tecnico','Reservado':'reservado','Vendido':'vendido'};
+  return '<span class="estado-badge estado-'+(map[estado]||'reservado')+'">'+estado+'</span>';
 }
-
 function renderStockTable(rows){
   rows = rows || stockData;
   const body=document.getElementById('stockBody');
   body.innerHTML='';
-  rows.forEach((p,i)=>{
+  rows.forEach(function(p){
     const globalIdx=stockData.indexOf(p);
     const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td class="td-model">${p.model} ${p.storage}</td>
-      <td><input class="inline-edit" style="width:90px;" value="${p.color||''}" onchange="stockData[${globalIdx}].color=this.value;stockModified=true;document.getElementById('btnSaveStock').disabled=false;"></td>
-      <td><input class="inline-edit" style="width:90px;" value="${p.battery||''}" onchange="stockData[${globalIdx}].battery=this.value;stockModified=true;document.getElementById('btnSaveStock').disabled=false;"></td>
-      <td class="td-price"><input class="inline-edit" type="number" value="${p.priceUSD}" onchange="stockData[${globalIdx}].priceUSD=parseInt(this.value);stockModified=true;document.getElementById('btnSaveStock').disabled=false;updateSummary();"></td>
-      <td>
-        <select class="form-select" style="padding:4px 8px;font-size:.78rem;border-radius:7px;" onchange="handleEstadoChange(this,${globalIdx})">
-          ${['Stock en Banfield','Stock en CABA','En el técnico','Reservado','Vendido'].map(e=>`<option${p.estado===e?' selected':''}>${e}</option>`).join('')}
-        </select>
-      </td>
-      <td><input class="inline-edit" style="width:130px;" value="${p.observaciones||''}" onchange="stockData[${globalIdx}].observaciones=this.value;stockModified=true;document.getElementById('btnSaveStock').disabled=false;"></td>
-      <td><div class="td-actions">
-        <button class="btn btn-danger btn-sm" onclick="removeProduct(${globalIdx})">✕</button>
-      </div></td>
-    `;
+    const opts=['Stock en Banfield','Stock en CABA','En el técnico','Reservado','Vendido'].map(function(e){return '<option'+(p.estado===e?' selected':'')+'>'+e+'</option>';}).join('');
+    tr.innerHTML='<td class="td-model">'+p.model+' '+p.storage+'</td>'
+      +'<td><input class="inline-edit" style="width:90px;" value="'+(p.color||'')+'" onchange="stockData['+globalIdx+'].color=this.value;stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;"></td>'
+      +'<td><input class="inline-edit" style="width:90px;" value="'+(p.battery||'')+'" onchange="stockData['+globalIdx+'].battery=this.value;stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;"></td>'
+      +'<td class="td-price"><input class="inline-edit" type="number" value="'+p.priceUSD+'" onchange="stockData['+globalIdx+'].priceUSD=parseInt(this.value);stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;updateSummary();"></td>'
+      +'<td><select class="form-select" style="padding:4px 8px;font-size:.78rem;border-radius:7px;" onchange="handleEstadoChange(this,'+globalIdx+')">'+opts+'</select></td>'
+      +'<td><input class="inline-edit" style="width:130px;" value="'+(p.observaciones||'')+'" onchange="stockData['+globalIdx+'].observaciones=this.value;stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;"></td>'
+      +'<td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="removeProduct('+globalIdx+')">X</button></div></td>';
     body.appendChild(tr);
   });
-  document.getElementById('stockCount').textContent=`Mostrando ${rows.length} de ${stockData.length} equipos`;
+  document.getElementById('stockCount').textContent='Mostrando '+rows.length+' de '+stockData.length+' equipos';
 }
-
+function handleEstadoChange(sel,idx){
+  const newEstado=sel.value;
+  const prev=stockData[idx].estado;
+  if(newEstado==='Vendido'&&prev!=='Vendido'){
+    sel.value=prev;
+    openSaleModal(idx);
+  } else {
+    stockData[idx].estado=newEstado;
+    stockModified=true;
+    document.getElementById('btnSaveStock').disabled=false;
+    updateSummary();
+  }
+}
 function removeProduct(i){
-  if(!confirm(`¿Quitar "${stockData[i].model} ${stockData[i].storage} ${stockData[i].color}"?`)) return;
+  if(!confirm('Quitar '+stockData[i].model+' '+stockData[i].storage+'?')) return;
   stockData.splice(i,1);
-  applyFilters();
-  updateSummary();
+  applyFilters(); updateSummary();
   stockModified=true;
   document.getElementById('btnSaveStock').disabled=false;
 }
 
-// ── BULK PRICE ────────────────────────────────────────────
+// BULK PRICE
 function applyBulkPrice(){
   const model=document.getElementById('bulkModel').value;
   const storage=document.getElementById('bulkStorage').value;
   const batMin=parseFloat(document.getElementById('bulkBatMin').value)||0;
   const batMax=parseFloat(document.getElementById('bulkBatMax').value)||999;
   const price=parseFloat(document.getElementById('bulkPrice').value);
-  if(!price){alert('Ingresá el nuevo precio');return;}
-
+  if(!price){alert('Ingresa el nuevo precio');return;}
   let count=0;
-  stockData.forEach(p=>{
+  stockData.forEach(function(p){
     if(model && p.model!==model) return;
     if(storage && p.storage!==storage) return;
-    // Extraer número de batería
-    const batMatch=(p.battery||'').match(/(\d+)/);
-    const batPct=batMatch?parseFloat(batMatch[1]):100;
+    var m=(p.battery||'').match(/(\d+)/);
+    var batPct=m?parseFloat(m[1]):100;
     if(batPct<batMin||batPct>batMax) return;
-    p.priceUSD=price;
-    count++;
+    p.priceUSD=price; count++;
   });
-
-  if(count===0){
-    document.getElementById('bulkResult').textContent='No se encontraron equipos que coincidan con los filtros.';
-    return;
-  }
+  if(count===0){document.getElementById('bulkResult').textContent='No se encontraron equipos que coincidan.';return;}
   stockModified=true;
   document.getElementById('btnSaveStock').disabled=false;
-  document.getElementById('bulkResult').textContent=`✅ Se actualizó el precio a USD ${price} en ${count} equipo(s).`;
+  document.getElementById('bulkResult').textContent='Precio actualizado a USD '+price+' en '+count+' equipo(s).';
   applyFilters();
 }
 
-// ── ADD PRODUCT ───────────────────────────────────────────
+// ADD PRODUCT
 function addProduct(){
   const model=document.getElementById('newModel').value;
   const storage=document.getElementById('newStorage').value;
   const color=document.getElementById('newColor').value.trim();
-  const battery = document.getElementById('newBattery').value.trim();
-  const batteryFormatted = battery ? `Batería ${battery}%` : '';
+  const batNum=document.getElementById('newBattery').value.trim();
+  const battery=batNum?'Bateria '+batNum+'%':'';
   const price=parseFloat(document.getElementById('newPrice').value);
   const condition=document.getElementById('newCondition').value;
   const estado=document.getElementById('newEstado').value;
   const obs=document.getElementById('newObs').value.trim();
-  if(!price){alert('Ingresá el precio');return;}
-  stockData.push({model,storage,color,battery:batteryFormatted,priceUSD:price,condition,estado,badges:[...pendingBadges],observaciones:obs});
-  stockData.sort((a,b)=>{
-    const ca=a.condition==='Seminuevo'?0:1,cb=b.condition==='Seminuevo'?0:1;
-    return ca!==cb?ca-cb:a.priceUSD-b.priceUSD;
-  });
-  ['newColor','newBattery','newPrice','newObs'].forEach(id=>document.getElementById(id).value='');
+  if(!price){alert('Ingresa el precio');return;}
+  stockData.push({model:model,storage:storage,color:color,battery:battery,priceUSD:price,condition:condition,estado:estado,badges:pendingBadges.slice(),observaciones:obs});
+  stockData.sort(function(a,b){var ca=a.condition==='Seminuevo'?0:1,cb=b.condition==='Seminuevo'?0:1;return ca!==cb?ca-cb:a.priceUSD-b.priceUSD;});
+  ['newColor','newBattery','newPrice','newObs'].forEach(function(id){document.getElementById(id).value='';});
   pendingBadges=[];renderBadgeContainer();
   stockModified=true;
   document.getElementById('btnSaveStock').disabled=false;
   applyFilters();updateSummary();
-  showStatus('statusStock','success','✅ Equipo agregado. Guardá los cambios para que aparezca en la web.');
+  showStatus('statusStock','success','Equipo agregado. Guarda los cambios para que aparezca en la web.');
 }
 
-// ── SAVE STOCK ────────────────────────────────────────────
+// SAVE STOCK
 async function saveStock(){
   showLoading(true);
   try{
     const res=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'updateStockRaw',password:PASSWORD,data:stockData})});
     const json=await res.json();
-    if(json.ok){
-      showStatus('statusStock','success','✅ Stock guardado. Los cambios ya se ven en la página.');
-      stockModified=false;
-      document.getElementById('btnSaveStock').disabled=true;
-    } else showStatus('statusStock','error',json.error||'Error');
+    if(json.ok){showStatus('statusStock','success','Stock guardado.');stockModified=false;document.getElementById('btnSaveStock').disabled=true;}
+    else showStatus('statusStock','error',json.error||'Error');
   }catch(e){showStatus('statusStock','error',e.message);}
   showLoading(false);
 }
 
-// ── BULK ADD (carga masiva) ───────────────────────────────
-let bmRows = [];
-
+// BULK ADD
 function bmAddRow(){
-  const id = Date.now();
-  bmRows.push({id});
+  var id=Date.now();
+  bmRows.push({id:id});
   renderBmTable();
-  // focus first input of new row
-  setTimeout(()=>{
-    const inp = document.querySelector(`#bmRow${id} .bm-storage`);
-    if(inp) inp.focus();
-  }, 50);
+  setTimeout(function(){var inp=document.querySelector('#bmRow'+id+' .bm-storage');if(inp)inp.focus();},50);
 }
-
-function bmRemoveRow(id){
-  bmRows = bmRows.filter(r=>r.id!==id);
-  renderBmTable();
-}
-
+function bmRemoveRow(id){bmRows=bmRows.filter(function(r){return r.id!==id;});renderBmTable();}
 function renderBmTable(){
-  const body = document.getElementById('bmBody');
+  var body=document.getElementById('bmBody');
   if(!bmRows.length){
-    body.innerHTML = `<tr><td colspan="6" style="padding:14px 8px;color:var(--muted);font-size:.8rem;text-align:center;">Hacé clic en "+ Fila" para agregar equipos</td></tr>`;
+    body.innerHTML='<tr><td colspan="6" style="padding:14px 8px;color:var(--muted);font-size:.8rem;text-align:center;">Haz clic en + Fila para agregar equipos</td></tr>';
     return;
   }
-  body.innerHTML = bmRows.map(r=>`
-    <tr id="bmRow${r.id}">
-      <td>
-        <select class="form-select bm-storage" style="padding:5px 8px;font-size:.8rem;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);">
-          <option>64GB</option><option selected>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option><option>2TB</option>
-        </select>
-      </td>
-      <td><input class="inline-edit bm-color" style="width:100px;" placeholder="Negro" value="${r.color||''}"></td>
-      <td>
-        <div class="bat-wrap" style="width:130px;">
-          <span class="bat-affix">Batería</span>
-          <input class="bat-input bm-battery" type="number" min="50" max="100" placeholder="95" value="${r.battery||''}">
-          <span class="bat-affix">%</span>
-        </div>
-      </td>
-      <td><input class="inline-edit bm-price" type="number" style="width:80px;" placeholder="650" value="${r.price||''}"></td>
-      <td><input class="inline-edit bm-obs" style="width:140px;" placeholder="Opcional" value="${r.obs||''}"></td>
-      <td><button class="btn-icon" onclick="bmRemoveRow(${r.id})">✕</button></td>
-    </tr>
-  `).join('');
+  body.innerHTML=bmRows.map(function(r){
+    return '<tr id="bmRow'+r.id+'">'
+      +'<td><select class="form-select bm-storage" style="padding:5px 8px;font-size:.8rem;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);"><option>64GB</option><option selected>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option><option>2TB</option></select></td>'
+      +'<td><input class="inline-edit bm-color" style="width:100px;" placeholder="Negro"></td>'
+      +'<td><div class="bat-wrap" style="width:130px;"><span class="bat-affix">Bateria</span><input class="bat-input bm-battery" type="number" min="50" max="100" placeholder="95"><span class="bat-affix">%</span></div></td>'
+      +'<td><input class="inline-edit bm-price" type="number" style="width:80px;" placeholder="650"></td>'
+      +'<td><input class="inline-edit bm-obs" style="width:140px;" placeholder="Opcional"></td>'
+      +'<td><button class="btn-icon" onclick="bmRemoveRow('+r.id+')">X</button></td>'
+      +'</tr>';
+  }).join('');
 }
-
 function bmConfirm(){
-  const model = document.getElementById('bmModel').value;
-  const condition = document.getElementById('bmCondition').value;
-  const estado = document.getElementById('bmEstado').value;
-
-  const rows = document.querySelectorAll('#bmBody tr[id]');
-  if(!rows.length){ document.getElementById('bmStatus').textContent = 'Agregá al menos una fila.'; return; }
-
-  let added = 0, errors = 0;
-  rows.forEach(tr=>{
-    const storage = tr.querySelector('.bm-storage').value;
-    const color   = tr.querySelector('.bm-color').value.trim();
-    const batNum  = tr.querySelector('.bm-battery').value.trim();
-    const price   = parseFloat(tr.querySelector('.bm-price').value);
-    const obs     = tr.querySelector('.bm-obs').value.trim();
-    if(!price){ errors++; tr.style.outline='2px solid var(--red)'; return; }
+  var model=document.getElementById('bmModel').value;
+  var condition=document.getElementById('bmCondition').value;
+  var estado=document.getElementById('bmEstado').value;
+  var rows=document.querySelectorAll('#bmBody tr[id]');
+  if(!rows.length){document.getElementById('bmStatus').textContent='Agrega al menos una fila.';return;}
+  var added=0,errors=0;
+  rows.forEach(function(tr){
+    var storage=tr.querySelector('.bm-storage').value;
+    var color=tr.querySelector('.bm-color').value.trim();
+    var batNum=tr.querySelector('.bm-battery').value.trim();
+    var price=parseFloat(tr.querySelector('.bm-price').value);
+    var obs=tr.querySelector('.bm-obs').value.trim();
+    if(!price){errors++;tr.style.outline='2px solid var(--red)';return;}
     tr.style.outline='none';
-    const battery = batNum ? `Batería ${batNum}%` : '';
-    stockData.push({model, storage, color, battery, priceUSD:price, condition, estado, badges:[], observaciones:obs});
+    stockData.push({model:model,storage:storage,color:color,battery:batNum?'Bateria '+batNum+'%':'',priceUSD:price,condition:condition,estado:estado,badges:[],observaciones:obs});
     added++;
   });
+  if(errors){document.getElementById('bmStatus').textContent=errors+' fila(s) sin precio.';return;}
+  bmRows=[];renderBmTable();
+  stockModified=true;
+  document.getElementById('btnSaveStock').disabled=false;
+  applyFilters();updateSummary();
+  document.getElementById('bmStatus').textContent=added+' equipo(s) agregados. Guarda los cambios.';
+}
 
-  if(errors){ document.getElementById('bmStatus').textContent = `⚠️ ${errors} fila(s) sin precio — corregí e intentá de nuevo.`; return; }
+// SALE MODAL
+function openSaleModal(idx){
+  pendingSaleIdx=idx;
+  var p=stockData[idx];
+  document.getElementById('saleModalSub').textContent=p.model+' '+p.storage+' USD '+p.priceUSD;
+  document.getElementById('saleInfoBar').innerHTML='<strong>'+p.model+' '+p.storage+'</strong> '+( p.color||'')+' '+(p.battery||'')+' <strong>USD '+p.priceUSD+'</strong> '+p.condition;
+  var today=new Date();
+  var g=new Date(today);g.setDate(g.getDate()+90);
+  var s=new Date(today);s.setFullYear(s.getFullYear()+1);
+  document.getElementById('saleGarantia').value=g.toISOString().split('T')[0];
+  document.getElementById('saleSeguimiento').value=s.toISOString().split('T')[0];
+  ['saleNombre','saleWA','saleIG','saleZona','saleNotas','tradeBateria','tradeValor'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('saleCanal').value='';
+  document.getElementById('salePago').value='Contado USD';
+  document.getElementById('saleSucursal').value='Banfield';
+  document.getElementById('toggleCanje').checked=false;
+  document.getElementById('tradeBlock').style.display='none';
+  document.getElementById('saleModal').classList.add('show');
+}
+function closeSaleModal(){
+  document.getElementById('saleModal').classList.remove('show');
+  pendingSaleIdx=null;
+}
+function confirmSale(){
+  var nombre=document.getElementById('saleNombre').value.trim();
+  var wa=document.getElementById('saleWA').value.trim();
+  if(!nombre||!wa){alert('Nombre y WhatsApp son obligatorios.');return;}
+  var idx=pendingSaleIdx;
+  var p=stockData[idx];
+  var tieneCanje=document.getElementById('toggleCanje').checked;
+  var batNum=document.getElementById('tradeBateria').value.trim();
+  var sale={
+    fecha:new Date().toISOString().split('T')[0],
+    nombre:nombre,whatsapp:wa,
+    instagram:document.getElementById('saleIG').value.trim(),
+    zona:document.getElementById('saleZona').value.trim(),
+    canal:document.getElementById('saleCanal').value,
+    sucursal:document.getElementById('saleSucursal').value,
+    modelo_vendido:p.model+' '+p.storage,
+    color:p.color||'',
+    precio_usd:p.priceUSD,
+    forma_pago:document.getElementById('salePago').value,
+    tiene_canje:tieneCanje?'Si':'No',
+    canje_modelo:tieneCanje?document.getElementById('tradeModelo').value:'',
+    canje_bateria:tieneCanje&&batNum?'Bateria '+batNum+'%':'',
+    canje_valor_usd:tieneCanje?document.getElementById('tradeValor').value:'',
+    canje_estado:tieneCanje?document.getElementById('tradeEstadoRecibido').value:'',
+    garantia_hasta:document.getElementById('saleGarantia').value,
+    seguimiento:document.getElementById('saleSeguimiento').value,
+    notas:document.getElementById('saleNotas').value.trim()
+  };
+  salesData.unshift(sale);
+  stockData[idx].estado='Vendido';
+  stockModified=true;
+  document.getElementById('btnSaveStock').disabled=false;
+  updateSummary();applyFilters();closeSaleModal();
+  saveSaleToSheets(sale);
+  renderSalesTable();updateSalesSummary();
+  showStatus('statusVentas','success','Venta de '+sale.modelo_vendido+' registrada para '+sale.nombre);
+  var ventasNav=Array.from(document.querySelectorAll('.nav-item')).find(function(n){return n.textContent.includes('Ventas');});
+  showSection('ventas',ventasNav);
+}
 
-  stockData.sort((a,b)=>{
-    const ca=a.condition==='Seminuevo'?0:1, cb=b.condition==='Seminuevo'?0:1;
-    return ca!==cb?ca-cb:a.priceUSD-b.priceUSD;
+// SHEETS PERSISTENCE
+async function saveSaleToSheets(sale){
+  try{
+    const res=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'saveVenta',password:PASSWORD,data:sale})});
+    const json=await res.json();
+    if(!json.ok) console.warn('saveVenta error:',json.error);
+  }catch(e){console.warn('saveVenta error:',e.message);}
+}
+async function loadVentas(){
+  try{
+    const res=await fetch(API_URL+'?action=ventas');
+    const json=await res.json();
+    if(Array.isArray(json)&&json.length){salesData=json.reverse();renderSalesTable();updateSalesSummary();}
+  }catch(e){console.warn('loadVentas error:',e.message);}
+}
+
+// SALES TABLE
+function seguimientoAlert(dateStr){
+  if(!dateStr) return '';
+  var diff=(new Date(dateStr)-new Date())/(1000*60*60*24);
+  if(diff<0) return '<span class="alert-dot alert-red"></span>';
+  if(diff<=7) return '<span class="alert-dot alert-yellow"></span>';
+  return '<span class="alert-dot alert-green"></span>';
+}
+function canalBadge(canal){
+  if(!canal) return '-';
+  var color='var(--muted)',bg='var(--surface2)';
+  if(canal.indexOf('Publicidad')===0){color='#ff9f0a';bg='rgba(255,159,10,.15)';}
+  else if(canal.indexOf('Organico')===0){color='#30d158';bg='rgba(48,209,88,.15)';}
+  else if(canal.indexOf('Recomendado')===0){color='#bf5af2';bg='rgba(191,90,242,.15)';}
+  else if(canal.indexOf('Cliente anterior')===0){color='#4da3ff';bg='rgba(10,132,255,.15)';}
+  return '<span style="font-size:.72rem;font-weight:700;background:'+bg+';color:'+color+';padding:2px 7px;border-radius:999px;white-space:nowrap;">'+canal+'</span>';
+}
+function renderSalesTable(){
+  var search=(document.getElementById('salesSearch').value||'').toLowerCase();
+  var suc=document.getElementById('salesSucursal').value;
+  var mes=document.getElementById('salesMes').value;
+  var alerta=document.getElementById('salesAlerta').value;
+  var today=new Date();
+  var rows=salesData.filter(function(s){
+    if(suc&&s.sucursal!==suc) return false;
+    if(mes&&!s.fecha.startsWith(mes)) return false;
+    if(alerta){
+      var diff=(new Date(s.seguimiento)-today)/(1000*60*60*24);
+      if(alerta==='red'&&diff>=0) return false;
+      if(alerta==='yellow'&&(diff<0||diff>7)) return false;
+    }
+    if(search&&!(s.nombre+s.whatsapp+s.modelo_vendido+s.canal+s.zona).toLowerCase().includes(search)) return false;
+    return true;
   });
-
-  bmRows = [];
-  renderBmTable();
-  stockModified = true;
-  document.getElementById('btnSaveStock').disabled = false;
-  applyFilters(); updateSummary();
-  document.getElementById('bmStatus').textContent = `✅ ${added} equipo(s) agregados. Guardá los cambios.`;
-  showStatus('statusStock','success',`✅ ${added} equipos agregados por carga masiva. Guardá los cambios.`);
-}
-
-// ── BADGES ────────────────────────────────────────────────
-function addBadge(text){if(!pendingBadges.includes(text)){pendingBadges.push(text);renderBadgeContainer();}}
-function addCustomBadge(){const i=document.getElementById('customBadge');if(i.value.trim()){addBadge(i.value.trim());i.value='';}}
-function removeBadge(text){pendingBadges=pendingBadges.filter(b=>b!==text);renderBadgeContainer();}
-function renderBadgeContainer(){
-  document.getElementById('badgesContainer').innerHTML=pendingBadges.map(b=>
-    `<span class="badge-tag">${b}<button onclick="removeBadge('${b}')">×</button></span>`
-  ).join('');
-}
-
-// ── TRADE-IN ──────────────────────────────────────────────
-function renderTradeTable(filter=''){
-  const body=document.getElementById('tradeBody');
+  var body=document.getElementById('salesBody');
   body.innerHTML='';
-  const f=filter.toLowerCase();
-  Object.entries(tradeData).forEach(([key,ranges])=>{
+  if(!rows.length){
+    body.innerHTML='<tr><td colspan="12"><div class="empty-state"><div class="empty-icon">📋</div>No hay ventas registradas todavia.</div></td></tr>';
+    document.getElementById('salesCount').textContent='';return;
+  }
+  rows.forEach(function(s){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td style="white-space:nowrap">'+s.fecha+'</td>'
+      +'<td style="font-weight:600">'+s.nombre+'</td>'
+      +'<td><a href="https://wa.me/549'+s.whatsapp+'" target="_blank" style="color:var(--primary);text-decoration:none;">+54 9 '+s.whatsapp+'</a></td>'
+      +'<td>'+canalBadge(s.canal)+'</td>'
+      +'<td class="td-model">'+s.modelo_vendido+'</td>'
+      +'<td class="td-price">USD '+s.precio_usd+'</td>'
+      +'<td style="font-size:.78rem">'+s.forma_pago+'</td>'
+      +'<td style="font-size:.78rem">'+s.sucursal+'</td>'
+      +'<td style="font-size:.78rem">'+(s.tiene_canje==='Si'?'<span style="color:var(--primary)">canje '+s.canje_modelo+'</span>':'-')+'</td>'
+      +'<td style="font-size:.78rem;white-space:nowrap">'+(s.garantia_hasta||'-')+'</td>'
+      +'<td style="white-space:nowrap">'+seguimientoAlert(s.seguimiento)+(s.seguimiento||'-')+'</td>'
+      +'<td style="font-size:.78rem;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+(s.notas||'')+'">'+(s.notas||'-')+'</td>';
+    body.appendChild(tr);
+  });
+  document.getElementById('salesCount').textContent='Mostrando '+rows.length+' venta(s)';
+  updateSalesSummary();
+}
+function updateSalesSummary(){
+  var today=new Date();
+  var mesActual=today.toISOString().slice(0,7);
+  document.getElementById('sumTotalVentas').textContent=salesData.length;
+  document.getElementById('sumVentasMes').textContent=salesData.filter(function(s){return s.fecha.startsWith(mesActual);}).length;
+  document.getElementById('sumSeguimientosVencidos').textContent=salesData.filter(function(s){return s.seguimiento&&(new Date(s.seguimiento)-today)<0;}).length;
+  document.getElementById('sumSeguimientosProximos').textContent=salesData.filter(function(s){
+    if(!s.seguimiento) return false;
+    var diff=(new Date(s.seguimiento)-today)/(1000*60*60*24);
+    return diff>=0&&diff<=7;
+  }).length;
+}
+function clearSalesFilters(){
+  ['salesSearch','salesMes'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('salesSucursal').value='';
+  document.getElementById('salesAlerta').value='';
+  renderSalesTable();
+}
+function exportSalesCSV(){
+  if(!salesData.length){alert('No hay ventas para exportar.');return;}
+  var headers=['fecha','nombre','whatsapp','instagram','zona','canal','sucursal','modelo_vendido','color','precio_usd','forma_pago','tiene_canje','canje_modelo','canje_bateria','canje_valor_usd','canje_estado','garantia_hasta','seguimiento','notas'];
+  var rows=salesData.map(function(s){return headers.map(function(h){return '"'+((s[h]||'').toString().replace(/"/g,'""'))+'"';}).join(',');});
+  var csv=[headers.join(',')].concat(rows).join('\n');
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='ventas_appletrade_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+
+// BADGES
+function addBadge(text){if(!pendingBadges.includes(text)){pendingBadges.push(text);renderBadgeContainer();}}
+function addCustomBadge(){var i=document.getElementById('customBadge');if(i.value.trim()){addBadge(i.value.trim());i.value='';}}
+function removeBadge(text){pendingBadges=pendingBadges.filter(function(b){return b!==text;});renderBadgeContainer();}
+function renderBadgeContainer(){
+  document.getElementById('badgesContainer').innerHTML=pendingBadges.map(function(b){
+    return '<span class="badge-tag">'+b+'<button onclick="removeBadge(\''+b+'\')">x</button></span>';
+  }).join('');
+}
+
+// TRADE-IN
+function renderTradeTable(filter){
+  filter=filter||'';
+  var body=document.getElementById('tradeBody');
+  body.innerHTML='';
+  var f=filter.toLowerCase();
+  Object.entries(tradeData).forEach(function(e){
+    var key=e[0],ranges=e[1];
     if(f&&!key.toLowerCase().includes(f))return;
-    ranges.forEach((r,ri)=>{
-      const tr=document.createElement('tr');
-      tr.innerHTML=`<td class="td-model">${ri===0?key:''}</td><td>${r.min}%</td><td>${r.max}%</td>
-        <td><input type="number" value="${r.val}" class="inline-edit" onchange="tradeData['${key}'][${ri}].val=parseFloat(this.value)"></td>`;
+    ranges.forEach(function(r,ri){
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td class="td-model">'+(ri===0?key:'')+'</td><td>'+r.min+'%</td><td>'+r.max+'%</td>'
+        +'<td><input type="number" value="'+r.val+'" class="inline-edit" onchange="tradeData[\''+key+'\']['+ri+'].val=parseFloat(this.value)"></td>';
       body.appendChild(tr);
     });
   });
 }
 function filterTradeTable(){renderTradeTable(document.getElementById('tradeSearch').value);}
 
-// ── ESTADO CHANGE WITH SALE TRIGGER ──────────────────────
-function handleEstadoChange(sel, idx){
-  const newEstado = sel.value;
-  const prev = stockData[idx].estado;
-  if(newEstado === 'Vendido' && prev !== 'Vendido'){
-    // revert visually — will confirm via modal
-    sel.value = prev;
-    openSaleModal(idx);
-  } else {
-    stockData[idx].estado = newEstado;
-    stockModified = true;
-    document.getElementById('btnSaveStock').disabled = false;
-    updateSummary();
-  }
-}
-
-// ── SALE MODAL ────────────────────────────────────────────
-function openSaleModal(idx){
-  pendingSaleIdx = idx;
-  const p = stockData[idx];
-  document.getElementById('saleModalSub').textContent = `${p.model} ${p.storage} · USD ${p.priceUSD}`;
-  document.getElementById('saleInfoBar').innerHTML =
-    `<strong>${p.model} ${p.storage}</strong> · ${p.color||''} · ${p.battery||''} · <strong>USD ${p.priceUSD}</strong> · ${p.condition}`;
-  // Default dates
-  const today = new Date();
-  const garantia = new Date(today); garantia.setDate(garantia.getDate()+90);
-  const seguimiento = new Date(today); seguimiento.setFullYear(seguimiento.getFullYear()+1);
-  document.getElementById('saleGarantia').value = garantia.toISOString().split('T')[0];
-  document.getElementById('saleSeguimiento').value = seguimiento.toISOString().split('T')[0];
-  // Reset fields
-  ['saleNombre','saleWA','saleIG','saleZona','saleNotas','tradeBateria','tradeValor'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('saleCanal').value='';
-  document.getElementById('salePago').value='Contado USD';
-  document.getElementById('saleSucursal').value='Banfield';
-  document.getElementById('toggleCanje').checked=false;
-  document.getElementById('tradeBlock').style.display='none';
-  document.getElementById('tradeEstadoRecibido').value='Excelente (10/10)';
-  document.getElementById('saleModal').classList.add('show');
-}
-
-function closeSaleModal(){
-  document.getElementById('saleModal').classList.remove('show');
-  pendingSaleIdx = null;
-}
-
-function toggleCanjeBlock(on){
-  document.getElementById('tradeBlock').style.display = on ? 'block' : 'none';
-}
-
-function confirmSale(){
-  const nombre = document.getElementById('saleNombre').value.trim();
-  const wa = document.getElementById('saleWA').value.trim();
-  if(!nombre || !wa){ alert('Nombre y WhatsApp son obligatorios.'); return; }
-
-  const idx = pendingSaleIdx;
-  const p = stockData[idx];
-  const tieneCanje = document.getElementById('toggleCanje').checked;
-
-  const sale = {
-    fecha: new Date().toISOString().split('T')[0],
-    nombre,
-    whatsapp: wa,
-    instagram: document.getElementById('saleIG').value.trim(),
-    zona: document.getElementById('saleZona').value.trim(),
-    canal: document.getElementById('saleCanal').value,
-    sucursal: document.getElementById('saleSucursal').value,
-    modelo_vendido: `${p.model} ${p.storage}`,
-    color: p.color||'',
-    precio_usd: p.priceUSD,
-    forma_pago: document.getElementById('salePago').value,
-    tiene_canje: tieneCanje ? 'Sí' : 'No',
-    canje_modelo: tieneCanje ? document.getElementById('tradeModelo').value : '',
-    canje_bateria: tieneCanje ? document.getElementById('tradeBateria').value : '',
-    canje_valor_usd: tieneCanje ? document.getElementById('tradeValor').value : '',
-    canje_estado: tieneCanje ? document.getElementById('tradeEstadoRecibido').value : '',
-    garantia_hasta: document.getElementById('saleGarantia').value,
-    seguimiento: document.getElementById('saleSeguimiento').value,
-    notas: document.getElementById('saleNotas').value.trim(),
-  };
-
-  salesData.unshift(sale);
-  // Mark stock as vendido
-  stockData[idx].estado = 'Vendido';
-  stockModified = true;
-  document.getElementById('btnSaveStock').disabled = false;
-  updateSummary();
-  applyFilters();
-  closeSaleModal();
-  renderSalesTable();
-  updateSalesSummary();
-
-  // Persist venta to Google Sheets
-  saveSaleToSheets(sale);
-
-  showStatus('statusVentas','success',`✅ Venta de ${sale.modelo_vendido} registrada para ${sale.nombre}`);
-  // Switch to ventas section
-  const allNav = document.querySelectorAll('.nav-item');
-  const ventasNav = Array.from(allNav).find(n=>n.textContent.includes('Ventas'));
-  showSection('ventas', ventasNav);
-}
-
-// ── SHEETS PERSISTENCE ───────────────────────────────────
-async function saveSaleToSheets(sale){
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'saveVenta', password: PASSWORD, data: sale })
-    });
-    const json = await res.json();
-    if(!json.ok) console.warn('saveVenta error:', json.error);
-  } catch(e) { console.warn('saveVenta fetch error:', e.message); }
-}
-
-async function loadVentas(){
-  try {
-    const res = await fetch(API_URL + '?action=ventas');
-    const json = await res.json();
-    if(Array.isArray(json) && json.length){
-      salesData = json.reverse(); // newest first
-      renderSalesTable();
-      updateSalesSummary();
-    }
-  } catch(e) { console.warn('loadVentas error:', e.message); }
-}
-
-// ── SALES TABLE ───────────────────────────────────────────
-function seguimientoAlert(dateStr){
-  if(!dateStr) return '';
-  const diff = (new Date(dateStr) - new Date()) / (1000*60*60*24);
-  if(diff < 0) return '<span class="alert-dot alert-red"></span>';
-  if(diff <= 7) return '<span class="alert-dot alert-yellow"></span>';
-  return '<span class="alert-dot alert-green"></span>';
-}
-
-function canalBadge(canal){
-  if(!canal) return '—';
-  let color = 'var(--muted)'; let bg = 'var(--surface2)';
-  if(canal.startsWith('Publicidad')){ color='#ff9f0a'; bg='rgba(255,159,10,.15)'; }
-  else if(canal.startsWith('Orgánico')){ color='#30d158'; bg='rgba(48,209,88,.15)'; }
-  else if(canal.startsWith('Recomendado')){ color='#bf5af2'; bg='rgba(191,90,242,.15)'; }
-  else if(canal.startsWith('Cliente anterior')){ color='#4da3ff'; bg='rgba(10,132,255,.15)'; }
-  return `<span style="font-size:.72rem;font-weight:700;background:${bg};color:${color};padding:2px 7px;border-radius:999px;white-space:nowrap;">${canal}</span>`;
-}
-
-
-function renderSalesTable(){
-  const search = (document.getElementById('salesSearch').value||'').toLowerCase();
-  const suc = document.getElementById('salesSucursal').value;
-  const mes = document.getElementById('salesMes').value;
-  const alerta = document.getElementById('salesAlerta').value;
-  const today = new Date();
-
-  let rows = salesData.filter(s=>{
-    if(suc && s.sucursal !== suc) return false;
-    if(mes && !s.fecha.startsWith(mes)) return false;
-    if(alerta){
-      const diff = (new Date(s.seguimiento) - today) / (1000*60*60*24);
-      if(alerta==='red' && diff >= 0) return false;
-      if(alerta==='yellow' && (diff < 0 || diff > 7)) return false;
-    }
-    if(search && !(s.nombre+s.whatsapp+s.modelo_vendido+s.canal+s.zona).toLowerCase().includes(search)) return false;
-    return true;
-  });
-
-  const body = document.getElementById('salesBody');
-  body.innerHTML = '';
-  if(!rows.length){
-    body.innerHTML = `<tr><td colspan="12"><div class="empty-state"><div class="empty-icon">📋</div>No hay ventas registradas todavía.</div></td></tr>`;
-    document.getElementById('salesCount').textContent = '';
-    return;
-  }
-  rows.forEach(s=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="white-space:nowrap">${s.fecha}</td>
-      <td style="font-weight:600">${s.nombre}</td>
-      <td><a href="https://wa.me/549${s.whatsapp}" target="_blank" style="color:var(--primary);text-decoration:none;">+54 9 ${s.whatsapp}</a></td>
-      <td>${canalBadge(s.canal)}</td>
-      <td class="td-model">${s.modelo_vendido}</td>
-      <td class="td-price">USD ${s.precio_usd}</td>
-      <td style="font-size:.78rem">${s.forma_pago}</td>
-      <td style="font-size:.78rem">${s.sucursal}</td>
-      <td style="font-size:.78rem">${s.tiene_canje==='Sí'?`<span style="color:var(--primary)">✓ ${s.canje_modelo}</span>`:'—'}</td>
-      <td style="font-size:.78rem;white-space:nowrap">${s.garantia_hasta||'—'}</td>
-      <td style="white-space:nowrap">${seguimientoAlert(s.seguimiento)}${s.seguimiento||'—'}</td>
-      <td style="font-size:.78rem;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${s.notas}">${s.notas||'—'}</td>
-    `;
-    body.appendChild(tr);
-  });
-  document.getElementById('salesCount').textContent = `Mostrando ${rows.length} venta(s)`;
-  updateSalesSummary();
-}
-
-function updateSalesSummary(){
-  const today = new Date();
-  const mesActual = today.toISOString().slice(0,7);
-  document.getElementById('sumTotalVentas').textContent = salesData.length;
-  document.getElementById('sumVentasMes').textContent = salesData.filter(s=>s.fecha.startsWith(mesActual)).length;
-  document.getElementById('sumSeguimientosVencidos').textContent = salesData.filter(s=>s.seguimiento && (new Date(s.seguimiento)-today)<0).length;
-  document.getElementById('sumSeguimientosProximos').textContent = salesData.filter(s=>{
-    if(!s.seguimiento) return false;
-    const diff = (new Date(s.seguimiento)-today)/(1000*60*60*24);
-    return diff>=0 && diff<=7;
-  }).length;
-}
-
-function clearSalesFilters(){
-  ['salesSearch','salesMes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('salesSucursal').value='';
-  document.getElementById('salesAlerta').value='';
-  renderSalesTable();
-}
-
-function exportSalesCSV(){
-  if(!salesData.length){ alert('No hay ventas para exportar.'); return; }
-  const headers = ['fecha','nombre','whatsapp','instagram','zona','canal','sucursal','modelo_vendido','color','precio_usd','forma_pago','tiene_canje','canje_modelo','canje_bateria','canje_valor_usd','canje_estado','garantia_hasta','seguimiento','notas'];
-  const rows = salesData.map(s=>headers.map(h=>`"${(s[h]||'').toString().replace(/"/g,'""')}"`).join(','));
-  const csv = [headers.join(','),...rows].join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
-  a.download = `ventas_appletrade_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-}
-
-// ── HELPERS ───────────────────────────────────────────────
+// HELPERS
 function showStatus(id,type,msg){
-  const el=document.getElementById(id);
+  var el=document.getElementById(id);
   el.className='status-bar '+type;el.textContent=msg;el.style.display='block';
-  setTimeout(()=>el.style.display='none',5000);
+  setTimeout(function(){el.style.display='none';},5000);
 }
 function showLoading(show){document.getElementById('loadingOverlay').classList.toggle('show',show);}
 </script>
+
+
+<div class="modal-overlay" id="saleModal">
+  <div class="modal-box">
+    <div class="modal-title">Registrar venta</div>
+    <div class="modal-sub" id="saleModalSub">equipo</div>
+    <div class="sale-info-bar" id="saleInfoBar"></div>
+    <div class="modal-section">Cliente</div>
+    <div class="modal-grid">
+      <div class="form-group"><label class="form-label">Nombre y apellido *</label><input class="form-input" id="saleNombre" placeholder="Juan Perez"></div>
+      <div class="form-group"><label class="form-label">WhatsApp *</label><input class="form-input" id="saleWA" placeholder="1134567890" type="tel"></div>
+      <div class="form-group"><label class="form-label">Instagram (opcional)</label><input class="form-input" id="saleIG" placeholder="@juanperez"></div>
+      <div class="form-group"><label class="form-label">Barrio / Zona</label><input class="form-input" id="saleZona" placeholder="Banfield, Lanus..."></div>
+    </div>
+    <div class="form-group" style="margin-top:12px;"><label class="form-label">Origen del cliente</label>
+      <select class="form-select form-input" id="saleCanal">
+        <option value="">Seleccionar</option>
+        <optgroup label="Publicidad paga">
+          <option>Publicidad - TikTok Ads</option>
+          <option>Publicidad - Meta Ads (Instagram/Facebook)</option>
+          <option>Publicidad - WhatsApp Ads</option>
+        </optgroup>
+        <optgroup label="Organico">
+          <option>Organico - TikTok</option>
+          <option>Organico - Instagram</option>
+          <option>Organico - WhatsApp directo</option>
+          <option>Organico - Local fisico (paso por ahi)</option>
+        </optgroup>
+        <optgroup label="Recomendacion">
+          <option>Recomendado por cliente</option>
+          <option>Recomendado por conocido</option>
+        </optgroup>
+        <optgroup label="Cliente anterior">
+          <option>Cliente anterior - recompra</option>
+          <option>Cliente anterior - upgrade (canje propio)</option>
+        </optgroup>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div class="modal-section">Venta</div>
+    <div class="modal-grid">
+      <div class="form-group"><label class="form-label">Sucursal</label>
+        <select class="form-select form-input" id="saleSucursal"><option>Banfield</option><option>CABA</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Forma de pago</label>
+        <select class="form-select form-input" id="salePago">
+          <option>Contado USD</option><option>Contado ARS</option><option>3 cuotas</option><option>6 cuotas</option><option>Mixto</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-section" style="margin-top:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span>Incluye canje</span>
+        <label class="toggle-switch"><input type="checkbox" id="toggleCanje" onchange="document.getElementById('tradeBlock').style.display=this.checked?'block':'none'"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+    <div id="tradeBlock">
+      <div class="modal-grid col3" style="margin-top:12px;">
+        <div class="form-group"><label class="form-label">Modelo canjeado</label>
+          <select class="form-select form-input" id="tradeModelo">
+            <option value="">Seleccionar</option>
+            <optgroup label="iPhone 11"><option>iPhone 11 128GB</option><option>iPhone 11 Pro 256GB</option></optgroup>
+            <optgroup label="iPhone 12"><option>iPhone 12 128GB</option><option>iPhone 12 Pro 256GB</option></optgroup>
+            <optgroup label="iPhone 13"><option>iPhone 13 128GB</option><option>iPhone 13 256GB</option><option>iPhone 13 Pro 256GB</option></optgroup>
+            <optgroup label="iPhone 14"><option>iPhone 14 128GB</option><option>iPhone 14 256GB</option><option>iPhone 14 Pro 256GB</option></optgroup>
+            <optgroup label="iPhone 15"><option>iPhone 15 128GB</option><option>iPhone 15 Pro 256GB</option></optgroup>
+            <optgroup label="iPhone 16"><option>iPhone 16 128GB</option><option>iPhone 16 Pro 256GB</option></optgroup>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Bateria</label>
+          <div class="bat-wrap"><span class="bat-affix">Bateria</span><input class="bat-input" id="tradeBateria" type="number" min="50" max="100" placeholder="87"><span class="bat-affix">%</span></div>
+        </div>
+        <div class="form-group"><label class="form-label">Valor canje USD</label><input class="form-input" id="tradeValor" type="number" placeholder="300"></div>
+      </div>
+      <div class="form-group" style="margin-top:12px;"><label class="form-label">Estado equipo recibido</label>
+        <select class="form-select form-input" id="tradeEstadoRecibido">
+          <option>Excelente (10/10)</option><option>Muy bueno (8-9/10)</option><option>Bueno (6-7/10)</option><option>Regular (con detalles)</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-section">Postventa</div>
+    <div class="modal-grid">
+      <div class="form-group"><label class="form-label">Garantia hasta</label><input class="form-input" id="saleGarantia" type="date"></div>
+      <div class="form-group"><label class="form-label">Seguimiento (upgrade)</label><input class="form-input" id="saleSeguimiento" type="date"></div>
+    </div>
+    <div class="form-group" style="margin-top:12px;"><label class="form-label">Notas internas</label>
+      <textarea class="form-input" id="saleNotas" rows="2" placeholder="Cualquier detalle..." style="resize:vertical;font-family:inherit;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeSaleModal()">Cancelar</button>
+      <button class="btn btn-success" onclick="confirmSale()">Confirmar venta</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
