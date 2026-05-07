@@ -1197,11 +1197,11 @@ function renderProducts(filter){
         <div class="pc-price-label">Precio contado</div>
         ${f.priceOffer
           ? `<div class="pc-price-offer">
-               <span class="pc-price-original">USD \${f.priceUSD}</span>
-               <span class="pc-price-usd-offer">USD \${f.priceOffer}</span>
+               <span class="pc-price-original">USD ${f.priceUSD}</span>
+               <span class="pc-price-usd-offer">USD ${f.priceOffer}</span>
                <span class="pc-offer-badge">Oferta</span>
              </div>`
-          : `<div class="pc-price-usd">USD \${f.priceUSD}</div>`
+          : `<div class="pc-price-usd">USD ${f.priceUSD}</div>`
         }
         <div class="pc-separator">ó</div>
         <div class="pc-price-ars">$ ${ars}</div>
