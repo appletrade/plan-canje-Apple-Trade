@@ -275,7 +275,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Modelo</th><th>Color</th><th>Batería</th><th>USD</th><th>Estado</th><th>Observaciones</th><th></th></tr></thead>
+            <thead><tr><th>Modelo</th><th>Color</th><th>Batería</th><th>USD</th><th>Oferta USD</th><th>Estado</th><th>Observaciones</th><th></th></tr></thead>
             <tbody id="stockBody"></tbody>
           </table>
         </div>
@@ -302,6 +302,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
             <div class="form-group"><label class="form-label">Color</label><input class="form-input" id="newColor" placeholder="Negro"></div>
             <div class="form-group"><label class="form-label">Batería</label><div class="bat-wrap"><span class="bat-affix">Batería</span><input class="bat-input" id="newBattery" type="number" min="50" max="100" placeholder="95"><span class="bat-affix">%</span></div></div>
             <div class="form-group"><label class="form-label">Precio USD</label><input type="number" class="form-input" id="newPrice" placeholder="650"></div>
+            <div class="form-group"><label class="form-label">Precio oferta USD <span style="font-size:.7rem;color:var(--muted);font-weight:400;">(opcional)</span></label><input type="number" class="form-input" id="newPriceOffer" placeholder="—"></div>
             <div class="form-group"><label class="form-label">Condición</label>
               <select class="form-select form-input" id="newCondition"><option value="Seminuevo">Seminuevo</option><option value="Nuevo en caja sellada">Nuevo en caja sellada</option></select>
             </div>
@@ -421,6 +422,10 @@ tbody td{padding:8px 10px;vertical-align:middle;}
         </div>
         <div style="margin-top:10px;font-size:.8rem;color:var(--muted)" id="salesCount"></div>
       </div>
+      <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn btn-ghost" onclick="loadVentas()">↺ Recargar ventas</button>
+        <button class="btn btn-success" onclick="saveAllSalesToSheets()" id="btnSaveVentas">✓ Guardar cambios</button>
+      </div>
     </div>
 
     <!-- TRADE-IN -->
@@ -435,6 +440,10 @@ tbody td{padding:8px 10px;vertical-align:middle;}
           <table><thead><tr><th>Modelo + Storage</th><th>Bat. mín.</th><th>Bat. máx.</th><th>Valor USD</th></tr></thead>
           <tbody id="tradeBody"></tbody></table>
         </div>
+      </div>
+      <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn btn-ghost" onclick="loadAll()">↺ Recargar</button>
+        <button class="btn btn-success" onclick="saveTradeIn()">✓ Guardar cambios</button>
       </div>
     </div>
 
@@ -574,6 +583,7 @@ function renderStockTable(rows){
       +'<td><input class="inline-edit" style="width:90px;" value="'+(p.color||'')+'" onchange="stockData['+globalIdx+'].color=this.value;stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;"></td>'
       +'<td><input class="inline-edit" style="width:90px;" value="'+(p.battery||'')+'" onchange="stockData['+globalIdx+'].battery=this.value;stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;"></td>'
       +'<td class="td-price"><input class="inline-edit" type="number" value="'+p.priceUSD+'" onchange="stockData['+globalIdx+'].priceUSD=parseInt(this.value);stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;updateSummary();"></td>'
+      +'<td><input class="inline-edit" type="number" style="width:74px;" placeholder="—" value="'+(p.priceOffer||'')+'" onchange="var v=parseInt(this.value);stockData['+globalIdx+'].priceOffer=v>0?v:undefined;stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;" title="Precio oferta — dejar vacío para quitar"></td>'
       +'<td><select class="form-select" style="padding:4px 8px;font-size:.78rem;border-radius:7px;" onchange="handleEstadoChange(this,'+globalIdx+')">'+opts+'</select></td>'
       +'<td><input class="inline-edit" style="width:130px;" value="'+(p.observaciones||'')+'" onchange="stockData['+globalIdx+'].observaciones=this.value;stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;"></td>'
       +'<td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="removeProduct('+globalIdx+')">X</button></div></td>';
@@ -634,13 +644,14 @@ function addProduct(){
   const batNum=document.getElementById('newBattery').value.trim();
   const battery=batNum?'Bateria '+batNum+'%':'';
   const price=parseFloat(document.getElementById('newPrice').value);
+  const priceOffer=parseFloat(document.getElementById('newPriceOffer').value)||undefined;
   const condition=document.getElementById('newCondition').value;
   const estado=document.getElementById('newEstado').value;
   const obs=document.getElementById('newObs').value.trim();
   if(!price){alert('Ingresa el precio');return;}
-  stockData.push({model:model,storage:storage,color:color,battery:battery,priceUSD:price,condition:condition,estado:estado,badges:pendingBadges.slice(),observaciones:obs});
+  stockData.push({model:model,storage:storage,color:color,battery:battery,priceUSD:price,priceOffer:priceOffer,condition:condition,estado:estado,badges:pendingBadges.slice(),observaciones:obs});
   stockData.sort(function(a,b){var ca=a.condition==='Seminuevo'?0:1,cb=b.condition==='Seminuevo'?0:1;return ca!==cb?ca-cb:a.priceUSD-b.priceUSD;});
-  ['newColor','newBattery','newPrice','newObs'].forEach(function(id){document.getElementById(id).value='';});
+  ['newColor','newBattery','newPrice','newPriceOffer','newObs'].forEach(function(id){document.getElementById(id).value='';});
   pendingBadges=[];renderBadgeContainer();
   stockModified=true;
   document.getElementById('btnSaveStock').disabled=false;
@@ -775,6 +786,17 @@ function confirmSale(){
 }
 
 // SHEETS PERSISTENCE
+async function saveAllSalesToSheets(){
+  if(!salesData.length){ showStatus('statusVentas','error','No hay ventas para guardar.'); return; }
+  showLoading(true);
+  try{
+    const res=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'saveAllVentas',password:PASSWORD,data:salesData})});
+    const json=await res.json();
+    if(json.ok) showStatus('statusVentas','success','Ventas guardadas correctamente.');
+    else showStatus('statusVentas','error',json.error||'Error al guardar.');
+  }catch(e){ showStatus('statusVentas','error',e.message); }
+  showLoading(false);
+}
 async function saveSaleToSheets(sale){
   try{
     const res=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'saveVenta',password:PASSWORD,data:sale})});
@@ -906,6 +928,18 @@ function renderTradeTable(filter){
   });
 }
 function filterTradeTable(){renderTradeTable(document.getElementById('tradeSearch').value);}
+
+async function saveTradeIn(){
+  if(!Object.keys(tradeData).length){ showStatus('statusTrade','error','No hay datos de trade-in cargados.'); return; }
+  showLoading(true);
+  try{
+    const res=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'updateTradeIn',password:PASSWORD,data:tradeData})});
+    const json=await res.json();
+    if(json.ok) showStatus('statusTrade','success','Valores de trade-in guardados.');
+    else showStatus('statusTrade','error',json.error||'Error al guardar.');
+  }catch(e){ showStatus('statusTrade','error',e.message); }
+  showLoading(false);
+}
 
 // HELPERS
 function showStatus(id,type,msg){
