@@ -636,6 +636,20 @@ function applyBulkPrice(){
   applyFilters();
 }
 
+// SORT STOCK
+function sortStock(){
+  function modelTier(p){
+    var n=parseInt((p.model.match(/iPhone (\d+)/)||[])[1]||0);
+    var tier=p.model.indexOf('Pro Max')>-1?3:p.model.indexOf('Pro')>-1?2:p.model.indexOf('Plus')>-1?1:p.model.indexOf(' E')>-1?-1:0;
+    var cond=p.condition==='Seminuevo'?0:1;
+    return [cond, n*10+tier, p.priceUSD];
+  }
+  stockData.sort(function(a,b){
+    var ta=modelTier(a),tb=modelTier(b);
+    return ta[0]-tb[0]||ta[1]-tb[1]||ta[2]-tb[2];
+  });
+}
+
 // ADD PRODUCT
 function addProduct(){
   const model=document.getElementById('newModel').value;
@@ -650,7 +664,7 @@ function addProduct(){
   const obs=document.getElementById('newObs').value.trim();
   if(!price){alert('Ingresa el precio');return;}
   stockData.push({model:model,storage:storage,color:color,battery:battery,priceUSD:price,priceOffer:priceOffer,condition:condition,estado:estado,badges:pendingBadges.slice(),observaciones:obs});
-  stockData.sort(function(a,b){var ca=a.condition==='Seminuevo'?0:1,cb=b.condition==='Seminuevo'?0:1;return ca!==cb?ca-cb:a.priceUSD-b.priceUSD;});
+  sortStock();
   ['newColor','newBattery','newPrice','newPriceOffer','newObs'].forEach(function(id){document.getElementById(id).value='';});
   pendingBadges=[];renderBadgeContainer();
   stockModified=true;
@@ -715,6 +729,7 @@ function bmConfirm(){
     added++;
   });
   if(errors){document.getElementById('bmStatus').textContent=errors+' fila(s) sin precio.';return;}
+  sortStock();
   bmRows=[];renderBmTable();
   stockModified=true;
   document.getElementById('btnSaveStock').disabled=false;
