@@ -154,6 +154,10 @@ section{padding:80px 20px;}
 .pc-badge.sellado{background:#e8f5e9;color:#2e7d32;}
 .pc-body{padding:16px 20px;}
 .pc-price-usd{font-size:1.5rem;font-weight:800;color:var(--primary);letter-spacing:-.02em;}
+.pc-price-offer{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.pc-price-original{font-size:1rem;color:var(--muted);text-decoration:line-through;font-weight:600;}
+.pc-price-usd-offer{font-size:1.5rem;font-weight:800;color:#ff3b30;letter-spacing:-.02em;}
+.pc-offer-badge{font-size:.7rem;font-weight:800;background:#ff3b30;color:#fff;padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.4px;align-self:center;}
 .pc-price-label{font-size:.75rem;color:var(--muted);margin-bottom:2px;}
 .pc-separator{font-size:.78rem;color:var(--muted);margin:4px 0;}
 .pc-price-ars{font-size:.95rem;color:var(--text);font-weight:600;}
@@ -1132,6 +1136,18 @@ function renderProducts(filter){
   });
   if(!filtered.length){grid.innerHTML='<p style="color:var(--muted);padding:20px;">Sin equipos disponibles.</p>';return;}
 
+  // Ordenar: primero por número de modelo iPhone ascendente, luego Pro/Max, luego precio
+  filtered.sort((a,b)=>{
+    const modelNum = m => {
+      const n = parseInt((m.model.match(/iPhone (\d+)/)||[])[1]||0);
+      const tier = m.model.includes('Pro Max')?3:m.model.includes('Pro')?2:m.model.includes('Plus')?1:m.model.includes(' E')?-1:0;
+      return n*10 + tier;
+    };
+    const diff = modelNum(a) - modelNum(b);
+    if(diff !== 0) return diff;
+    return (a.priceOffer||a.priceUSD) - (b.priceOffer||b.priceUSD);
+  });
+
   // Agrupar por model + condition
   const groups = new Map();
   filtered.forEach(p=>{
@@ -1157,8 +1173,9 @@ function renderProducts(filter){
     }).join('');
 
     const f = first;
-    const ars=(f.priceUSD*USD).toLocaleString('es-AR');
-    const c3=Math.round(f.priceUSD*USD*INT3/3).toLocaleString('es-AR');
+    const activePrice = f.priceOffer || f.priceUSD;
+    const ars=(activePrice*USD).toLocaleString('es-AR');
+    const c3=Math.round(activePrice*USD*INT3/3).toLocaleString('es-AR');
     const colorHTML=getColorDots(f.details);
     const waMsg=encodeURIComponent(`Hola! Me interesa el ${f.model} ${f.storage} (${f.details}) a USD ${f.priceUSD}. ¿Está disponible?`);
 
@@ -1178,10 +1195,17 @@ function renderProducts(filter){
       </div>
       <div class="pc-body">
         <div class="pc-price-label">Precio contado</div>
-        <div class="pc-price-usd">USD ${f.priceUSD}</div>
+        ${f.priceOffer
+          ? `<div class="pc-price-offer">
+               <span class="pc-price-original">USD \${f.priceUSD}</span>
+               <span class="pc-price-usd-offer">USD \${f.priceOffer}</span>
+               <span class="pc-offer-badge">Oferta</span>
+             </div>`
+          : `<div class="pc-price-usd">USD \${f.priceUSD}</div>`
+        }
         <div class="pc-separator">ó</div>
         <div class="pc-price-ars">$ ${ars}</div>
-        <div class="pc-installments"><span>3 cuotas de $ ${c3}</span><span>6 cuotas de $ ${Math.round(f.priceUSD*USD*INT6/6).toLocaleString('es-AR')}</span></div>
+        <div class="pc-installments"><span>3 cuotas de $ ${c3}</span><span>6 cuotas de $ ${Math.round(activePrice*USD*INT6/6).toLocaleString('es-AR')}</span></div>
         <div class="pc-actions">
           <button class="pc-btn-buy" data-wa="${waMsg}" onclick="fbq('track','Contact',{content_name:'Compra directa',content_category:'${f.model}',value:${f.priceUSD},currency:'USD'});window.open('https://wa.me/${WA}?text='+this.dataset.wa,'_blank')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
@@ -1202,12 +1226,22 @@ function updateCard(select){
   const card = select.closest('.product-card');
   const variants = card._variants;
   const v = variants[parseInt(select.value)];
-  const ars=(v.priceUSD*USD).toLocaleString('es-AR');
-  const c3=Math.round(v.priceUSD*USD*INT3/3).toLocaleString('es-AR');
-  const waMsg=encodeURIComponent(`Hola! Me interesa el ${v.model} ${v.storage} (${v.details}) a USD ${v.priceUSD}. ¿Está disponible?`);
-  card.querySelector('.pc-price-usd').textContent='USD '+v.priceUSD;
+  const vActivePrice = v.priceOffer || v.priceUSD;
+  const ars=(vActivePrice*USD).toLocaleString('es-AR');
+  const c3=Math.round(vActivePrice*USD*INT3/3).toLocaleString('es-AR');
+  const waMsg=encodeURIComponent(`Hola! Me interesa el ${v.model} ${v.storage} (${v.details}) a USD ${v.priceOffer||v.priceUSD}. ¿Está disponible?`);
+  const priceBox = card.querySelector('.pc-price-usd, .pc-price-usd-offer, .pc-price-offer');
+  if(priceBox && priceBox.classList.contains('pc-price-offer')){
+    priceBox.outerHTML = v.priceOffer
+      ? `<div class="pc-price-offer"><span class="pc-price-original">USD ${v.priceUSD}</span><span class="pc-price-usd-offer">USD ${v.priceOffer}</span><span class="pc-offer-badge">Oferta</span></div>`
+      : `<div class="pc-price-usd">USD ${v.priceUSD}</div>`;
+  } else if(priceBox){
+    priceBox.outerHTML = v.priceOffer
+      ? `<div class="pc-price-offer"><span class="pc-price-original">USD ${v.priceUSD}</span><span class="pc-price-usd-offer">USD ${v.priceOffer}</span><span class="pc-offer-badge">Oferta</span></div>`
+      : `<div class="pc-price-usd">USD ${v.priceUSD}</div>`;
+  }
   card.querySelector('.pc-price-ars').textContent='$ '+ars;
-  const c6u=Math.round(v.priceUSD*USD*INT6/6).toLocaleString('es-AR');
+  const c6u=Math.round(vActivePrice*USD*INT6/6).toLocaleString('es-AR');
   card.querySelector('.pc-installments').innerHTML='<span>3 cuotas de $ '+c3+'</span><span>6 cuotas de $ '+c6u+'</span>';
   card.querySelector('.pc-btn-buy').dataset.wa=waMsg;
   card.querySelector('.pc-btn-canje').dataset.model=v.model+' '+v.storage;
