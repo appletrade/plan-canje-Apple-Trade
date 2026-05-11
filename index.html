@@ -987,7 +987,8 @@ function showResult(){
       return;
     }
     allAccessible.slice(0,showing).forEach(p=>{
-      const diff = p.priceUSD - finalVal;
+      const activePrice = p.priceOffer || p.priceUSD;
+      const diff = activePrice - finalVal;
       const diffARS = diff * USD;
       const c3 = Math.round(diffARS * INT3 / 3);
       const c6 = Math.round(diffARS * INT6 / 6);
@@ -1011,8 +1012,8 @@ function showResult(){
           </div>
         </div>
         <div class="rmc-right">
-          <span class="rmc-badge-price">USD ${p.priceUSD}</span>
-          <button class="rmc-btn" onclick="sendCanjeWA('${p.model}','${p.storage}','${p.details}',${p.priceUSD},${finalVal})">Quiero este</button>
+          <span class="rmc-badge-price">USD ${activePrice}</span>
+          <button class="rmc-btn" onclick="sendCanjeWA('${p.model}','${p.storage}','${p.details}',${activePrice},${finalVal})">Quiero este</button>
         </div>
       `;
       container.appendChild(div);
