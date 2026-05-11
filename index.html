@@ -1177,7 +1177,7 @@ function renderProducts(filter){
     const ars=(activePrice*USD).toLocaleString('es-AR');
     const c3=Math.round(activePrice*USD*INT3/3).toLocaleString('es-AR');
     const colorHTML=getColorDots(f.details);
-    const waMsg=encodeURIComponent(`Hola! Me interesa el ${f.model} ${f.storage} (${f.details}) a USD ${f.priceUSD}. ¿Está disponible?`);
+    const waMsg=encodeURIComponent(`Hola! Me interesa el ${f.model} ${f.storage} (${f.details}) a USD ${f.priceOffer||f.priceUSD}. ¿Está disponible?`);
 
     const card=document.createElement('div');
     card.className='product-card';
