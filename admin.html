@@ -450,6 +450,12 @@ tbody td{padding:8px 10px;vertical-align:middle;}
   </div>
 </div>
 
+<!-- AVISO SESIÓN MÚLTIPLE -->
+<div id="sessionWarning" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9998;background:#ff9f0a;color:#fff;padding:10px 16px;font-size:.85rem;font-weight:700;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.2);">
+  ⚠️ Hay otra sesión del admin abierta. Recargá los datos antes de guardar para no perder cambios.
+  <button onclick="reloadAndDismiss()" style="margin-left:12px;background:#fff;color:#ff9f0a;border:none;padding:4px 12px;border-radius:999px;font-weight:800;cursor:pointer;font-size:.82rem;">↺ Recargar ahora</button>
+  <button onclick="document.getElementById('sessionWarning').style.display='none'" style="margin-left:8px;background:none;border:none;color:#fff;cursor:pointer;font-size:1rem;">✕</button>
+</div>
 <script>
 const API_URL  = "https://script.google.com/macros/s/AKfycbyTHEhZ0jhCjyzd9wJHWIoHxy2SyeotOpHZcaljLHGcOae-eRbWydVftIjRGCSh9PEduw/exec";
 const PASSWORD = "Budin2026";
@@ -487,6 +493,37 @@ function showSection(id,el){
 }
 
 // LOAD
+// SESSION & STALENESS DETECTION
+const SESSION_KEY = 'appletrade_admin_session';
+const LOAD_TS_KEY = 'appletrade_admin_loaded_at';
+const SAVE_TS_KEY = 'appletrade_admin_saved_at';
+const mySession = Date.now() + '_' + Math.random().toString(36).slice(2);
+
+function checkOtherSessions(){
+  // Detect if another tab saved after we loaded
+  const savedAt = parseInt(localStorage.getItem(SAVE_TS_KEY)||'0');
+  const loadedAt = parseInt(localStorage.getItem(LOAD_TS_KEY)||'0');
+  if(savedAt > loadedAt){
+    document.getElementById('sessionWarning').style.display='block';
+  }
+}
+
+function markLoaded(){
+  localStorage.setItem(LOAD_TS_KEY, Date.now().toString());
+}
+
+function markSaved(){
+  localStorage.setItem(SAVE_TS_KEY, Date.now().toString());
+}
+
+function reloadAndDismiss(){
+  document.getElementById('sessionWarning').style.display='none';
+  loadAll();
+}
+
+// Check every 30 seconds if another session saved changes
+setInterval(checkOtherSessions, 30000);
+
 async function loadAll(){
   showLoading(true);
   try {
@@ -508,6 +545,8 @@ async function loadAll(){
     if(data.tradein){ tradeData=data.tradein; renderTradeTable(); }
     await loadVentas();
     renderBmTable();
+    markLoaded();
+    document.getElementById('sessionWarning').style.display='none';
   } catch(e){ showStatus('statusConfig','error','Error al conectar: '+e.message); }
   showLoading(false);
 }
@@ -675,14 +714,26 @@ function addProduct(){
 
 // SAVE STOCK
 async function saveStock(){
+  // Verificar si hay cambios de otra sesión antes de guardar
+  const savedAt = parseInt(localStorage.getItem(SAVE_TS_KEY)||'0');
+  const loadedAt = parseInt(localStorage.getItem(LOAD_TS_KEY)||'0');
+  if(savedAt > loadedAt){
+    if(!confirm('⚠️ Otra sesión guardó cambios después de que cargaste los datos.\n\nSi guardás ahora vas a sobreescribir esos cambios.\n\n¿Querés recargar primero (recomendado) o guardar igual?')){
+      loadAll(); return;
+    }
+  }
   showLoading(true);
   try{
     const res=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'updateStockRaw',password:PASSWORD,data:stockData})});
     const text=await res.text();
     console.log('saveStock response:', text);
     const json=JSON.parse(text);
-    if(json.ok){showStatus('statusStock','success','Stock guardado.');stockModified=false;document.getElementById('btnSaveStock').disabled=true;}
-    else showStatus('statusStock','error',json.error||'Error: '+text);
+    if(json.ok){
+      showStatus('statusStock','success','Stock guardado.');
+      stockModified=false;
+      document.getElementById('btnSaveStock').disabled=true;
+      markSaved();
+    } else showStatus('statusStock','error',json.error||'Error: '+text);
   }catch(e){console.error('saveStock error:',e);showStatus('statusStock','error',e.message);}
   showLoading(false);
 }
