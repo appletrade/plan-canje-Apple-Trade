@@ -879,6 +879,7 @@ async function loadFromAPI() {
 
 function buildModelGrid(){
   const g = document.getElementById('modelGrid');
+  g.innerHTML = '';
   Object.keys(MODELS_BY_FAMILY).forEach(m=>{
     const b = document.createElement('button');
     b.className='btn-option'; b.dataset.val=m;
