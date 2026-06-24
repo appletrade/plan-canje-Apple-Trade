@@ -556,7 +556,7 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
       <div class="benefit-card">
         <div class="benefit-icon">💳</div>
         <h3 class="benefit-title">Cuotas fijas en pesos</h3>
-        <p class="benefit-desc">Financiación en 3 o 6 cuotas sin sorpresas. Sabés exactamente cuánto pagás desde el inicio.</p>
+        <p class="benefit-desc">Financiación en 3, 6 o 12 cuotas sin sorpresas. Sabés exactamente cuánto pagás desde el inicio.</p>
       </div>
       <div class="benefit-card">
         <div class="benefit-icon">🔄</div>
@@ -644,7 +644,7 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
           ¿Puedo pagar en cuotas?
           <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
-        <div class="faq-a">Sí, ofrecemos financiación en 3 o 6 cuotas fijas en pesos. Las cuotas se calculan sobre la diferencia a pagar después del canje.</div>
+        <div class="faq-a">Sí, ofrecemos financiación en 3, 6 o 12 cuotas fijas en pesos. Las cuotas se calculan sobre la diferencia a pagar después del canje.</div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
@@ -713,6 +713,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyTHEhZ0jhCjyzd9wJHWIoH
 let USD  = 1455;
 let INT3 = 1.376;
 let INT6 = 1.484;
+let INT12 = 1.712;
 let activeModel = 'all';
 let activeCondition = 'all';
 
@@ -855,6 +856,9 @@ async function loadFromAPI() {
       if (data.config.interes_6) INT6 = parseFloat(data.config.interes_6) > 10 
                                         ? parseFloat(data.config.interes_6) / 1000 
                                         : parseFloat(data.config.interes_6);
+      if (data.config.interes_12) INT12 = parseFloat(data.config.interes_12) > 10 
+                                        ? parseFloat(data.config.interes_12) / 1000 
+                                        : parseFloat(data.config.interes_12);
     }
 
     // Stock
@@ -993,6 +997,7 @@ function showResult(){
       const diffARS = diff * USD;
       const c3 = Math.round(diffARS * INT3 / 3);
       const c6 = Math.round(diffARS * INT6 / 6);
+      const c12 = Math.round(diffARS * INT12 / 12);
       const div=document.createElement('div');
       div.className='result-model-card';
       div.innerHTML=`
@@ -1009,7 +1014,7 @@ function showResult(){
               USD ${diff} de diferencia
             </div>
             <div class="rmc-diff-ars">o $ ${diffARS.toLocaleString('es-AR')} al cambio</div>
-            <div class="rmc-installments">3 cuotas de $ ${c3.toLocaleString('es-AR')} · 6 cuotas de $ ${c6.toLocaleString('es-AR')}</div>
+            <div class="rmc-installments">3 cuotas de $ ${c3.toLocaleString('es-AR')} · 6 cuotas de $ ${c6.toLocaleString('es-AR')} · 12 cuotas de $ ${c12.toLocaleString('es-AR')}</div>
           </div>
         </div>
         <div class="rmc-right">
@@ -1061,6 +1066,7 @@ function sendCanjeWA(destModel, destStorage, destDetails, destPrice, tradeVal){
   const diffARS = diff * USD;
   const c3 = Math.round(diffARS * INT3 / 3);
   const c6 = Math.round(diffARS * INT6 / 6);
+  const c12 = Math.round(diffARS * INT12 / 12);
   const fmt = n => n.toLocaleString('es-AR');
   const msg = `Hola! Quiero canjear mi iPhone.
 📲 Entrego: ${td.model||''} ${td.storage||''} · Batería ${td.battery||''} (valor estimado USD ${tradeVal})
@@ -1070,6 +1076,7 @@ function sendCanjeWA(destModel, destStorage, destDetails, destPrice, tradeVal){
 - $ ${fmt(diffARS)}
 - 3 cuotas: $ ${fmt(c3)}
 - 6 cuotas: $ ${fmt(c6)}
+- 12 cuotas: $ ${fmt(c12)}
 ¿Me ayudás a avanzar con el canje?`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
@@ -1185,6 +1192,8 @@ function renderProducts(filter){
     const activePrice = f.priceOffer || f.priceUSD;
     const ars=(activePrice*USD).toLocaleString('es-AR');
     const c3=Math.round(activePrice*USD*INT3/3).toLocaleString('es-AR');
+    const c6=Math.round(activePrice*USD*INT6/6).toLocaleString('es-AR');
+    const c12=Math.round(activePrice*USD*INT12/12).toLocaleString('es-AR');
     const colorHTML=getColorDots(f.details);
     const waMsg=encodeURIComponent(`Hola! Me interesa el ${f.model} ${f.storage} (${f.details}) a USD ${f.priceOffer||f.priceUSD}. ¿Está disponible?`);
 
@@ -1214,7 +1223,7 @@ function renderProducts(filter){
         }
         <div class="pc-separator">ó</div>
         <div class="pc-price-ars">$ ${ars}</div>
-        <div class="pc-installments"><span>3 cuotas de $ ${c3}</span><span>6 cuotas de $ ${Math.round(activePrice*USD*INT6/6).toLocaleString('es-AR')}</span></div>
+        <div class="pc-installments"><span>3 cuotas de $ ${c3}</span><span>6 cuotas de $ ${Math.round(activePrice*USD*INT6/6).toLocaleString('es-AR')}</span><span>12 cuotas de $ ${c12}</span></div>
         <div class="pc-actions">
           <button class="pc-btn-buy" data-wa="${waMsg}" onclick="fbq('track','Contact',{content_name:'Compra directa',content_category:'${f.model}',value:${f.priceUSD},currency:'USD'});window.open('https://wa.me/${WA}?text='+this.dataset.wa,'_blank')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
@@ -1251,7 +1260,8 @@ function updateCard(select){
   }
   card.querySelector('.pc-price-ars').textContent='$ '+ars;
   const c6u=Math.round(vActivePrice*USD*INT6/6).toLocaleString('es-AR');
-  card.querySelector('.pc-installments').innerHTML='<span>3 cuotas de $ '+c3+'</span><span>6 cuotas de $ '+c6u+'</span>';
+  const c12u=Math.round(vActivePrice*USD*INT12/12).toLocaleString('es-AR');
+  card.querySelector('.pc-installments').innerHTML='<span>3 cuotas de $ '+c3+'</span><span>6 cuotas de $ '+c6u+'</span><span>12 cuotas de $ '+c12u+'</span>';
   card.querySelector('.pc-btn-buy').dataset.wa=waMsg;
   card.querySelector('.pc-btn-canje').dataset.model=v.model+' '+v.storage;
   card.querySelector('.pc-btn-canje').dataset.price=v.priceOffer||v.priceUSD;
@@ -1324,13 +1334,14 @@ function calcModal(){
   const diffARS=diff*USD;
   const c3=Math.round(diffARS*INT3/3);
   const c6=Math.round(diffARS*INT6/6);
+  const c12=Math.round(diffARS*INT12/12);
   const fmt=n=>n.toLocaleString('es-AR');
   document.getElementById('modalDiff').textContent='USD '+diff;
   document.getElementById('modalARS').textContent='$ '+fmt(diffARS);
   document.getElementById('modalResult').classList.add('visible');
   const tradeLabel = sel.options[sel.selectedIndex].text.split('·')[0].trim();
   const destLabel = document.getElementById('modalTargetModel').textContent;
-  const msg=`Hola! Quiero canjear mi iPhone.\n📲 Entrego: ${tradeLabel} (valor estimado USD ${tradeVal})\n✅ Quiero: ${destLabel}\n💰 Diferencia estimada:\n- USD ${diff}\n- $ ${fmt(diffARS)}\n- 3 cuotas: $ ${fmt(c3)}\n- 6 cuotas: $ ${fmt(c6)}\n¿Me ayudás a avanzar con el canje?`;
+  const msg=`Hola! Quiero canjear mi iPhone.\n📲 Entrego: ${tradeLabel} (valor estimado USD ${tradeVal})\n✅ Quiero: ${destLabel}\n💰 Diferencia estimada:\n- USD ${diff}\n- $ ${fmt(diffARS)}\n- 3 cuotas: $ ${fmt(c3)}\n- 6 cuotas: $ ${fmt(c6)}\n- 12 cuotas: $ ${fmt(c12)}\n¿Me ayudás a avanzar con el canje?`;
   const waBtn=document.getElementById('modalWA');
   waBtn.href='https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
   waBtn.style.display='flex';
@@ -1374,6 +1385,7 @@ if (cacheValid) {
       if (c.config.usd_ars)   USD  = parseFloat(c.config.usd_ars);
       if (c.config.interes_3) INT3 = parseFloat(c.config.interes_3) > 10 ? parseFloat(c.config.interes_3)/1000 : parseFloat(c.config.interes_3);
       if (c.config.interes_6) INT6 = parseFloat(c.config.interes_6) > 10 ? parseFloat(c.config.interes_6)/1000 : parseFloat(c.config.interes_6);
+      if (c.config.interes_12) INT12 = parseFloat(c.config.interes_12) > 10 ? parseFloat(c.config.interes_12)/1000 : parseFloat(c.config.interes_12);
     }
     renderProducts('all');
     buildModelGrid();
