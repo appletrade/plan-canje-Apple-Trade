@@ -982,7 +982,7 @@ function showResult(){
     }
     // Siempre mostrar generaciones superiores
     return prodGen >= tradeGen;
-  });
+  }).sort((a,b) => (a.priceOffer||a.priceUSD) - (b.priceOffer||b.priceUSD));
   let showing = 5;
 
   function renderModelCards(){
