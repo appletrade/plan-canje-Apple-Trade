@@ -972,10 +972,12 @@ function showResult(){
   const tradeGen = MODEL_GENERATION[selModel] || 0;
   const allAccessible = products.filter(p => {
     const prodGen = MODEL_GENERATION[p.model] || 99;
-    // Excluir el modelo exacto que entrega
-    if(p.model === selModel) return false;
-    // Mostrar mismo generación o superiores (sin restricciones por tier Pro/Plus)
-    return prodGen >= tradeGen;
+    // Solo generaciones superiores (más nuevas) — sin importar el tier
+    if(prodGen <= tradeGen) return false;
+    // Excluir modelos donde el valor de canje cubre o supera el precio
+    const activePrice = p.priceOffer || p.priceUSD;
+    if(activePrice - finalVal <= 0) return false;
+    return true;
   }).sort((a,b) => (a.priceOffer||a.priceUSD) - (b.priceOffer||b.priceUSD));
   let showing = 5;
 
