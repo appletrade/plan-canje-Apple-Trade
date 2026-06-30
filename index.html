@@ -952,7 +952,7 @@ const MODEL_GENERATION = {
   "iPhone 14":4,"iPhone 14 Plus":4,"iPhone 14 Pro":4,"iPhone 14 Pro Max":4,
   "iPhone 15":5,"iPhone 15 Plus":5,"iPhone 15 Pro":5,"iPhone 15 Pro Max":5,
   "iPhone 16":6,"iPhone 16 E":6,"iPhone 16 Plus":6,"iPhone 16 Pro":6,"iPhone 16 Pro Max":6,
-  "iPhone 17":7,"iPhone 17 Air":7,"iPhone 17 Pro":7,"iPhone 17 Pro Max":7,
+  "iPhone 17":7,"iPhone 17 E":7,"iPhone 17 Air":7,"iPhone 17 Pro":7,"iPhone 17 Pro Max":7,
 };
 
 function showResult(){
@@ -972,15 +972,9 @@ function showResult(){
   const tradeGen = MODEL_GENERATION[selModel] || 0;
   const allAccessible = products.filter(p => {
     const prodGen = MODEL_GENERATION[p.model] || 99;
-    // Excluir el modelo exacto que entrega, pero permitir upgrades de la misma generación (ej: 14 → 14 Pro)
+    // Excluir el modelo exacto que entrega
     if(p.model === selModel) return false;
-    // Para modelos de la misma generación, solo mostrar si es "Pro" o más premium
-    if(prodGen === tradeGen){
-      const selIsPro = selModel.includes('Pro');
-      const prodIsPro = p.model.includes('Pro');
-      if(selIsPro && !prodIsPro) return false; // no mostrar downgrade dentro de la gen
-    }
-    // Siempre mostrar generaciones superiores
+    // Mostrar mismo generación o superiores (sin restricciones por tier Pro/Plus)
     return prodGen >= tradeGen;
   }).sort((a,b) => (a.priceOffer||a.priceUSD) - (b.priceOffer||b.priceUSD));
   let showing = 5;
