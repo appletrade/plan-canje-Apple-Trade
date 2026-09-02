@@ -148,6 +148,16 @@ tbody td{padding:8px 10px;vertical-align:middle;}
 }
 </style>
 <style>
+.dash-range-bar{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;}
+.dash-range-presets{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-width:240px;}
+.dash-range-btn{background:var(--surface2);border:1.5px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:999px;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.dash-range-btn:hover{border-color:var(--primary);color:var(--text);}
+.dash-range-btn.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+.dash-range-dates{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;}
+.dash-range-dates .form-group{margin:0;}
+.dash-range-dates .form-input{padding:7px 10px;font-size:.82rem;}
+.dash-range-caption{font-size:.8rem;color:var(--muted);margin-bottom:18px;padding-left:2px;}
+.dash-range-caption strong{color:var(--text);}
 .dash-kpi{border-radius:16px;padding:16px;}
 .dash-kpi-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
 .dash-kpi-value{font-size:1.7rem;font-weight:900;letter-spacing:-.02em;line-height:1.1;}
@@ -455,43 +465,63 @@ tbody td{padding:8px 10px;vertical-align:middle;}
       <div class="page-title">Dashboard 🔒</div>
       <div class="page-sub">Análisis completo del negocio</div>
 
+      <!-- Selector de rango -->
+      <div class="dash-range-bar">
+        <div class="dash-range-presets" id="dashPresets">
+          <button class="dash-range-btn" data-preset="today"   onclick="setDashPreset('today')">Hoy</button>
+          <button class="dash-range-btn" data-preset="yesterday" onclick="setDashPreset('yesterday')">Ayer</button>
+          <button class="dash-range-btn" data-preset="7d"      onclick="setDashPreset('7d')">Últimos 7 días</button>
+          <button class="dash-range-btn" data-preset="30d"     onclick="setDashPreset('30d')">Últimos 30 días</button>
+          <button class="dash-range-btn active" data-preset="month" onclick="setDashPreset('month')">Este mes</button>
+          <button class="dash-range-btn" data-preset="lastmonth" onclick="setDashPreset('lastmonth')">Mes pasado</button>
+          <button class="dash-range-btn" data-preset="year"    onclick="setDashPreset('year')">Este año</button>
+          <button class="dash-range-btn" data-preset="all"     onclick="setDashPreset('all')">Todo</button>
+        </div>
+        <div class="dash-range-dates">
+          <div class="form-group"><label class="form-label">Desde</label><input class="form-input" type="date" id="dashFrom" onchange="applyDashRange()"></div>
+          <div class="form-group"><label class="form-label">Hasta</label><input class="form-input" type="date" id="dashTo" onchange="applyDashRange()"></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadDashboard()" style="height:36px;">↺</button>
+        </div>
+      </div>
+      <div class="dash-range-caption" id="dashRangeCaption"></div>
+
       <!-- KPIs principales con comparación -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px;">
         <div class="dash-kpi" style="background:linear-gradient(135deg,rgba(48,209,88,.15),rgba(48,209,88,.05));border:1px solid rgba(48,209,88,.3);">
-          <div class="dash-kpi-label" style="color:#30d158;">📦 Vendidos hoy</div>
-          <div class="dash-kpi-value" style="color:#30d158;" id="dashSoldToday">0</div>
-          <div class="dash-kpi-trend" id="dashSoldTodayTrend"></div>
+          <div class="dash-kpi-label" style="color:#30d158;">📦 Equipos vendidos</div>
+          <div class="dash-kpi-value" style="color:#30d158;" id="dashSoldCount">0</div>
+          <div class="dash-kpi-trend" id="dashSoldCountTrend"></div>
         </div>
         <div class="dash-kpi" style="background:linear-gradient(135deg,rgba(10,132,255,.15),rgba(10,132,255,.05));border:1px solid rgba(10,132,255,.3);">
-          <div class="dash-kpi-label" style="color:#4da3ff;">💰 Facturado hoy</div>
-          <div class="dash-kpi-value" style="color:#4da3ff;" id="dashRevenueToday">USD 0</div>
-          <div class="dash-kpi-trend" id="dashRevenueTodayTrend"></div>
+          <div class="dash-kpi-label" style="color:#4da3ff;">💰 Facturado</div>
+          <div class="dash-kpi-value" style="color:#4da3ff;" id="dashRevenue">USD 0</div>
+          <div class="dash-kpi-trend" id="dashRevenueTrend"></div>
         </div>
         <div class="dash-kpi" style="background:linear-gradient(135deg,rgba(191,90,242,.15),rgba(191,90,242,.05));border:1px solid rgba(191,90,242,.3);">
-          <div class="dash-kpi-label" style="color:#bf5af2;">📅 Esta semana</div>
-          <div class="dash-kpi-value" style="color:#bf5af2;" id="dashRevenueWeek">USD 0</div>
-          <div class="dash-kpi-trend" id="dashRevenueWeekTrend"></div>
+          <div class="dash-kpi-label" style="color:#bf5af2;">🎯 Ticket promedio</div>
+          <div class="dash-kpi-value" style="color:#bf5af2;" id="dashAvgTicket">USD 0</div>
+          <div class="dash-kpi-trend" id="dashAvgTicketTrend"></div>
         </div>
         <div class="dash-kpi" style="background:linear-gradient(135deg,rgba(255,159,10,.15),rgba(255,159,10,.05));border:1px solid rgba(255,159,10,.3);">
-          <div class="dash-kpi-label" style="color:#ff9f0a;">📆 Este mes</div>
-          <div class="dash-kpi-value" style="color:#ff9f0a;" id="dashRevenueMonth">USD 0</div>
-          <div class="dash-kpi-trend" id="dashRevenueMonthTrend"></div>
+          <div class="dash-kpi-label" style="color:#ff9f0a;">📊 Promedio por día</div>
+          <div class="dash-kpi-value" style="color:#ff9f0a;" id="dashDailyAvg">USD 0</div>
+          <div class="dash-kpi-trend" id="dashDailyAvgTrend"></div>
         </div>
       </div>
 
       <!-- KPIs secundarios -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:24px;">
         <div class="dash-kpi-sm">
-          <div class="dash-kpi-label-sm">🎯 Ticket promedio</div>
-          <div class="dash-kpi-value-sm" id="dashAvgTicket">USD 0</div>
-        </div>
-        <div class="dash-kpi-sm">
           <div class="dash-kpi-label-sm">🔄 Ventas con canje</div>
           <div class="dash-kpi-value-sm" id="dashCanjeRate">0%</div>
         </div>
         <div class="dash-kpi-sm">
-          <div class="dash-kpi-label-sm">📈 Mejor día (mes)</div>
+          <div class="dash-kpi-label-sm">📈 Mejor día</div>
           <div class="dash-kpi-value-sm" id="dashBestDay">—</div>
+        </div>
+        <div class="dash-kpi-sm">
+          <div class="dash-kpi-label-sm">📅 Días con ventas</div>
+          <div class="dash-kpi-value-sm" id="dashActiveDays">0</div>
         </div>
         <div class="dash-kpi-sm">
           <div class="dash-kpi-label-sm">🔔 Seguimientos hoy</div>
@@ -499,39 +529,39 @@ tbody td{padding:8px 10px;vertical-align:middle;}
         </div>
       </div>
 
-      <!-- Gráfico ventas diarias -->
+      <!-- Gráfico evolución -->
       <div class="card">
-        <div class="card-title"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Ventas diarias — últimos 30 días</div>
+        <div class="card-title"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span id="dashChartDailyTitle">Evolución de facturación</span></div>
         <div style="position:relative;height:240px;"><canvas id="chartDaily"></canvas></div>
       </div>
 
-      <!-- Gráfico facturación mensual -->
+      <!-- Gráfico por día de la semana -->
       <div class="card">
-        <div class="card-title"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Facturación — últimos 6 meses</div>
+        <div class="card-title"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Facturación por día de la semana</div>
         <div style="position:relative;height:240px;"><canvas id="chartMonthly"></canvas></div>
       </div>
 
       <!-- Grid de 2 gráficos -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-bottom:16px;">
         <div class="card" style="margin:0;">
-          <div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>Origen de clientes (mes)</div>
+          <div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>Origen de clientes</div>
           <div style="position:relative;height:240px;"><canvas id="chartChannels"></canvas></div>
         </div>
         <div class="card" style="margin:0;">
-          <div class="card-title"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Ventas por sucursal (mes)</div>
+          <div class="card-title"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Ventas por sucursal</div>
           <div style="position:relative;height:240px;"><canvas id="chartBranches"></canvas></div>
         </div>
       </div>
 
-      <!-- Top modelos del mes -->
+      <!-- Top modelos -->
       <div class="card">
-        <div class="card-title"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Top 5 modelos del mes</div>
+        <div class="card-title"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Top 5 modelos</div>
         <div id="dashTopModels" style="display:flex;flex-direction:column;gap:8px;"></div>
       </div>
 
       <!-- Forma de pago -->
       <div class="card">
-        <div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Distribución por forma de pago (mes)</div>
+        <div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Distribución por forma de pago</div>
         <div id="dashPayments" style="display:flex;flex-direction:column;gap:8px;"></div>
       </div>
 
@@ -541,13 +571,14 @@ tbody td{padding:8px 10px;vertical-align:middle;}
         <div id="dashUpcoming" style="display:flex;flex-direction:column;gap:8px;"></div>
       </div>
 
-      <!-- Ventas de hoy -->
+      <!-- Ventas del período -->
       <div class="card">
-        <div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Ventas de hoy</div>
-        <div id="dashTodaySales" style="display:flex;flex-direction:column;gap:8px;"></div>
+        <div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span id="dashSalesListTitle">Ventas del período</span></div>
+        <div id="dashTodaySales" style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;"></div>
       </div>
 
       <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:10px;">
+        <button class="btn btn-ghost" onclick="exportDashCSV()">↓ Exportar período</button>
         <button class="btn btn-ghost" onclick="loadDashboard()">↺ Recargar</button>
       </div>
     </div>
@@ -613,6 +644,7 @@ function openDashboard(el){
   // Verificar si ya está autenticado en esta sesión
   if(sessionStorage.getItem('dashboardAuth')==='ok'){
     showSection('dashboard', el);
+    restoreDashRange();
     loadDashboard();
     return;
   }
@@ -624,6 +656,7 @@ function openDashboard(el){
   }
   sessionStorage.setItem('dashboardAuth','ok');
   showSection('dashboard', el);
+  restoreDashRange();
   loadDashboard();
 }
 
@@ -637,126 +670,202 @@ function toLocalYMD(d){
   return yy+'-'+mm+'-'+dd;
 }
 
+// ── RANGO DE FECHAS DEL DASHBOARD ─────────────────────────
+let dashFrom = null;   // 'YYYY-MM-DD'
+let dashTo   = null;   // 'YYYY-MM-DD'
+let dashPreset = 'month';
+
+function addDays(d, n){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()+n); }
+
+function computePresetRange(preset){
+  const t = new Date();
+  switch(preset){
+    case 'today':     return [toLocalYMD(t), toLocalYMD(t)];
+    case 'yesterday': { const y = addDays(t,-1); return [toLocalYMD(y), toLocalYMD(y)]; }
+    case '7d':        return [toLocalYMD(addDays(t,-6)), toLocalYMD(t)];
+    case '30d':       return [toLocalYMD(addDays(t,-29)), toLocalYMD(t)];
+    case 'month':     return [toLocalYMD(new Date(t.getFullYear(), t.getMonth(), 1)), toLocalYMD(t)];
+    case 'lastmonth': return [toLocalYMD(new Date(t.getFullYear(), t.getMonth()-1, 1)), toLocalYMD(new Date(t.getFullYear(), t.getMonth(), 0))];
+    case 'year':      return [toLocalYMD(new Date(t.getFullYear(), 0, 1)), toLocalYMD(t)];
+    case 'all': {
+      const fechas = salesData.map(s => s.fecha).filter(Boolean).sort();
+      return [fechas.length ? fechas[0] : toLocalYMD(new Date(t.getFullYear(),0,1)), toLocalYMD(t)];
+    }
+    default:          return [toLocalYMD(new Date(t.getFullYear(), t.getMonth(), 1)), toLocalYMD(t)];
+  }
+}
+
+function setDashPreset(preset){
+  dashPreset = preset;
+  const r = computePresetRange(preset);
+  dashFrom = r[0]; dashTo = r[1];
+  document.getElementById('dashFrom').value = dashFrom;
+  document.getElementById('dashTo').value   = dashTo;
+  highlightPreset(preset);
+  saveDashRange();
+  loadDashboard();
+}
+
+function applyDashRange(){
+  const f = document.getElementById('dashFrom').value;
+  const t = document.getElementById('dashTo').value;
+  if(!f || !t){ return; }
+  if(f > t){ alert('La fecha "Desde" no puede ser posterior a "Hasta".'); return; }
+  dashFrom = f; dashTo = t; dashPreset = 'custom';
+  highlightPreset('custom');
+  saveDashRange();
+  loadDashboard();
+}
+
+function highlightPreset(preset){
+  document.querySelectorAll('#dashPresets .dash-range-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.preset === preset);
+  });
+}
+
+function saveDashRange(){
+  try{ sessionStorage.setItem('dashRange', JSON.stringify({from:dashFrom,to:dashTo,preset:dashPreset})); }catch(e){}
+}
+
+function restoreDashRange(){
+  try{
+    const raw = sessionStorage.getItem('dashRange');
+    if(raw){
+      const r = JSON.parse(raw);
+      if(r.from && r.to){ dashFrom=r.from; dashTo=r.to; dashPreset=r.preset||'custom'; }
+    }
+  }catch(e){}
+  if(!dashFrom || !dashTo){
+    const r = computePresetRange('month');
+    dashFrom = r[0]; dashTo = r[1]; dashPreset = 'month';
+  }
+  const fEl = document.getElementById('dashFrom');
+  const tEl = document.getElementById('dashTo');
+  if(fEl) fEl.value = dashFrom;
+  if(tEl) tEl.value = dashTo;
+  highlightPreset(dashPreset);
+}
+
+function daysBetween(a, b){
+  return Math.round((parseLocalDate(b) - parseLocalDate(a)) / 86400000) + 1;
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────
 async function loadDashboard(){
   if(!salesData.length) await loadVentas();
+  if(!dashFrom || !dashTo) restoreDashRange();
 
-  const today = new Date();
+  const today    = new Date();
   const todayStr = toLocalYMD(today);
-  const monthStr = todayStr.slice(0,7);
 
   // Helpers
   const sum = arr => arr.reduce((t,s) => t + (parseFloat(s.precio_usd)||0), 0);
   const fmt = n => 'USD ' + Math.round(n).toLocaleString('es-AR');
   const fmtCompact = n => n >= 1000 ? 'USD ' + (n/1000).toFixed(1) + 'K' : 'USD ' + Math.round(n);
   const pctChange = (curr, prev) => prev === 0 ? (curr > 0 ? 100 : 0) : ((curr - prev) / prev * 100);
-  const trendHTML = (curr, prev, label) => {
+  const trendHTML = (curr, prev) => {
     if(prev === 0 && curr === 0) return '<span style="color:var(--muted);">Sin datos del período anterior</span>';
     const diff = pctChange(curr, prev);
     const sign = diff >= 0 ? '↑' : '↓';
-    const cls = diff >= 0 ? 'up' : 'down';
-    return '<span class="'+cls+'">'+sign+' '+Math.abs(diff).toFixed(0)+'% vs '+label+'</span>';
+    const cls  = diff >= 0 ? 'up' : 'down';
+    return '<span class="'+cls+'">'+sign+' '+Math.abs(diff).toFixed(0)+'% vs período anterior</span>';
   };
+  const inRange = (f, from, to) => f && f >= from && f <= to;
 
-  // Períodos
-  const yesterdayStr = toLocalYMD(new Date(today.getTime() - 86400000));
-  const dayOfWeek = today.getDay() || 7;
-  const monday = new Date(today); monday.setDate(today.getDate()-dayOfWeek+1); monday.setHours(0,0,0,0);
-  const lastMonday = new Date(monday); lastMonday.setDate(monday.getDate()-7);
-  const lastSunday = new Date(monday); lastSunday.setDate(monday.getDate()-1);
-  const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const lastMonthStart = new Date(today.getFullYear(), today.getMonth()-1, 1);
-  const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+  // Período actual y anterior (misma cantidad de días, inmediatamente antes)
+  const rangeDays = daysBetween(dashFrom, dashTo);
+  const prevTo    = toLocalYMD(addDays(parseLocalDate(dashFrom), -1));
+  const prevFrom  = toLocalYMD(addDays(parseLocalDate(dashFrom), -rangeDays));
 
-  // Filtros temporales
-  const todaySales = salesData.filter(s => s.fecha === todayStr);
-  const yesterdaySales = salesData.filter(s => s.fecha === yesterdayStr);
-  const weekSales = salesData.filter(s => parseLocalDate(s.fecha) >= monday);
-  const lastWeekSales = salesData.filter(s => { const d = parseLocalDate(s.fecha); return d >= lastMonday && d <= lastSunday; });
-  const monthSales = salesData.filter(s => s.fecha && s.fecha.startsWith(monthStr));
-  const lastMonthSales = salesData.filter(s => { const d = parseLocalDate(s.fecha); return d >= lastMonthStart && d <= lastMonthEnd; });
+  const rangeSales = salesData.filter(s => inRange(s.fecha, dashFrom, dashTo));
+  const prevSales  = salesData.filter(s => inRange(s.fecha, prevFrom, prevTo));
 
-  // KPIs principales con comparación
-  document.getElementById('dashSoldToday').textContent = todaySales.length;
-  document.getElementById('dashSoldTodayTrend').innerHTML = trendHTML(todaySales.length, yesterdaySales.length, 'ayer');
+  // Leyenda del rango
+  document.getElementById('dashRangeCaption').innerHTML =
+    'Mostrando <strong>' + fmtDate(dashFrom) + '</strong> a <strong>' + fmtDate(dashTo) + '</strong>'
+    + ' · ' + rangeDays + (rangeDays === 1 ? ' día' : ' días')
+    + ' · comparando con ' + fmtDate(prevFrom) + ' a ' + fmtDate(prevTo);
 
-  document.getElementById('dashRevenueToday').textContent = fmtCompact(sum(todaySales));
-  document.getElementById('dashRevenueTodayTrend').innerHTML = trendHTML(sum(todaySales), sum(yesterdaySales), 'ayer');
+  // KPIs principales
+  const revenue     = sum(rangeSales);
+  const prevRevenue = sum(prevSales);
+  const avgTicket     = rangeSales.length ? revenue / rangeSales.length : 0;
+  const prevAvgTicket = prevSales.length  ? prevRevenue / prevSales.length : 0;
+  const dailyAvg     = revenue / rangeDays;
+  const prevDailyAvg = prevRevenue / rangeDays;
 
-  document.getElementById('dashRevenueWeek').textContent = fmtCompact(sum(weekSales));
-  document.getElementById('dashRevenueWeekTrend').innerHTML = trendHTML(sum(weekSales), sum(lastWeekSales), 'semana ant.');
-
-  document.getElementById('dashRevenueMonth').textContent = fmtCompact(sum(monthSales));
-  document.getElementById('dashRevenueMonthTrend').innerHTML = trendHTML(sum(monthSales), sum(lastMonthSales), 'mes ant.');
+  document.getElementById('dashSoldCount').textContent      = rangeSales.length;
+  document.getElementById('dashSoldCountTrend').innerHTML   = trendHTML(rangeSales.length, prevSales.length);
+  document.getElementById('dashRevenue').textContent        = fmtCompact(revenue);
+  document.getElementById('dashRevenueTrend').innerHTML     = trendHTML(revenue, prevRevenue);
+  document.getElementById('dashAvgTicket').textContent      = fmt(avgTicket);
+  document.getElementById('dashAvgTicketTrend').innerHTML   = trendHTML(avgTicket, prevAvgTicket);
+  document.getElementById('dashDailyAvg').textContent       = fmt(dailyAvg);
+  document.getElementById('dashDailyAvgTrend').innerHTML    = trendHTML(dailyAvg, prevDailyAvg);
 
   // KPIs secundarios
-  const avgTicket = monthSales.length ? sum(monthSales) / monthSales.length : 0;
-  document.getElementById('dashAvgTicket').textContent = fmt(avgTicket);
-
-  const canjeRate = monthSales.length ? (monthSales.filter(s => s.tiene_canje === 'Si' || s.tiene_canje === 'Sí').length / monthSales.length * 100) : 0;
+  const canjeRate = rangeSales.length ? (rangeSales.filter(s => s.tiene_canje === 'Si' || s.tiene_canje === 'Sí').length / rangeSales.length * 100) : 0;
   document.getElementById('dashCanjeRate').textContent = canjeRate.toFixed(0) + '%';
 
-  // Mejor día de la semana del mes
   const dayNames = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
   const dayRevenue = [0,0,0,0,0,0,0];
-  monthSales.forEach(s => {
-    const d = parseLocalDate(s.fecha).getDay();
-    dayRevenue[d] += parseFloat(s.precio_usd) || 0;
-  });
-  const bestDayIdx = dayRevenue.indexOf(Math.max(...dayRevenue));
+  rangeSales.forEach(s => { dayRevenue[parseLocalDate(s.fecha).getDay()] += parseFloat(s.precio_usd)||0; });
+  const bestDayIdx = dayRevenue.indexOf(Math.max.apply(null, dayRevenue));
   document.getElementById('dashBestDay').textContent = dayRevenue[bestDayIdx] > 0 ? dayNames[bestDayIdx] : '—';
 
-  // Seguimientos de hoy
-  const todayFollow = salesData.filter(s => s.seguimiento === todayStr).length;
-  document.getElementById('dashFollowups').textContent = todayFollow;
+  const activeDays = new Set(rangeSales.map(s => s.fecha)).size;
+  document.getElementById('dashActiveDays').textContent = activeDays + ' / ' + rangeDays;
 
-  // GRÁFICO 1: Ventas diarias últimos 30 días
-  const last30Days = [];
-  for(let i = 29; i >= 0; i--){
-    const d = new Date(today.getTime() - i*86400000);
-    last30Days.push(toLocalYMD(d));
+  document.getElementById('dashFollowups').textContent = salesData.filter(s => s.seguimiento === todayStr).length;
+
+  // GRÁFICO 1: evolución (diaria si el rango es corto, mensual si es largo)
+  const groupByMonth = rangeDays > 92;
+  let evoLabels = [], evoData = [];
+  if(groupByMonth){
+    const cursor = parseLocalDate(dashFrom); cursor.setDate(1);
+    const last   = parseLocalDate(dashTo);
+    while(cursor <= last){
+      const key = toLocalYMD(cursor).slice(0,7);
+      evoLabels.push(cursor.toLocaleString('es-AR',{month:'short',year:'2-digit'}));
+      evoData.push(sum(rangeSales.filter(s => s.fecha.slice(0,7) === key)));
+      cursor.setMonth(cursor.getMonth()+1);
+    }
+    document.getElementById('dashChartDailyTitle').textContent = 'Facturación por mes';
+  } else {
+    const cursor = parseLocalDate(dashFrom);
+    const last   = parseLocalDate(dashTo);
+    while(cursor <= last){
+      const key = toLocalYMD(cursor);
+      evoLabels.push(cursor.getDate()+'/'+(cursor.getMonth()+1));
+      evoData.push(sum(rangeSales.filter(s => s.fecha === key)));
+      cursor.setDate(cursor.getDate()+1);
+    }
+    document.getElementById('dashChartDailyTitle').textContent = 'Facturación por día';
   }
-  const dailyData = last30Days.map(d => sum(salesData.filter(s => s.fecha === d)));
-  const dailyLabels = last30Days.map(d => {
-    const dd = new Date(d);
-    return (dd.getDate()+'/'+(dd.getMonth()+1));
-  });
   drawChart('chartDaily', 'line', {
-    labels: dailyLabels,
+    labels: evoLabels,
     datasets: [{
-      label: 'USD facturado',
-      data: dailyData,
-      borderColor: '#4da3ff',
-      backgroundColor: 'rgba(77,163,255,.15)',
-      borderWidth: 2,
-      fill: true,
-      tension: 0.35,
-      pointRadius: 2,
-      pointHoverRadius: 5
+      label: 'USD facturado', data: evoData,
+      borderColor: '#4da3ff', backgroundColor: 'rgba(77,163,255,.15)',
+      borderWidth: 2, fill: true, tension: 0.35, pointRadius: 2, pointHoverRadius: 5
     }]
   });
 
-  // GRÁFICO 2: Facturación últimos 6 meses
-  const last6Months = [];
-  for(let i = 5; i >= 0; i--){
-    const d = new Date(today.getFullYear(), today.getMonth()-i, 1);
-    last6Months.push({ key: toLocalYMD(d).slice(0,7), label: d.toLocaleString('es-AR',{month:'short',year:'2-digit'}) });
-  }
-  const monthlyData = last6Months.map(m => sum(salesData.filter(s => s.fecha && s.fecha.startsWith(m.key))));
+  // GRÁFICO 2: facturación por día de la semana
+  const weekOrder = [1,2,3,4,5,6,0]; // lunes → domingo
   drawChart('chartMonthly', 'bar', {
-    labels: last6Months.map(m => m.label),
+    labels: weekOrder.map(i => dayNames[i].slice(0,3)),
     datasets: [{
       label: 'USD facturado',
-      data: monthlyData,
-      backgroundColor: 'rgba(191,90,242,.7)',
-      borderRadius: 8
+      data: weekOrder.map(i => dayRevenue[i]),
+      backgroundColor: 'rgba(191,90,242,.7)', borderRadius: 8
     }]
   });
 
-  // GRÁFICO 3: Canales de origen (dona)
+  // GRÁFICO 3: canales de origen
   const channelCount = {};
-  monthSales.forEach(s => {
+  rangeSales.forEach(s => {
     let c = s.canal || 'Sin definir';
-    // Agrupar por categoría
     if(c.indexOf('Publicidad')===0) c = '📢 Publicidad';
     else if(c.indexOf('Organico')===0 || c.indexOf('Orgánico')===0) c = '📱 Orgánico';
     else if(c.indexOf('Recomendado')===0) c = '🤝 Recomendación';
@@ -765,107 +874,110 @@ async function loadDashboard(){
   });
   drawChart('chartChannels', 'doughnut', {
     labels: Object.keys(channelCount),
-    datasets: [{
-      data: Object.values(channelCount),
-      backgroundColor: ['#ff9f0a','#30d158','#bf5af2','#4da3ff','#8e8e93'],
-      borderWidth: 0
-    }]
+    datasets: [{ data: Object.values(channelCount), backgroundColor: ['#ff9f0a','#30d158','#bf5af2','#4da3ff','#8e8e93'], borderWidth: 0 }]
   });
 
-  // GRÁFICO 4: Ventas por sucursal
-  const banfield = monthSales.filter(s => s.sucursal === 'Banfield').length;
-  const caba = monthSales.filter(s => s.sucursal === 'CABA').length;
+  // GRÁFICO 4: sucursales
   drawChart('chartBranches', 'doughnut', {
     labels: ['Banfield', 'CABA'],
     datasets: [{
-      data: [banfield, caba],
-      backgroundColor: ['#30d158','#4da3ff'],
-      borderWidth: 0
+      data: [rangeSales.filter(s => s.sucursal === 'Banfield').length, rangeSales.filter(s => s.sucursal === 'CABA').length],
+      backgroundColor: ['#30d158','#4da3ff'], borderWidth: 0
     }]
   });
 
-  // Top modelos del mes
-  const modelCount = {};
-  const modelRevenue = {};
-  monthSales.forEach(s => {
+  // Top modelos
+  const modelCount = {}, modelRevenue = {};
+  rangeSales.forEach(s => {
     const m = s.modelo_vendido || '—';
-    modelCount[m] = (modelCount[m]||0) + 1;
+    modelCount[m]   = (modelCount[m]||0) + 1;
     modelRevenue[m] = (modelRevenue[m]||0) + (parseFloat(s.precio_usd)||0);
   });
   const topModels = Object.entries(modelCount).sort((a,b) => b[1]-a[1]).slice(0,5);
   const topEl = document.getElementById('dashTopModels');
   if(!topModels.length){
-    topEl.innerHTML = '<div style="color:var(--muted);font-size:.85rem;padding:10px;">Sin ventas este mes.</div>';
+    topEl.innerHTML = '<div style="color:var(--muted);font-size:.85rem;padding:10px;">Sin ventas en el período.</div>';
   } else {
     const max = topModels[0][1];
     topEl.innerHTML = topModels.map(([m,c]) => {
       const pct = (c/max*100).toFixed(0);
-      const rev = fmt(modelRevenue[m]);
       return '<div class="dash-bar-row"><div class="dash-bar-label">'
-        + '<div class="dash-bar-top"><span class="dash-bar-name">'+m+'</span><span class="dash-bar-count">'+c+' · '+rev+'</span></div>'
+        + '<div class="dash-bar-top"><span class="dash-bar-name">'+m+'</span><span class="dash-bar-count">'+c+' · '+fmt(modelRevenue[m])+'</span></div>'
         + '<div class="dash-bar-bg"><div class="dash-bar-fg" style="background:linear-gradient(90deg,#4da3ff,#bf5af2);width:'+pct+'%;"></div></div>'
         + '</div></div>';
     }).join('');
   }
 
   // Formas de pago
-  const paymentCount = {};
-  const paymentRevenue = {};
-  monthSales.forEach(s => {
+  const paymentCount = {}, paymentRevenue = {};
+  rangeSales.forEach(s => {
     const p = s.forma_pago || 'Sin definir';
-    paymentCount[p] = (paymentCount[p]||0) + 1;
+    paymentCount[p]   = (paymentCount[p]||0) + 1;
     paymentRevenue[p] = (paymentRevenue[p]||0) + (parseFloat(s.precio_usd)||0);
   });
   const payments = Object.entries(paymentCount).sort((a,b) => b[1]-a[1]);
   const payEl = document.getElementById('dashPayments');
   if(!payments.length){
-    payEl.innerHTML = '<div style="color:var(--muted);font-size:.85rem;padding:10px;">Sin ventas este mes.</div>';
+    payEl.innerHTML = '<div style="color:var(--muted);font-size:.85rem;padding:10px;">Sin ventas en el período.</div>';
   } else {
-    const total = payments.reduce((t,[,c]) => t+c, 0);
+    const total = payments.reduce((t,p) => t+p[1], 0);
     payEl.innerHTML = payments.map(([p,c]) => {
       const pct = (c/total*100).toFixed(0);
-      const rev = fmt(paymentRevenue[p]);
       return '<div class="dash-bar-row"><div class="dash-bar-label">'
-        + '<div class="dash-bar-top"><span class="dash-bar-name">'+p+'</span><span class="dash-bar-count">'+c+' ('+pct+'%) · '+rev+'</span></div>'
+        + '<div class="dash-bar-top"><span class="dash-bar-name">'+p+'</span><span class="dash-bar-count">'+c+' ('+pct+'%) · '+fmt(paymentRevenue[p])+'</span></div>'
         + '<div class="dash-bar-bg"><div class="dash-bar-fg" style="background:#30d158;width:'+pct+'%;"></div></div>'
         + '</div></div>';
     }).join('');
   }
 
-  // Recompras potenciales (seguimientos próximos 30 días)
-  const next30 = new Date(today.getTime() + 30*86400000);
+  // Recompras potenciales (siempre próximos 30 días, no depende del rango)
+  const next30 = addDays(today, 30);
   const upcoming = salesData.filter(s => {
     if(!s.seguimiento) return false;
     const d = parseLocalDate(s.seguimiento);
-    return d >= today && d <= next30;
-  }).sort((a,b) => new Date(a.seguimiento) - new Date(b.seguimiento)).slice(0,8);
+    return d >= parseLocalDate(todayStr) && d <= next30;
+  }).sort((a,b) => parseLocalDate(a.seguimiento) - parseLocalDate(b.seguimiento)).slice(0,8);
   const upEl = document.getElementById('dashUpcoming');
   if(!upcoming.length){
     upEl.innerHTML = '<div style="color:var(--muted);font-size:.85rem;padding:10px;">Sin recompras próximas.</div>';
   } else {
     upEl.innerHTML = upcoming.map(s => {
-      const diff = Math.ceil((parseLocalDate(s.seguimiento) - today) / 86400000);
-      const dl = diff === 0 ? 'hoy' : diff + ' días';
-      const wa = 'https://wa.me/549' + s.whatsapp;
+      const diff = Math.ceil((parseLocalDate(s.seguimiento) - parseLocalDate(todayStr)) / 86400000);
+      const dl = diff === 0 ? 'hoy' : 'en ' + diff + ' días';
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--surface2);border-radius:10px;font-size:.85rem;">'
-        + '<div><div style="font-weight:700;">'+s.nombre+'</div><div style="font-size:.78rem;color:var(--muted);">Compró '+s.modelo_vendido+' · Original: '+s.fecha+'</div></div>'
-        + '<div style="text-align:right;"><div style="font-size:.78rem;color:#ff9f0a;font-weight:700;">en '+dl+'</div><a href="'+wa+'" target="_blank" style="font-size:.78rem;color:#4da3ff;text-decoration:none;">Contactar →</a></div>'
+        + '<div><div style="font-weight:700;">'+s.nombre+'</div><div style="font-size:.78rem;color:var(--muted);">Compró '+s.modelo_vendido+' · '+fmtDate(s.fecha)+'</div></div>'
+        + '<div style="text-align:right;"><div style="font-size:.78rem;color:#ff9f0a;font-weight:700;">'+dl+'</div><a href="https://wa.me/549'+s.whatsapp+'" target="_blank" style="font-size:.78rem;color:#4da3ff;text-decoration:none;">Contactar →</a></div>'
         + '</div>';
     }).join('');
   }
 
-  // Ventas de hoy
-  const todayEl = document.getElementById('dashTodaySales');
-  if(!todaySales.length){
-    todayEl.innerHTML = '<div style="color:var(--muted);font-size:.85rem;padding:10px;">Sin ventas registradas hoy.</div>';
+  // Ventas del período
+  document.getElementById('dashSalesListTitle').textContent = 'Ventas del período (' + rangeSales.length + ')';
+  const listEl = document.getElementById('dashTodaySales');
+  if(!rangeSales.length){
+    listEl.innerHTML = '<div style="color:var(--muted);font-size:.85rem;padding:10px;">Sin ventas en el período seleccionado.</div>';
   } else {
-    todayEl.innerHTML = todaySales.map(s =>
+    const ordered = rangeSales.slice().sort((a,b) => b.fecha.localeCompare(a.fecha));
+    listEl.innerHTML = ordered.map(s =>
       '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--surface2);border-radius:10px;font-size:.85rem;">'
-      + '<div><div style="font-weight:700;">'+s.modelo_vendido+'</div><div style="font-size:.78rem;color:var(--muted);">'+s.nombre+' · '+s.sucursal+' · '+s.forma_pago+'</div></div>'
-      + '<div style="font-weight:800;color:#4da3ff;">USD '+s.precio_usd+'</div>'
+      + '<div><div style="font-weight:700;">'+s.modelo_vendido+'</div><div style="font-size:.78rem;color:var(--muted);">'+fmtDate(s.fecha)+' · '+s.nombre+' · '+s.sucursal+' · '+s.forma_pago+'</div></div>'
+      + '<div style="font-weight:800;color:#4da3ff;white-space:nowrap;">USD '+s.precio_usd+'</div>'
       + '</div>'
     ).join('');
   }
+}
+
+function exportDashCSV(){
+  const rows = salesData.filter(s => s.fecha && s.fecha >= dashFrom && s.fecha <= dashTo);
+  if(!rows.length){ alert('No hay ventas en el período seleccionado.'); return; }
+  const headers = ['fecha','modelo_vendido','zona','precio_usd','nombre','canal','whatsapp','forma_pago','sucursal','tiene_canje','canje_modelo','canje_valor_usd','garantia_hasta','seguimiento','notas'];
+  const csv = [headers.join(',')].concat(
+    rows.map(s => headers.map(h => '"'+((s[h]||'').toString().replace(/"/g,'""'))+'"').join(','))
+  ).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = 'ventas_' + dashFrom + '_a_' + dashTo + '.csv';
+  a.click();
 }
 
 function drawChart(canvasId, type, data){
