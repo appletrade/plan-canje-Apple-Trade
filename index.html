@@ -1183,6 +1183,8 @@ function renderProducts(filter){
   // Ordenar: primero por número de modelo iPhone ascendente, luego Pro/Max, luego precio
   filtered.sort((a,b)=>{
     const modelNum = m => {
+      // iPhone DUO no lleva número: va al final, por encima del 18 Pro Max
+      if(/\bduo\b/i.test(m.model)) return 18*10 + 4;
       const n = parseInt((m.model.match(/iPhone (\d+)/)||[])[1]||0);
       const tier = m.model.includes('Pro Max')?3:m.model.includes('Pro')?2:m.model.includes('Plus')?1:m.model.includes(' E')?-1:0;
       return n*10 + tier;
