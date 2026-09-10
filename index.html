@@ -51,6 +51,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,113,227,.55);}
 .btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:17px 32px;border-radius:999px;background:rgba(255,255,255,.15);color:#fff;font-size:1.05rem;font-weight:700;text-decoration:none;border:1.5px solid rgba(255,255,255,.35);cursor:pointer;transition:background .15s;backdrop-filter:blur(8px);}
 .btn-secondary:hover{background:rgba(255,255,255,.25);}
+.btn-preventa{display:inline-flex;align-items:center;gap:8px;padding:17px 30px;border-radius:999px;background:linear-gradient(135deg,#ff6b00,#ff2d55);color:#fff;font-size:1.05rem;font-weight:800;text-decoration:none;border:none;cursor:pointer;letter-spacing:-.01em;box-shadow:0 8px 28px rgba(255,45,85,.5);transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;}
+.btn-preventa:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(255,45,85,.62);}
+.btn-preventa::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:shine 3.2s infinite;}
+@keyframes shine{0%{left:-60%;}55%{left:120%;}100%{left:120%;}}
+.pc-badge.preventa-badge{background:linear-gradient(135deg,#ff6b00,#ff2d55);color:#fff;font-weight:800;letter-spacing:.4px;box-shadow:0 2px 8px rgba(255,45,85,.4);animation:pulsePreventa 1.9s ease-in-out infinite;}
+@keyframes pulsePreventa{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+.filter-btn.preventa-filter{background:linear-gradient(135deg,#ff6b00,#ff2d55);color:#fff;border-color:transparent;font-weight:800;}
+.filter-btn.preventa-filter.active{box-shadow:0 4px 14px rgba(255,45,85,.45);}
 .hero-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:.78rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:6px;}
 .hero-scroll-arrow{animation:bounce 2s infinite;}
 @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
@@ -362,6 +370,7 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
         Cotizar mi iPhone
       </a>
       <a href="#modelos" class="btn-secondary">Ver iPhones disponibles →</a>
+      <button type="button" class="btn-preventa" onclick="goPreventa()">🔥 PREVENTA iPHONE 18</button>
     </div>
   </div>
   <div class="hero-scroll">
@@ -527,11 +536,13 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
     <div class="filter-bar" id="modelFilterBar">
       <button class="filter-btn active" onclick="filterProducts('all',this)">Todos los modelos</button>
       <button class="filter-btn" onclick="filterProducts('11',this)">iPhone 11</button>
+      <button class="filter-btn" onclick="filterProducts('12',this)">iPhone 12</button>
       <button class="filter-btn" onclick="filterProducts('13',this)">iPhone 13</button>
       <button class="filter-btn" onclick="filterProducts('14',this)">iPhone 14</button>
       <button class="filter-btn" onclick="filterProducts('15',this)">iPhone 15</button>
       <button class="filter-btn" onclick="filterProducts('16',this)">iPhone 16</button>
       <button class="filter-btn" onclick="filterProducts('17',this)">iPhone 17</button>
+      <button class="filter-btn preventa-filter" id="fmPreventa" onclick="filterProducts('preventa',this)">🔥 Preventa</button>
     </div>
     <div class="products-grid" id="productsGrid"></div>
   </div>
@@ -835,7 +846,7 @@ const MODELS_BY_FAMILY = {
   "iPhone 14":["128GB","256GB"],"iPhone 14 Plus":["128GB","256GB"],"iPhone 14 Pro":["128GB","256GB","512GB"],"iPhone 14 Pro Max":["128GB","256GB","512GB"],
   "iPhone 15":["128GB","256GB"],"iPhone 15 Plus":["128GB","256GB"],"iPhone 15 Pro":["128GB","256GB","512GB"],"iPhone 15 Pro Max":["256GB","512GB"],
   "iPhone 16":["128GB","256GB"],"iPhone 16 E":["128GB","256GB"],"iPhone 16 Plus":["128GB","256GB"],"iPhone 16 Pro":["128GB","256GB","512GB"],"iPhone 16 Pro Max":["256GB","512GB"],
-  "iPhone 17":["256GB","512GB"],"iPhone 17 Air":["256GB","512GB"],"iPhone 17 Pro":["256GB","512GB"],
+  "iPhone 17":["256GB","512GB"],"iPhone 17 Air":["256GB","512GB"],"iPhone 17 Pro":["256GB","512GB"],"iPhone 17 Pro Max":["256GB","512GB","1TB"],
 };
 
 let selModel='', selStorage='', selCondition='', selBattery='', currentStep=1;
@@ -953,6 +964,7 @@ const MODEL_GENERATION = {
   "iPhone 15":5,"iPhone 15 Plus":5,"iPhone 15 Pro":5,"iPhone 15 Pro Max":5,
   "iPhone 16":6,"iPhone 16 E":6,"iPhone 16 Plus":6,"iPhone 16 Pro":6,"iPhone 16 Pro Max":6,
   "iPhone 17":7,"iPhone 17 E":7,"iPhone 17 Air":7,"iPhone 17 Pro":7,"iPhone 17 Pro Max":7,
+  "iPhone 18":8,"iPhone 18 Air":8,"iPhone 18 Pro":8,"iPhone 18 Pro Max":8,"iPhone DUO":8,
 };
 
 function showResult(){
@@ -1104,6 +1116,21 @@ function getColorDots(details){
   }).filter(Boolean).join(' ');
 }
 
+// Modelos en preventa (badge automático + filtro del hero)
+const PREVENTA_MODELS = ["iphone 18 pro","iphone 18 pro max","iphone duo"];
+function isPreventa(p){
+  const m = (p.model||'').trim().toLowerCase();
+  if(PREVENTA_MODELS.indexOf(m) !== -1) return true;
+  return (p.badges||[]).some(b => String(b).toLowerCase().indexOf('preventa') !== -1);
+}
+// Devuelve los badges del producto, inyectando "Preventa" si corresponde
+function badgesOf(p){
+  const list = (p.badges||[]).slice();
+  const yaTiene = list.some(b => String(b).toLowerCase().indexOf('preventa') !== -1);
+  if(isPreventa(p) && !yaTiene) list.unshift('Preventa');
+  return list;
+}
+
 const BADGE_COLORS = {
   "con caja original":           "background:#e3f2fd;color:#1565c0",
   "garantía de apple":           "background:#dcfce7;color:#15803d",
@@ -1142,11 +1169,16 @@ function renderProducts(filter){
   grid.innerHTML='';
   activeModel = filter;
   const filtered = products.filter(p => {
-    const matchModel = filter === 'all' || p.model.includes(filter);
+    const matchModel = filter === 'all' ? true : (filter === 'preventa' ? isPreventa(p) : p.model.includes(filter));
     const matchCond  = activeCondition === 'all' || p.condition === activeCondition;
     return matchModel && matchCond;
   });
-  if(!filtered.length){grid.innerHTML='<p style="color:var(--muted);padding:20px;">Sin equipos disponibles.</p>';return;}
+  if(!filtered.length){
+    grid.innerHTML = filter === 'preventa'
+      ? '<p style="color:var(--muted);padding:20px;">La preventa se abre muy pronto. Escribinos por WhatsApp para reservar el tuyo.</p>'
+      : '<p style="color:var(--muted);padding:20px;">Sin equipos disponibles.</p>';
+    return;
+  }
 
   // Ordenar: primero por número de modelo iPhone ascendente, luego Pro/Max, luego precio
   filtered.sort((a,b)=>{
@@ -1172,7 +1204,9 @@ function renderProducts(filter){
     const modelName = groupKey.split('||')[0];
     const first = variants[0];
     const condBadge=`<span class="pc-badge ${first.condition==='Seminuevo'?'seminuevo':'nuevo'}">${first.condition}</span>`;
-    const badgesHTML=(first.badges||[]).map(b=>{
+    const badgesHTML=badgesOf(first).map(b=>{
+      if(String(b).toLowerCase().indexOf('preventa') !== -1)
+        return `<span class="pc-badge preventa-badge">🔥 ${b.toUpperCase()}</span>`;
       const style = BADGE_COLORS[b.toLowerCase()] || "background:#fff8e1;color:#f57f17";
       return `<span class="pc-badge special" style="${style}">${b}</span>`;
     }).join('');
@@ -1266,7 +1300,9 @@ function updateCard(select){
   const colorDiv = card.querySelector('.pc-colors');
   if (colorDiv) colorDiv.innerHTML = newColorHTML;
   // Actualizar badges
-  const badgesHTML=(v.badges||[]).map(b=>{
+  const badgesHTML=badgesOf(v).map(b=>{
+    if(String(b).toLowerCase().indexOf('preventa') !== -1)
+      return `<span class="pc-badge preventa-badge">🔥 ${b.toUpperCase()}</span>`;
     const style = BADGE_COLORS[b.toLowerCase()] || "background:#fff8e1;color:#f57f17";
     return `<span class="pc-badge special" style="${style}">${b}</span>`;
   }).join('');
@@ -1281,6 +1317,21 @@ function filterCondition(cond, btn){
   document.querySelectorAll('#fcAll,#fcSemi,#fcNuevo').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderProducts(activeModel);
+}
+
+function goPreventa(){
+  // Reset del filtro de condición para no ocultar equipos
+  activeCondition = 'all';
+  document.querySelectorAll('#fcAll,#fcSemi,#fcNuevo').forEach(b=>b.classList.remove('active'));
+  const fcAll = document.getElementById('fcAll');
+  if(fcAll) fcAll.classList.add('active');
+  // Activar el filtro de preventa
+  document.querySelectorAll('#modelFilterBar .filter-btn').forEach(b=>b.classList.remove('active'));
+  const fm = document.getElementById('fmPreventa');
+  if(fm) fm.classList.add('active');
+  renderProducts('preventa');
+  const target = document.getElementById('modelos');
+  if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function filterProducts(f, btn){
