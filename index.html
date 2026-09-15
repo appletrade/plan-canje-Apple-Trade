@@ -734,13 +734,22 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
       <div class="modal-target-model" id="modalTargetModel">—</div>
     </div>
     <label class="modal-select-label">¿Qué iPhone tenés actualmente?</label>
-    <select class="modal-select" id="modalTradeSelect" onchange="calcModal()">
+    <select class="modal-select" id="modalTradeSelect" onchange="onModalModelChange()">
       <option value="">Seleccioná tu iPhone</option>
     </select>
+    <div id="modalBatWrap" style="display:none;">
+      <label class="modal-select-label">¿Cómo está la salud de la batería?</label>
+      <select class="modal-select" id="modalBatSelect" onchange="calcModal()">
+        <option value="">Seleccioná el estado de batería</option>
+      </select>
+    </div>
     <div class="modal-result" id="modalResult">
+      <div class="mr-label">Te tomamos tu equipo por</div>
+      <div class="mr-tradein" id="modalTradeVal" style="font-size:1.15rem;font-weight:800;color:#30a14e;margin-bottom:10px;">USD 0</div>
       <div class="mr-label">Diferencia a pagar</div>
       <div class="mr-value" id="modalDiff">USD 0</div>
       <div class="mr-ars" id="modalARS">$ 0</div>
+      <div class="mr-installments" id="modalCuotas" style="font-size:.82rem;color:var(--muted);margin-top:8px;line-height:1.6;"></div>
       <div class="mr-note">Sujeto a revisión del equipo entregado</div>
     </div>
     <a href="#" class="btn-wa-full" id="modalWA" style="display:none;">
@@ -869,13 +878,6 @@ function getTradeValue(model, storage, batteryPct) {
 }
 
 // Para el modal de cards: valor promedio del rango 90-100%
-const tradeInValues = Object.fromEntries(
-  Object.entries(tradeInTable).map(([k, ranges]) => {
-    const best = ranges[ranges.length - 1];
-    return [k, best.val];
-  })
-);
-
 // ─── WIZARD ───
 const MODELS_BY_FAMILY = {
   "iPhone 11":["128GB","256GB"],"iPhone 11 Pro":["256GB"],"iPhone 11 Pro Max":["256GB"],
@@ -1521,15 +1523,37 @@ function openModal(modelLabel, price){
   document.getElementById('modalTargetModel').textContent=modelLabel+' · USD '+price;
   const sel=document.getElementById('modalTradeSelect');
   sel.innerHTML='<option value="">Seleccioná tu iPhone</option>';
-  Object.entries(tradeInValues).forEach(([k,v])=>{
+  // Se arma en el momento, con la tabla ya actualizada desde el Sheet
+  Object.keys(tradeInTable).forEach(k=>{
     const opt=document.createElement('option');
-    opt.value=v; opt.textContent=k+' · USD '+v;
+    opt.value=k; opt.textContent=k;
     sel.appendChild(opt);
   });
+  document.getElementById('modalBatWrap').style.display='none';
+  document.getElementById('modalBatSelect').innerHTML='<option value="">Seleccioná el estado de batería</option>';
   document.getElementById('modalResult').classList.remove('visible');
   document.getElementById('modalWA').style.display='none';
   document.getElementById('canjeModal').classList.add('open');
   document.body.style.overflow='hidden';
+}
+
+// Al elegir modelo, cargar los rangos de batería reales de ese modelo
+function onModalModelChange(){
+  const modelo = document.getElementById('modalTradeSelect').value;
+  const wrap   = document.getElementById('modalBatWrap');
+  const batSel = document.getElementById('modalBatSelect');
+  document.getElementById('modalResult').classList.remove('visible');
+  document.getElementById('modalWA').style.display='none';
+  if(!modelo || !tradeInTable[modelo]){ wrap.style.display='none'; return; }
+  const ranges = tradeInTable[modelo].slice().sort((a,b)=>a.min-b.min);
+  batSel.innerHTML='<option value="">Seleccioná el estado de batería</option>';
+  ranges.forEach(r=>{
+    const opt=document.createElement('option');
+    opt.value=r.val;
+    opt.textContent = (r.min===r.max ? r.min+'%' : r.min+'-'+r.max+'%') + ' · USD ' + r.val;
+    batSel.appendChild(opt);
+  });
+  wrap.style.display='block';
 }
 
 function openModalFromResult(label,price,tradeVal){
@@ -1547,25 +1571,33 @@ function openModalFromResult(label,price,tradeVal){
 }
 
 function calcModal(){
-  const sel=document.getElementById('modalTradeSelect');
-  const tradeVal=parseInt(sel.value)||0;
-  if(!tradeVal) return;
+  const modelo  = document.getElementById('modalTradeSelect').value;
+  const batSel  = document.getElementById('modalBatSelect');
+  const tradeVal= parseInt(batSel.value)||0;
+  if(!modelo || !tradeVal){
+    document.getElementById('modalResult').classList.remove('visible');
+    document.getElementById('modalWA').style.display='none';
+    return;
+  }
   const diff=Math.max(0,modalTargetPrice-tradeVal);
   const diffARS=diff*USD;
   const c3=Math.round(diffARS*INT3/3);
   const c6=Math.round(diffARS*INT6/6);
   const c12=Math.round(diffARS*INT12/12);
   const fmt=n=>n.toLocaleString('es-AR');
+  document.getElementById('modalTradeVal').textContent='USD '+tradeVal;
   document.getElementById('modalDiff').textContent='USD '+diff;
   document.getElementById('modalARS').textContent='$ '+fmt(diffARS);
+  document.getElementById('modalCuotas').innerHTML =
+    '3 cuotas de $ '+fmt(c3)+'<br>6 cuotas de $ '+fmt(c6)+'<br>12 cuotas de $ '+fmt(c12);
   document.getElementById('modalResult').classList.add('visible');
-  const tradeLabel = sel.options[sel.selectedIndex].text.split('·')[0].trim();
+
+  const batLabel = batSel.options[batSel.selectedIndex].text.split('·')[0].trim();
   const destLabel = document.getElementById('modalTargetModel').textContent;
-  const msg=`Hola! Quiero canjear mi iPhone.\n📲 Entrego: ${tradeLabel} (valor estimado USD ${tradeVal})\n✅ Quiero: ${destLabel}\n💰 Diferencia estimada:\n- USD ${diff}\n- $ ${fmt(diffARS)}\n- 3 cuotas: $ ${fmt(c3)}\n- 6 cuotas: $ ${fmt(c6)}\n- 12 cuotas: $ ${fmt(c12)}\n¿Me ayudás a avanzar con el canje?`;
-  const waBtn=document.getElementById('modalWA');
-  waBtn.href='https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
-  waBtn.style.display='flex';
-  waBtn.onclick=function(){fbq('track','Contact',{content_name:'Canje modal'});};
+  const msg=`Hola! Quiero canjear mi iPhone.\n📲 Entrego: ${modelo} · Batería ${batLabel} (valor estimado USD ${tradeVal})\n✅ Quiero: ${destLabel}\n💰 Diferencia estimada:\n- USD ${diff}\n- $ ${fmt(diffARS)}\n- 3 cuotas: $ ${fmt(c3)}\n- 6 cuotas: $ ${fmt(c6)}\n- 12 cuotas: $ ${fmt(c12)}\n¿Me ayudás a avanzar con el canje?`;
+  const wa=document.getElementById('modalWA');
+  wa.href=`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+  wa.style.display='flex';
 }
 
 function closeModal(){
