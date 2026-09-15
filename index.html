@@ -162,6 +162,10 @@ section{padding:80px 20px;}
 .promo-new{font-size:1.6rem;font-weight:900;color:#ff2d55;letter-spacing:-.02em;}
 .promo-save{font-size:.8rem;font-weight:800;color:#30a14e;background:#e9f9ee;border-radius:999px;padding:3px 10px;display:inline-block;margin:8px 0 10px;}
 .promo-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto;padding-top:14px;}
+.promo-cta{margin-top:30px;text-align:center;padding:24px;background:#fff;border:2px dashed #ffd9d2;border-radius:var(--radius,18px);}
+.promo-cta-text{font-size:.95rem;color:var(--muted);margin:0 0 14px;font-weight:600;}
+.promo-cta-btn{display:inline-block;padding:14px 30px;border-radius:999px;background:var(--primary,#0a84ff);color:#fff;font-size:.98rem;font-weight:800;text-decoration:none;transition:transform .15s,box-shadow .15s;box-shadow:0 6px 20px rgba(10,132,255,.32);}
+.promo-cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(10,132,255,.42);}
 @media(max-width:768px){.promo-grid{grid-template-columns:1fr;}}
 .product-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .2s,box-shadow .2s;}
 .product-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
@@ -525,6 +529,10 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
     <h2 class="section-title">Precios rebajados</h2>
     <p class="section-sub" style="margin-bottom:0;">Equipos con descuento por tiempo limitado. Sujeto a disponibilidad.</p>
     <div class="promo-grid" id="promoGrid"></div>
+    <div class="promo-cta">
+      <p class="promo-cta-text">Estas son solo las ofertas. Tenemos muchos más modelos disponibles.</p>
+      <a href="#modelos" class="promo-cta-btn" onclick="goCatalogo(event)">Ver catálogo completo →</a>
+    </div>
   </div>
 </section>
 
@@ -1353,6 +1361,70 @@ function filterCondition(cond, btn){
 }
 
 // ── SECCIÓN DE OFERTAS ────────────────────────────────────
+function promoCardHTML(v, variants){
+  const off    = Math.round((1 - v.priceOffer / v.priceUSD) * 100);
+  const ahorro = Math.round(v.priceUSD - v.priceOffer);
+  const ars    = (v.priceOffer * USD).toLocaleString('es-AR');
+  const c3     = Math.round(v.priceOffer * USD * INT3 / 3).toLocaleString('es-AR');
+  const c6     = Math.round(v.priceOffer * USD * INT6 / 6).toLocaleString('es-AR');
+  const c12    = Math.round(v.priceOffer * USD * INT12 / 12).toLocaleString('es-AR');
+  const colorHTML = getColorDots(v.details || '');
+  const bateria   = (String(v.details||'').match(/Bater[íi]a[^·]*/i) || [''])[0].trim();
+  const condBadge = `<span class="pc-badge ${v.condition==='Seminuevo'?'seminuevo':'nuevo'}">${v.condition}</span>`;
+  const badgesHTML = badgesOf(v).map(b => {
+    if(String(b).toLowerCase().indexOf('preventa') !== -1)
+      return `<span class="pc-badge preventa-badge">🔥 ${b.toUpperCase()}</span>`;
+    const style = BADGE_COLORS[b.toLowerCase()] || "background:#fff8e1;color:#f57f17";
+    return `<span class="pc-badge special" style="${style}">${b}</span>`;
+  }).join('');
+  const waMsg = encodeURIComponent(`Hola! Vi la oferta del ${v.model} ${v.storage} a USD ${v.priceOffer} (antes USD ${v.priceUSD}). ¿Sigue disponible?`);
+
+  const optionsHTML = variants.map((x,i) => {
+    const bat = (String(x.details||'').match(/Bater[íi]a[^·]*/i)||[''])[0].trim();
+    const label = x.storage + (bat ? ' — ' + bat : '') + ' · USD ' + x.priceOffer;
+    return `<option value="${i}"${x===v?' selected':''}>${label}</option>`;
+  }).join('');
+
+  return `
+    <div class="promo-off">-${off}%</div>
+    <div class="pc-header">
+      <div class="pc-model">${v.model}</div>
+      <div class="pc-badges" style="margin-top:6px;">${condBadge}${badgesHTML}</div>
+      ${variants.length > 1
+        ? `<label class="pc-variant-label">Elegí variante</label>
+           <select class="pc-variant-select" onchange="updatePromoCard(this)">${optionsHTML}</select>`
+        : `<div class="pc-storage">${v.storage}</div>${bateria ? `<div class="pc-battery">${bateria}</div>` : ''}`
+      }
+      ${colorHTML ? `<div class="pc-colors" style="margin-top:8px;font-size:.8rem;color:var(--muted);">${colorHTML}</div>` : ''}
+    </div>
+    <div class="pc-body">
+      <div class="pc-price-label">Precio con descuento</div>
+      <div class="promo-prices">
+        <span class="promo-old">USD ${v.priceUSD}</span>
+        <span class="promo-new">USD ${v.priceOffer}</span>
+      </div>
+      <div class="promo-save">Ahorrás USD ${ahorro}</div>
+      <div class="pc-price-ars">$ ${ars}</div>
+      <div class="pc-installments"><span>3 cuotas de $ ${c3}</span><span>6 cuotas de $ ${c6}</span><span>12 cuotas de $ ${c12}</span></div>
+      <div class="promo-actions">
+        <button class="pc-btn-buy" data-wa="${waMsg}" onclick="fbq('track','Contact',{content_name:'Oferta',content_category:'${v.model}',value:${v.priceOffer},currency:'USD'});window.open('https://wa.me/${WA}?text='+this.dataset.wa,'_blank')">Comprar</button>
+        <button class="pc-btn-canje" data-model="${v.model} ${v.storage}" data-price="${v.priceOffer}" onclick="openModal(this.dataset.model,parseInt(this.dataset.price))">🔄 Canjear</button>
+      </div>
+    </div>
+  `;
+}
+
+function updatePromoCard(select){
+  const card = select.closest('.promo-card');
+  const variants = card._variants;
+  const v = variants[parseInt(select.value)];
+  card.innerHTML = promoCardHTML(v, variants);
+  card._variants = variants;
+  // Mantener seleccionada la variante elegida
+  const sel = card.querySelector('.pc-variant-select');
+  if(sel) sel.value = String(variants.indexOf(v));
+}
+
 function renderPromos(){
   const sec  = document.getElementById('promos');
   const grid = document.getElementById('promoGrid');
@@ -1363,9 +1435,6 @@ function renderPromos(){
   const promos = products.filter(p => {
     const off = parseFloat(p.priceOffer) || 0;
     return off > 0 && off < (parseFloat(p.priceUSD) || 0);
-  }).sort((a,b) => {
-    const pa = (1 - a.priceOffer / a.priceUSD), pb = (1 - b.priceOffer / b.priceUSD);
-    return pb - pa; // mayor descuento primero
   });
 
   if(!promos.length){
@@ -1377,58 +1446,50 @@ function renderPromos(){
 
   sec.style.display = 'block';
   if(nav) nav.style.display = '';
+
+  // Agrupar por modelo + condición (igual que el catálogo)
+  const groups = new Map();
+  promos.forEach(p => {
+    const key = p.model + '||' + p.condition;
+    if(!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(p);
+  });
+
+  // Dentro de cada card, variantes por precio de oferta ascendente
+  groups.forEach(list => list.sort((a,b) => a.priceOffer - b.priceOffer));
+
+  // Ordenar las cards por mayor descuento
+  const ordered = [...groups.values()].sort((a,b) => {
+    const best = l => Math.max(...l.map(x => 1 - x.priceOffer / x.priceUSD));
+    return best(b) - best(a);
+  });
+
+  const totalUnidades = promos.length;
   const cnt = document.getElementById('promoCount');
-  if(cnt) cnt.textContent = promos.length === 1 ? '1 equipo en promoción' : promos.length + ' equipos en promoción';
+  if(cnt) cnt.textContent = totalUnidades === 1 ? '1 equipo en promoción' : totalUnidades + ' equipos en promoción';
 
   grid.innerHTML = '';
-  promos.forEach(p => {
-    const off     = Math.round((1 - p.priceOffer / p.priceUSD) * 100);
-    const ahorro  = Math.round(p.priceUSD - p.priceOffer);
-    const ars     = (p.priceOffer * USD).toLocaleString('es-AR');
-    const c3      = Math.round(p.priceOffer * USD * INT3 / 3).toLocaleString('es-AR');
-    const c6      = Math.round(p.priceOffer * USD * INT6 / 6).toLocaleString('es-AR');
-    const c12     = Math.round(p.priceOffer * USD * INT12 / 12).toLocaleString('es-AR');
-    const colorHTML = getColorDots(p.details || '');
-    const bateria   = (String(p.details||'').match(/Bater[íi]a[^·]*/i) || [''])[0].trim();
-
-    const condClass = p.condition === 'Nuevo en caja sellada' ? 'sellado' : 'seminuevo';
-    const condBadge = `<span class="pc-badge ${condClass}">${p.condition}</span>`;
-    const badgesHTML = badgesOf(p).map(b => {
-      if(String(b).toLowerCase().indexOf('preventa') !== -1)
-        return `<span class="pc-badge preventa-badge">🔥 ${b.toUpperCase()}</span>`;
-      const style = BADGE_COLORS[b.toLowerCase()] || "background:#fff8e1;color:#f57f17";
-      return `<span class="pc-badge special" style="${style}">${b}</span>`;
-    }).join('');
-
-    const waMsg = encodeURIComponent(`Hola! Vi la oferta del ${p.model} ${p.storage} a USD ${p.priceOffer} (antes USD ${p.priceUSD}). ¿Sigue disponible?`);
-
+  ordered.forEach(variants => {
     const card = document.createElement('div');
     card.className = 'promo-card';
-    card.innerHTML = `
-      <div class="promo-off">-${off}%</div>
-      <div class="pc-header">
-        <div class="pc-model">${p.model} ${p.storage}</div>
-        <div class="pc-badges" style="margin-top:6px;">${condBadge}${badgesHTML}</div>
-        ${bateria ? `<div class="pc-battery">${bateria}</div>` : ''}
-        ${colorHTML ? `<div class="pc-colors" style="margin-top:8px;font-size:.8rem;color:var(--muted);">${colorHTML}</div>` : ''}
-      </div>
-      <div class="pc-body">
-        <div class="pc-price-label">Precio con descuento</div>
-        <div class="promo-prices">
-          <span class="promo-old">USD ${p.priceUSD}</span>
-          <span class="promo-new">USD ${p.priceOffer}</span>
-        </div>
-        <div class="promo-save">Ahorrás USD ${ahorro}</div>
-        <div class="pc-price-ars">$ ${ars}</div>
-        <div class="pc-installments"><span>3 cuotas de $ ${c3}</span><span>6 cuotas de $ ${c6}</span><span>12 cuotas de $ ${c12}</span></div>
-        <div class="promo-actions">
-          <button class="pc-btn-buy" data-wa="${waMsg}" onclick="fbq('track','Contact',{content_name:'Oferta',content_category:'${p.model}',value:${p.priceOffer},currency:'USD'});window.open('https://wa.me/${WA}?text='+this.dataset.wa,'_blank')">Comprar</button>
-          <button class="pc-btn-canje" data-model="${p.model} ${p.storage}" data-price="${p.priceOffer}" onclick="openModal(this.dataset.model,parseInt(this.dataset.price))">🔄 Canjear</button>
-        </div>
-      </div>
-    `;
+    card.innerHTML = promoCardHTML(variants[0], variants);
+    card._variants = variants;
     grid.appendChild(card);
   });
+}
+
+function goCatalogo(e){
+  if(e) e.preventDefault();
+  activeCondition = 'all';
+  document.querySelectorAll('#fcAll,#fcSemi,#fcNuevo').forEach(b=>b.classList.remove('active'));
+  const fcAll = document.getElementById('fcAll');
+  if(fcAll) fcAll.classList.add('active');
+  document.querySelectorAll('#modelFilterBar .filter-btn').forEach(b=>b.classList.remove('active'));
+  const primero = document.querySelector('#modelFilterBar .filter-btn');
+  if(primero) primero.classList.add('active');
+  renderProducts('all');
+  const target = document.getElementById('modelos');
+  if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function goPreventa(){
