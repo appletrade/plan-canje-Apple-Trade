@@ -51,6 +51,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,113,227,.55);}
 .btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:17px 32px;border-radius:999px;background:rgba(255,255,255,.15);color:#fff;font-size:1.05rem;font-weight:700;text-decoration:none;border:1.5px solid rgba(255,255,255,.35);cursor:pointer;transition:background .15s;backdrop-filter:blur(8px);}
 .btn-secondary:hover{background:rgba(255,255,255,.25);}
+.btn-hero-ofertas{display:inline-flex;align-items:center;gap:8px;padding:17px 30px;border-radius:999px;background:#fff;color:#ff2d55;font-size:1.05rem;font-weight:800;border:2px solid #ff2d55;cursor:pointer;letter-spacing:-.01em;transition:transform .15s,box-shadow .15s,background .15s;}
+.btn-hero-ofertas:hover{transform:translateY(-2px);background:#fff0f2;box-shadow:0 10px 28px rgba(255,45,85,.3);}
 .btn-preventa{display:inline-flex;align-items:center;gap:8px;padding:17px 30px;border-radius:999px;background:linear-gradient(135deg,#ff6b00,#ff2d55);color:#fff;font-size:1.05rem;font-weight:800;text-decoration:none;border:none;cursor:pointer;letter-spacing:-.01em;box-shadow:0 8px 28px rgba(255,45,85,.5);transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;}
 .btn-preventa:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(255,45,85,.62);}
 .btn-preventa::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:shine 3.2s infinite;}
@@ -77,7 +79,6 @@ section{padding:80px 20px;}
 .section-sub{font-size:1.05rem;color:var(--muted);line-height:1.5;max-width:540px;}
 
 /* ─── WIZARD ─── */
-#cotizador{background:#fff;padding:80px 20px;}
 .wizard-wrap{max-width:680px;margin:0 auto;}
 .wizard-header{text-align:center;margin-bottom:40px;}
 .wizard-progress{display:flex;align-items:center;gap:0;margin-bottom:32px;}
@@ -259,6 +260,9 @@ section{padding:80px 20px;}
 .mr-value{font-size:2.4rem;font-weight:800;letter-spacing:-.03em;}
 .mr-ars{font-size:.9rem;opacity:.75;margin-top:4px;}
 .mr-note{font-size:.75rem;opacity:.6;margin-top:6px;}
+.mr-tradein{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:1.25rem;font-weight:800;letter-spacing:-.02em;padding:6px 16px;border-radius:999px;margin-bottom:4px;}
+.mr-divider{height:1px;background:rgba(255,255,255,.25);margin:16px 0 14px;}
+.mr-installments{font-size:.82rem;color:#fff;opacity:.85;margin-top:10px;line-height:1.65;}
 .modal-warning{font-size:.78rem;color:var(--muted);text-align:center;margin-top:12px;}
 
     /* SKELETON LOADER */
@@ -365,7 +369,6 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
       <img src="data:image/png;base64,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" alt="Apple Trade">
     </a>
     <nav class="header-nav">
-      <a href="#cotizador" class="nav-link">Cotizador</a>
       <a href="#promos" class="nav-link" id="navPromos" style="display:none;color:#ff2d55;font-weight:700;">🔥 Ofertas</a>
       <a href="#modelos" class="nav-link">Lista de precios</a>
       <a href="#como-funciona" class="nav-link">Cómo funciona</a>
@@ -383,14 +386,17 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
       <span class="hero-badge-dot"></span>
       Stock disponible hoy
     </div>
-    <h1 class="hero-title">Cambiá tu iPhone.<br>Pagás solo la <em>diferencia.</em></h1>
-    <p class="hero-sub">Entregás el tuyo, te llevás el que querés. En menos de 2 minutos sabés cuánto sale.</p>
+    <h1 class="hero-title">El iPhone que querés,<br>al precio que <em>buscabas.</em></h1>
+    <p class="hero-sub">Seminuevos verificados y sellados con garantía. Entregá el tuyo en parte de pago y pagá solo la diferencia, hasta en 12 cuotas.</p>
     <div class="hero-ctas">
-      <a href="#cotizador" class="btn-primary">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Cotizar mi iPhone
+      <a href="#modelos" class="btn-primary" onclick="goCatalogo(event)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        Ver catálogo completo
       </a>
-      <a href="#modelos" class="btn-secondary">Ver iPhones disponibles →</a>
+      <button type="button" class="btn-hero-ofertas" id="heroOfertas" style="display:none;" onclick="goOfertas(event)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Ver ofertas
+      </button>
       <button type="button" class="btn-preventa" onclick="goPreventa()">🔥 PREVENTA iPHONE 18</button>
     </div>
   </div>
@@ -426,99 +432,6 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
   </div>
 </div>
 
-<!-- COTIZADOR (WIZARD) -->
-<section id="cotizador">
-  <div class="wizard-wrap">
-    <div class="wizard-header">
-      <p class="section-label" style="text-align:center;">Plan canje</p>
-      <h2 class="section-title" style="text-align:center;">¿Qué iPhone tenés?</h2>
-      <p style="text-align:center;color:var(--muted);font-size:.95rem;margin-top:8px;">En 4 pasos te decimos cuánto vale y a qué modelo podés acceder.</p>
-    </div>
-
-    <!-- BARRA DE PROGRESO -->
-    <div class="wizard-progress" id="wizardProgress">
-      <div class="wp-step active" id="wp1"><div class="wp-num">1</div><div class="wp-label">Modelo</div></div>
-      <div class="wp-step" id="wp2"><div class="wp-num">2</div><div class="wp-label">Capacidad</div></div>
-      <div class="wp-step" id="wp3"><div class="wp-num">3</div><div class="wp-label">Estado</div></div>
-      <div class="wp-step" id="wp4"><div class="wp-num">4</div><div class="wp-label">Batería</div></div>
-    </div>
-
-    <!-- PASO 1: MODELO -->
-    <div class="wizard-pane active" id="pane1">
-      <h3 class="wizard-pane-title">¿Qué modelo es tu iPhone?</h3>
-      <p class="wizard-pane-sub">Seleccioná la generación</p>
-      <div class="btn-grid" id="modelGrid"></div>
-      <div class="wizard-nav">
-        <span class="wizard-step-counter">Paso 1 de 4</span>
-        <button class="btn-next" id="next1" disabled onclick="goStep(2)">Siguiente →</button>
-      </div>
-    </div>
-
-    <!-- PASO 2: CAPACIDAD -->
-    <div class="wizard-pane" id="pane2">
-      <h3 class="wizard-pane-title">¿Cuánto almacenamiento tiene?</h3>
-      <p class="wizard-pane-sub"></p>
-      <div class="btn-grid" id="storageGrid"></div>
-      <div class="wizard-nav">
-        <button class="btn-back" onclick="goStep(1)">← Volver</button>
-        <span class="wizard-step-counter">Paso 2 de 4</span>
-        <button class="btn-next" id="next2" disabled onclick="goStep(3)">Siguiente →</button>
-      </div>
-    </div>
-
-    <!-- PASO 3: ESTADO -->
-    <div class="wizard-pane" id="pane3">
-      <h3 class="wizard-pane-title">¿En qué estado está?</h3>
-      <p class="wizard-pane-sub">Sé honesto, eso nos ayuda a darte la cotización más precisa</p>
-      <div class="btn-grid" id="conditionGrid">
-        <button class="btn-option" data-val="excelente" onclick="selectOption(this,'conditionGrid','selectedCondition')">⭐ Excelente<br><small style="font-weight:400;font-size:.75rem">Sin rayones</small></button>
-        <button class="btn-option" data-val="bueno" onclick="selectOption(this,'conditionGrid','selectedCondition')">👍 Bueno<br><small style="font-weight:400;font-size:.75rem">Rayones leves</small></button>
-        <button class="btn-option" data-val="regular" onclick="selectOption(this,'conditionGrid','selectedCondition')">🔧 Regular<br><small style="font-weight:400;font-size:.75rem">Rayones visibles</small></button>
-      </div>
-      <div class="wizard-nav">
-        <button class="btn-back" onclick="goStep(2)">← Volver</button>
-        <span class="wizard-step-counter">Paso 3 de 4</span>
-        <button class="btn-next" id="next3" disabled onclick="goStep(4)">Siguiente →</button>
-      </div>
-    </div>
-
-    <!-- PASO 4: BATERÍA -->
-    <div class="wizard-pane" id="pane4">
-      <h3 class="wizard-pane-title">¿Cuál es la salud de la batería?</h3>
-      <p class="wizard-pane-sub">Encontrala en Ajustes → Batería → Estado de la batería</p>
-      <div class="btn-grid" id="batteryGrid">
-        <button class="btn-option" data-val="100" onclick="selectOption(this,'batteryGrid','selectedBattery')">💚 100%</button>
-        <button class="btn-option" data-val="95" onclick="selectOption(this,'batteryGrid','selectedBattery')">💚 90–99%</button>
-        <button class="btn-option" data-val="85" onclick="selectOption(this,'batteryGrid','selectedBattery')">🟡 81–89%</button>
-        <button class="btn-option" data-val="70" onclick="selectOption(this,'batteryGrid','selectedBattery')">🔴 60–80%</button>
-      </div>
-      <div class="wizard-nav">
-        <button class="btn-back" onclick="goStep(3)">← Volver</button>
-        <span class="wizard-step-counter">Paso 4 de 4</span>
-        <button class="btn-next" id="next4" disabled onclick="showResult()">Ver resultado →</button>
-      </div>
-    </div>
-
-    <!-- RESULTADO -->
-    <div class="wizard-pane" id="paneResult">
-      <div class="result-box">
-        <div class="result-label">Tu iPhone vale hasta</div>
-        <div class="result-value" id="resultValue">USD 0</div>
-        <div class="result-sub" id="resultARS">$ 0</div>
-        <div class="result-disclaimer">Cotización estimada · Sujeta a revisión del equipo</div>
-      </div>
-      <p class="result-models-title">Con ese valor, podés llevarte estos modelos:</p>
-      <div id="resultModels"></div>
-      <a href="#" class="btn-wa-full" id="resultWA">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-        Coordinar canje por WhatsApp
-      </a>
-      <button class="btn-back" style="width:100%;margin-top:10px;text-align:center;" onclick="resetWizard()">← Volver a cotizar</button>
-    </div>
-  </div>
-</section>
-
-<!-- CÓMO FUNCIONA -->
 <!-- OFERTAS -->
 <section id="promos">
   <div class="section-inner">
@@ -536,31 +449,7 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
   </div>
 </section>
 
-<section id="como-funciona">
-  <div class="section-inner">
-    <p class="section-label">Simple</p>
-    <h2 class="section-title">3 pasos. Sin vueltas.</h2>
-    <div class="how-grid">
-      <div class="how-card" data-num="1">
-        <div class="how-num">1</div>
-        <h3 class="how-title">Cotizás tu iPhone</h3>
-        <p class="how-desc">Usás el cotizador de arriba. En menos de 2 minutos sabés exactamente cuánto vale tu equipo actual.</p>
-      </div>
-      <div class="how-card" data-num="2">
-        <div class="how-num">2</div>
-        <h3 class="how-title">Elegís el que querés</h3>
-        <p class="how-desc">Te mostramos a qué modelos podés acceder con tu canje. Ves la diferencia a pagar al instante.</p>
-      </div>
-      <div class="how-card" data-num="3">
-        <div class="how-num">3</div>
-        <h3 class="how-title">Cerrás por WhatsApp</h3>
-        <p class="how-desc">Coordinamos la entrega en Banfield o CABA. Traspaso de datos incluido. Todo en el mismo día.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- MODELOS DISPONIBLES -->
+<!-- CATÁLOGO -->
 <section id="modelos">
   <div class="section-inner">
     <p class="section-label">Catálogo</p>
@@ -587,6 +476,33 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
 </section>
 
 <!-- BENEFICIOS -->
+<!-- CÓMO FUNCIONA -->
+<!-- CÓMO FUNCIONA -->
+<section id="como-funciona">
+  <div class="section-inner">
+    <p class="section-label">Simple</p>
+    <h2 class="section-title">3 pasos. Sin vueltas.</h2>
+    <div class="how-grid">
+      <div class="how-card" data-num="1">
+        <div class="how-num">1</div>
+        <h3 class="how-title">Elegís tu iPhone</h3>
+        <p class="how-desc">Mirás el catálogo con precios y stock real, actualizado todos los días.</p>
+      </div>
+      <div class="how-card" data-num="2">
+        <div class="how-num">2</div>
+        <h3 class="how-title">Cotizás tu canje</h3>
+        <p class="how-desc">Tocás "Canjear" en el modelo que te gusta, elegís el iPhone que entregás y ves la diferencia al instante.</p>
+      </div>
+      <div class="how-card" data-num="3">
+        <div class="how-num">3</div>
+        <h3 class="how-title">Cerrás por WhatsApp</h3>
+        <p class="how-desc">Te esperamos en nuestro local de Lomas de Zamora. Traspaso de datos incluido. Todo en el mismo día.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODELOS DISPONIBLES -->
 <section id="beneficios">
   <div class="section-inner">
     <p class="section-label">¿Por qué Apple Trade?</p>
@@ -600,7 +516,7 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
       <div class="benefit-card">
         <div class="benefit-icon">⚡</div>
         <h3 class="benefit-title">Todo en el mismo día</h3>
-        <p class="benefit-desc">Coordinamos entrega en Banfield o CABA. Traspaso de datos incluido sin costo adicional.</p>
+        <p class="benefit-desc">Coordinamos la entrega en nuestro local de Lomas de Zamora. Traspaso de datos incluido sin costo adicional.</p>
       </div>
       <div class="benefit-card">
         <div class="benefit-icon">💳</div>
@@ -614,8 +530,8 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
       </div>
       <div class="benefit-card">
         <div class="benefit-icon">📍</div>
-        <h3 class="benefit-title">Dos sucursales</h3>
-        <p class="benefit-desc">Estamos en Banfield y Microcentro. Elegís el punto que más te quede cómodo.</p>
+        <h3 class="benefit-title">Local a la calle</h3>
+        <p class="benefit-desc">Nos encontrás en Lomas de Zamora. Venís, ves el equipo y te lo llevás el mismo día.</p>
       </div>
       <div class="benefit-card">
         <div class="benefit-icon">✅</div>
@@ -636,13 +552,13 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
         <div class="tc-stars">★★★★★</div>
         <p class="tc-text">"Entregué mi 13 Pro y me llevé el 15 Pro Max pagando solo la diferencia. Todo en el día, sin complicaciones. Los recomiendo."</p>
         <div class="tc-author">Martín G.</div>
-        <div class="tc-handle">Banfield</div>
+        <div class="tc-handle">Lomas de Zamora</div>
       </div>
       <div class="testimonio-card">
         <div class="tc-stars">★★★★★</div>
         <p class="tc-text">"Lo cotice por WhatsApp, me pasaron el valor y en 2 horas estaba retirando el iPhone 16 nuevo. Super rápido y profesional."</p>
         <div class="tc-author">Sofía L.</div>
-        <div class="tc-handle">CABA</div>
+        <div class="tc-handle">Lomas de Zamora</div>
       </div>
       <div class="testimonio-card">
         <div class="tc-stars">★★★★★</div>
@@ -662,7 +578,7 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
     <div class="faq-list">
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">
-          ¿La cotización del cotizador es definitiva?
+          ¿La cotización del canje es definitiva?
           <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
         <div class="faq-a">La cotización es estimada. El valor final se confirma al revisar el equipo físicamente. En la gran mayoría de los casos el valor se respeta o mejora.</div>
@@ -700,7 +616,7 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
           ¿Dónde están ubicados?
           <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
-        <div class="faq-a">Tenemos dos sucursales: Banfield (GBA Sur) y Microcentro (CABA). Coordinamos el lugar que más te convenga por WhatsApp.</div>
+        <div class="faq-a">Tenemos un local a la calle en Lomas de Zamora, GBA Sur. Coordinás la visita por WhatsApp y te pasamos la dirección exacta y los horarios.</div>
       </div>
     </div>
   </div>
@@ -712,9 +628,9 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
     <h2 class="cta-final-title">¿Listo para cambiar<br>de iPhone?</h2>
     <p class="cta-final-sub">Cotizá gratis en 2 minutos. Sin compromiso.</p>
     <div class="cta-final-btns">
-      <a href="#cotizador" class="btn-primary" style="font-size:1.05rem;">
+      <a href="#modelos" class="btn-primary" style="font-size:1.05rem;" onclick="goCatalogo(event)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Cotizar mi iPhone gratis
+        Ver catálogo completo
       </a>
       <a href="https://wa.me/5491171645467?text=Hola!%20Quiero%20hacer%20un%20canje" class="btn-secondary" onclick="fbq('track','Contact',{content_name:'CTA final'})" target="_blank" style="background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.3);">
         Consultar por WhatsApp →
@@ -745,11 +661,12 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
     </div>
     <div class="modal-result" id="modalResult">
       <div class="mr-label">Te tomamos tu equipo por</div>
-      <div class="mr-tradein" id="modalTradeVal" style="font-size:1.15rem;font-weight:800;color:#30a14e;margin-bottom:10px;">USD 0</div>
+      <div class="mr-tradein" id="modalTradeVal">USD 0</div>
+      <div class="mr-divider"></div>
       <div class="mr-label">Diferencia a pagar</div>
       <div class="mr-value" id="modalDiff">USD 0</div>
       <div class="mr-ars" id="modalARS">$ 0</div>
-      <div class="mr-installments" id="modalCuotas" style="font-size:.82rem;color:var(--muted);margin-top:8px;line-height:1.6;"></div>
+      <div class="mr-installments" id="modalCuotas"></div>
       <div class="mr-note">Sujeto a revisión del equipo entregado</div>
     </div>
     <a href="#" class="btn-wa-full" id="modalWA" style="display:none;">
@@ -878,20 +795,6 @@ function getTradeValue(model, storage, batteryPct) {
 }
 
 // Para el modal de cards: valor promedio del rango 90-100%
-// ─── WIZARD ───
-const MODELS_BY_FAMILY = {
-  "iPhone 11":["128GB","256GB"],"iPhone 11 Pro":["256GB"],"iPhone 11 Pro Max":["256GB"],
-  "iPhone 12":["128GB","256GB"],"iPhone 12 Pro":["128GB","256GB"],"iPhone 12 Pro Max":["128GB","256GB"],
-  "iPhone 13":["128GB","256GB"],"iPhone 13 Pro":["128GB","256GB"],"iPhone 13 Pro Max":["128GB","256GB","512GB"],
-  "iPhone 14":["128GB","256GB"],"iPhone 14 Plus":["128GB","256GB"],"iPhone 14 Pro":["128GB","256GB","512GB"],"iPhone 14 Pro Max":["128GB","256GB","512GB"],
-  "iPhone 15":["128GB","256GB"],"iPhone 15 Plus":["128GB","256GB"],"iPhone 15 Pro":["128GB","256GB","512GB"],"iPhone 15 Pro Max":["256GB","512GB"],
-  "iPhone 16":["128GB","256GB"],"iPhone 16 E":["128GB","256GB"],"iPhone 16 Plus":["128GB","256GB"],"iPhone 16 Pro":["128GB","256GB","512GB"],"iPhone 16 Pro Max":["256GB","512GB"],
-  "iPhone 17":["256GB","512GB"],"iPhone 17 Air":["256GB","512GB"],"iPhone 17 Pro":["256GB","512GB"],"iPhone 17 Pro Max":["256GB","512GB","1TB"],
-};
-
-let selModel='', selStorage='', selCondition='', selBattery='', currentStep=1;
-
-
 // ── CARGA DESDE API ──────────────────────────────────────────
 async function loadFromAPI() {
   try {
@@ -931,212 +834,6 @@ async function loadFromAPI() {
   } catch(e) {
     console.warn('API no disponible, usando datos locales:', e.message);
   }
-}
-
-function buildModelGrid(){
-  const g = document.getElementById('modelGrid');
-  g.innerHTML = '';
-  Object.keys(MODELS_BY_FAMILY).forEach(m=>{
-    const b = document.createElement('button');
-    b.className='btn-option'; b.dataset.val=m;
-    b.textContent=m;
-    b.onclick=()=>selectOption(b,'modelGrid','selModel');
-    g.appendChild(b);
-  });
-}
-buildModelGrid();
-
-function selectOption(btn, gridId, varName){
-  document.querySelectorAll('#'+gridId+' .btn-option').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
-  if(varName==='selModel') selModel=btn.dataset.val;
-  if(varName==='selectedCondition') selCondition=btn.dataset.val;
-  if(varName==='selectedBattery') selBattery=btn.dataset.val;
-  const nextId = {selModel:'next1',selectedCondition:'next3',selectedBattery:'next4'}[varName];
-  if(nextId) document.getElementById(nextId).disabled=false;
-  // Avance automático con pequeño delay visual
-  const nextStep = {selModel:2, selectedCondition:4, selectedBattery:'result'}[varName];
-  if(nextStep==='result'){
-    setTimeout(()=>showResult(), 350);
-  } else if(nextStep){
-    setTimeout(()=>goStep(nextStep), 350);
-  }
-}
-
-function goStep(n){
-  if(n===2){
-    // build storage grid
-    const g=document.getElementById('storageGrid');
-    g.innerHTML='';
-    selStorage='';
-    document.getElementById('next2').disabled=true;
-    (MODELS_BY_FAMILY[selModel]||['128GB','256GB']).forEach(s=>{
-      const b=document.createElement('button');
-      b.className='btn-option'; b.dataset.val=s; b.textContent=s;
-      b.onclick=function(){
-        document.querySelectorAll('#storageGrid .btn-option').forEach(x=>x.classList.remove('selected'));
-        this.classList.add('selected');
-        selStorage=this.dataset.val;
-        document.getElementById('next2').disabled=false;
-        setTimeout(()=>goStep(3), 350);
-      };
-      g.appendChild(b);
-    });
-  }
-  [1,2,3,4].forEach(i=>{
-    document.getElementById('pane'+i).classList.remove('active');
-    const wp=document.getElementById('wp'+i);
-    wp.classList.remove('active','done');
-    if(i<n) wp.classList.add('done');
-    if(i===n) wp.classList.add('active');
-  });
-  document.getElementById('pane'+n).classList.add('active');
-  currentStep=n;
-  document.getElementById('cotizador').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-
-// Orden de generaciones para filtrar modelos superiores
-const MODEL_GENERATION = {
-  "iPhone 11":1,"iPhone 11 Pro":1,"iPhone 11 Pro Max":1,
-  "iPhone 12":2,"iPhone 12 Pro":2,"iPhone 12 Pro Max":2,
-  "iPhone 13":3,"iPhone 13 Pro":3,"iPhone 13 Pro Max":3,
-  "iPhone 14":4,"iPhone 14 Plus":4,"iPhone 14 Pro":4,"iPhone 14 Pro Max":4,
-  "iPhone 15":5,"iPhone 15 Plus":5,"iPhone 15 Pro":5,"iPhone 15 Pro Max":5,
-  "iPhone 16":6,"iPhone 16 E":6,"iPhone 16 Plus":6,"iPhone 16 Pro":6,"iPhone 16 Pro Max":6,
-  "iPhone 17":7,"iPhone 17 E":7,"iPhone 17 Air":7,"iPhone 17 Pro":7,"iPhone 17 Pro Max":7,
-  "iPhone 18":8,"iPhone 18 Air":8,"iPhone 18 Pro":8,"iPhone 18 Pro Max":8,"iPhone DUO":8,
-};
-
-function showResult(){
-  const batteryPct = parseInt(selBattery);
-  let baseVal = getTradeValue(selModel, selStorage, batteryPct);
-  // Ajuste por estado físico (estos sí son razonables)
-  const multCondition = {excelente:1, bueno:0.92, regular:0.82, roto:0.65}[selCondition] || 1;
-  const finalVal = Math.round(baseVal * multCondition);
-  const finalARS = finalVal * USD;
-
-  document.getElementById('resultValue').textContent = 'USD '+finalVal;
-  document.getElementById('resultARS').textContent = '$ '+finalARS.toLocaleString('es-AR');
-
-  // Modelos accesibles
-  const container = document.getElementById('resultModels');
-  container.innerHTML='';
-  const tradeGen = MODEL_GENERATION[selModel] || 0;
-  const allAccessible = products.filter(p => {
-    const prodGen = MODEL_GENERATION[p.model] || 99;
-    // Solo generaciones superiores (más nuevas) — sin importar el tier
-    if(prodGen <= tradeGen) return false;
-    // Excluir modelos donde el valor de canje cubre o supera el precio
-    const activePrice = p.priceOffer || p.priceUSD;
-    if(activePrice - finalVal <= 0) return false;
-    return true;
-  }).sort((a,b) => (a.priceOffer||a.priceUSD) - (b.priceOffer||b.priceUSD));
-  let showing = 5;
-
-  function renderModelCards(){
-    container.innerHTML='';
-    if(allAccessible.length===0){
-      container.innerHTML='<p style="text-align:center;color:var(--muted);padding:20px;">Consultanos por WhatsApp para ver opciones personalizadas.</p>';
-      return;
-    }
-    allAccessible.slice(0,showing).forEach(p=>{
-      const activePrice = p.priceOffer || p.priceUSD;
-      const diff = activePrice - finalVal;
-      const diffARS = diff * USD;
-      const c3 = Math.round(diffARS * INT3 / 3);
-      const c6 = Math.round(diffARS * INT6 / 6);
-      const c12 = Math.round(diffARS * INT12 / 12);
-      const div=document.createElement('div');
-      div.className='result-model-card';
-      div.innerHTML=`
-        <div class="rmc-left">
-          <div class="rmc-model">${p.model} ${p.storage}</div>
-          <div class="rmc-details">${p.details}</div>
-          ${(() => {
-            const allBadges = [p.condition, ...(p.badges||[])].filter(Boolean);
-            return allBadges.length ? `<div class="rmc-badges">${allBadges.map(b=>`<span class="rmc-badge-tag">${b}</span>`).join('')}</div>` : '';
-          })()}
-          <div class="rmc-diff-block">
-            <div class="rmc-diff-usd">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-              USD ${diff} de diferencia
-            </div>
-            <div class="rmc-diff-ars">o $ ${diffARS.toLocaleString('es-AR')} al cambio</div>
-            <div class="rmc-installments">3 cuotas de $ ${c3.toLocaleString('es-AR')} · 6 cuotas de $ ${c6.toLocaleString('es-AR')} · 12 cuotas de $ ${c12.toLocaleString('es-AR')}</div>
-          </div>
-        </div>
-        <div class="rmc-right">
-          <span class="rmc-badge-price">USD ${activePrice}</span>
-          <button class="rmc-btn" onclick="sendCanjeWA('${p.model}','${p.storage}','${p.details}',${activePrice},${finalVal})">Quiero este</button>
-        </div>
-      `;
-      container.appendChild(div);
-    });
-
-    // Botón "Ver más modelos"
-    if(showing < allAccessible.length){
-      const btn=document.createElement('button');
-      btn.className='btn-back';
-      btn.style='width:100%;margin-top:8px;text-align:center;';
-      btn.textContent=`Ver más modelos (${allAccessible.length - showing} restantes)`;
-      btn.onclick=()=>{ showing+=5; renderModelCards(); };
-      container.appendChild(btn);
-    }
-
-    // Botón ver catálogo completo
-    const linkBtn=document.createElement('a');
-    linkBtn.href='#modelos';
-    linkBtn.className='btn-back';
-    linkBtn.style='width:100%;margin-top:8px;text-align:center;display:block;text-decoration:none;';
-    linkBtn.textContent='Ver catálogo completo →';
-    linkBtn.onclick=()=>document.getElementById('modelos').scrollIntoView({behavior:'smooth'});
-    container.appendChild(linkBtn);
-  }
-  renderModelCards();
-
-  const batLabel = {100:'100%', 95:'90-99%', 85:'81-89%', 70:'60-80%'}[batteryPct] || batteryPct+'%';
-  // Guardar datos del trade para usarlos en el mensaje de cada modelo sugerido
-  window._tradeData = { model: selModel, storage: selStorage, battery: batLabel, condition: selCondition, value: finalVal };
-  // Mensaje genérico del botón principal (sin modelo destino)
-  const msgGen = `Hola! Quiero canjear mi iPhone.\n📲 Entrego: ${selModel} ${selStorage} · Batería ${batLabel} (valor estimado USD ${finalVal})\n¿Me ayudás a avanzar con el canje?`;
-  document.getElementById('resultWA').href=`https://wa.me/${WA}?text=${encodeURIComponent(msgGen)}`;
-  document.getElementById('resultWA').onclick=function(){fbq('track','Contact',{content_name:'Canje wizard'});};
-
-  [1,2,3,4].forEach(i=>{document.getElementById('pane'+i).classList.remove('active'); document.getElementById('wp'+i).classList.add('done'); document.getElementById('wp'+i).classList.remove('active');});
-  document.getElementById('paneResult').classList.add('active');
-  document.getElementById('cotizador').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function sendCanjeWA(destModel, destStorage, destDetails, destPrice, tradeVal){
-  fbq('track','Contact',{content_name:'Canje',content_category:destModel+' '+destStorage,value:destPrice,currency:'USD'});
-  const td = window._tradeData || {};
-  const diff = destPrice - tradeVal;
-  const diffARS = diff * USD;
-  const c3 = Math.round(diffARS * INT3 / 3);
-  const c6 = Math.round(diffARS * INT6 / 6);
-  const c12 = Math.round(diffARS * INT12 / 12);
-  const fmt = n => n.toLocaleString('es-AR');
-  const msg = `Hola! Quiero canjear mi iPhone.
-📲 Entrego: ${td.model||''} ${td.storage||''} · Batería ${td.battery||''} (valor estimado USD ${tradeVal})
-✅ Quiero: ${destModel} ${destStorage} (${destDetails})
-💰 Diferencia estimada:
-- USD ${diff}
-- $ ${fmt(diffARS)}
-- 3 cuotas: $ ${fmt(c3)}
-- 6 cuotas: $ ${fmt(c6)}
-- 12 cuotas: $ ${fmt(c12)}
-¿Me ayudás a avanzar con el canje?`;
-  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
-}
-
-function resetWizard(){
-  selModel=''; selStorage=''; selCondition=''; selBattery='';
-  document.querySelectorAll('.btn-option').forEach(b=>b.classList.remove('selected'));
-  ['next1','next2','next3','next4'].forEach(id=>document.getElementById(id).disabled=true);
-  document.getElementById('paneResult').classList.remove('active');
-  document.getElementById('modelGrid').querySelectorAll('.btn-option').forEach(b=>b.classList.remove('selected'));
-  goStep(1);
 }
 
 // ─── PRODUCTS GRID ───
@@ -1442,12 +1139,16 @@ function renderPromos(){
   if(!promos.length){
     sec.style.display = 'none';
     if(nav) nav.style.display = 'none';
+    const hb0 = document.getElementById('heroOfertas');
+    if(hb0) hb0.style.display = 'none';
     grid.innerHTML = '';
     return;
   }
 
   sec.style.display = 'block';
   if(nav) nav.style.display = '';
+  const hb = document.getElementById('heroOfertas');
+  if(hb) hb.style.display = 'inline-flex';
 
   // Agrupar por modelo + condición (igual que el catálogo)
   const groups = new Map();
@@ -1478,6 +1179,12 @@ function renderPromos(){
     card._variants = variants;
     grid.appendChild(card);
   });
+}
+
+function goOfertas(e){
+  if(e) e.preventDefault();
+  const target = document.getElementById('promos');
+  if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function goCatalogo(e){
@@ -1556,19 +1263,6 @@ function onModalModelChange(){
   wrap.style.display='block';
 }
 
-function openModalFromResult(label,price,tradeVal){
-  modalTargetPrice=price;
-  document.getElementById('modalTargetModel').textContent=label+' · USD '+price;
-  const sel=document.getElementById('modalTradeSelect');
-  sel.innerHTML='';
-  const diff=price-tradeVal;
-  const opt=document.createElement('option');
-  opt.value=tradeVal; opt.textContent='Tu iPhone cotizado · USD '+tradeVal;
-  sel.appendChild(opt);
-  calcModal();
-  document.getElementById('canjeModal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
 
 function calcModal(){
   const modelo  = document.getElementById('modalTradeSelect').value;
@@ -1641,16 +1335,13 @@ if (cacheValid) {
     }
     renderProducts('all');
     renderPromos();
-    buildModelGrid();
   } catch(e) {
     showSkeletonGrid(6);
-    buildModelGrid();
   }
 } else {
   // Caché vencido o primera visita: mostrar skeleton y buscar datos frescos
   localStorage.removeItem(CACHE_KEY);
   showSkeletonGrid(6);
-  buildModelGrid();
 }
 
 // Siempre actualizar desde API en segundo plano
