@@ -253,16 +253,23 @@ section{padding:80px 20px;}
 .modal-target-label{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
 .modal-target-model{font-size:.95rem;font-weight:700;color:var(--text);}
 .modal-select-label{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:8px;display:block;}
+.modal-select optgroup{font-weight:800;color:#1d1d1f;background:#f5f5f7;font-size:.9rem;padding:6px 0;}
+.modal-select option{font-weight:500;color:#1d1d1f;padding:6px 0;}
 .modal-select{width:100%;padding:12px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:#fff;color:var(--text);font-size:.9rem;margin-bottom:20px;appearance:none;cursor:pointer;}
-.modal-result{background:linear-gradient(135deg,#0071e3,#0058b0);border-radius:var(--radius-sm);padding:20px;color:#fff;text-align:center;margin-bottom:20px;display:none;}
+.modal-result{background:linear-gradient(135deg,#0071e3,#0058b0);border-radius:var(--radius-sm);padding:24px 22px;color:#fff;text-align:center;margin-bottom:20px;display:none;box-shadow:0 10px 30px rgba(0,88,176,.28);}
 .modal-result.visible{display:block;}
-.mr-label{font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.75;margin-bottom:6px;}
-.mr-value{font-size:2.4rem;font-weight:800;letter-spacing:-.03em;}
-.mr-ars{font-size:.9rem;opacity:.75;margin-top:4px;}
-.mr-note{font-size:.75rem;opacity:.6;margin-top:6px;}
-.mr-tradein{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:1.25rem;font-weight:800;letter-spacing:-.02em;padding:6px 16px;border-radius:999px;margin-bottom:4px;}
-.mr-divider{height:1px;background:rgba(255,255,255,.25);margin:16px 0 14px;}
-.mr-installments{font-size:.82rem;color:#fff;opacity:.85;margin-top:10px;line-height:1.65;}
+.mr-label{font-size:.7rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;opacity:.7;margin-bottom:8px;}
+.mr-value{font-size:2.5rem;font-weight:800;letter-spacing:-.03em;line-height:1.05;}
+.mr-ars{font-size:1.15rem;font-weight:700;opacity:.95;letter-spacing:-.01em;}
+.mr-note{font-size:.72rem;opacity:.6;margin-top:14px;}
+.mr-tradein{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:1.15rem;font-weight:800;letter-spacing:-.02em;padding:7px 18px;border-radius:999px;}
+.mr-separator{font-size:.85rem;opacity:.55;margin:6px 0;font-weight:500;}
+.mr-cuotas{background:rgba(255,255,255,.12);border-radius:12px;padding:4px 14px;margin-top:16px;text-align:left;}
+.mr-cuota-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;font-size:.85rem;}
+.mr-cuota-row + .mr-cuota-row{border-top:1px solid rgba(255,255,255,.15);}
+.mr-cuota-label{opacity:.8;font-weight:500;}
+.mr-cuota-val{font-weight:700;letter-spacing:-.01em;}
+.mr-divider{height:1px;background:rgba(255,255,255,.22);margin:18px 0 16px;}
 .modal-warning{font-size:.78rem;color:var(--muted);text-align:center;margin-top:12px;}
 
     /* SKELETON LOADER */
@@ -665,8 +672,9 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
       <div class="mr-divider"></div>
       <div class="mr-label">Diferencia a pagar</div>
       <div class="mr-value" id="modalDiff">USD 0</div>
+      <div class="mr-separator">ó</div>
       <div class="mr-ars" id="modalARS">$ 0</div>
-      <div class="mr-installments" id="modalCuotas"></div>
+      <div class="mr-cuotas" id="modalCuotas"></div>
       <div class="mr-note">Sujeto a revisión del equipo entregado</div>
     </div>
     <a href="#" class="btn-wa-full" id="modalWA" style="display:none;">
@@ -1230,11 +1238,37 @@ function openModal(modelLabel, price){
   document.getElementById('modalTargetModel').textContent=modelLabel+' · USD '+price;
   const sel=document.getElementById('modalTradeSelect');
   sel.innerHTML='<option value="">Seleccioná tu iPhone</option>';
-  // Se arma en el momento, con la tabla ya actualizada desde el Sheet
-  Object.keys(tradeInTable).forEach(k=>{
-    const opt=document.createElement('option');
-    opt.value=k; opt.textContent=k;
-    sel.appendChild(opt);
+  // Se arma en el momento, con la tabla ya actualizada desde el Sheet,
+  // agrupado por generación para que sea fácil de recorrer
+  const items = Object.keys(tradeInTable).map(k=>{
+    const m = k.match(/^(.*?)\s+(\d+\s*GB|\d+\s*TB)$/i);
+    const modelo  = m ? m[1].trim() : k;
+    const storage = m ? m[2].replace(/\s+/g,'').toUpperCase() : '';
+    const gen  = parseInt((modelo.match(/iPhone\s+(\d+)/i)||[])[1] || 0);
+    const tier = /pro\s*max/i.test(modelo) ? 3 : /pro/i.test(modelo) ? 2
+               : /plus/i.test(modelo) ? 1 : /\bE\b/.test(modelo) ? -1 : 0;
+    const cap  = /TB/i.test(storage) ? parseInt(storage)*1024 : parseInt(storage) || 0;
+    const esDuo = /\bduo\b/i.test(modelo);
+    return { key:k, modelo, storage, gen: esDuo ? 18 : gen, tier: esDuo ? 4 : tier, cap, esDuo };
+  }).sort((a,b) => a.gen - b.gen || a.tier - b.tier || a.cap - b.cap);
+
+  const grupos = new Map();
+  items.forEach(it=>{
+    const label = it.esDuo ? 'iPhone DUO' : (it.gen ? 'iPhone ' + it.gen : 'Otros');
+    if(!grupos.has(label)) grupos.set(label, []);
+    grupos.get(label).push(it);
+  });
+
+  grupos.forEach((lista, label)=>{
+    const og = document.createElement('optgroup');
+    og.label = label;
+    lista.forEach(it=>{
+      const opt = document.createElement('option');
+      opt.value = it.key;
+      opt.textContent = it.storage ? it.modelo + ' · ' + it.storage : it.modelo;
+      og.appendChild(opt);
+    });
+    sel.appendChild(og);
   });
   document.getElementById('modalBatWrap').style.display='none';
   document.getElementById('modalBatSelect').innerHTML='<option value="">Seleccioná el estado de batería</option>';
@@ -1283,7 +1317,9 @@ function calcModal(){
   document.getElementById('modalDiff').textContent='USD '+diff;
   document.getElementById('modalARS').textContent='$ '+fmt(diffARS);
   document.getElementById('modalCuotas').innerHTML =
-    '3 cuotas de $ '+fmt(c3)+'<br>6 cuotas de $ '+fmt(c6)+'<br>12 cuotas de $ '+fmt(c12);
+      '<div class="mr-cuota-row"><span class="mr-cuota-label">3 cuotas</span><span class="mr-cuota-val">$ '+fmt(c3)+'</span></div>'
+    + '<div class="mr-cuota-row"><span class="mr-cuota-label">6 cuotas</span><span class="mr-cuota-val">$ '+fmt(c6)+'</span></div>'
+    + '<div class="mr-cuota-row"><span class="mr-cuota-label">12 cuotas</span><span class="mr-cuota-val">$ '+fmt(c12)+'</span></div>';
   document.getElementById('modalResult').classList.add('visible');
 
   const batLabel = batSel.options[batSel.selectedIndex].text.split('·')[0].trim();
