@@ -255,6 +255,17 @@ section{padding:80px 20px;}
 .modal-select-label{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:8px;display:block;}
 .modal-select optgroup{font-weight:800;color:#1d1d1f;background:#f5f5f7;font-size:.9rem;padding:6px 0;}
 .modal-select option{font-weight:500;color:#1d1d1f;padding:6px 0;}
+.nav-cotizar{color:var(--primary)!important;font-weight:700!important;}
+.modal-box-wide{max-width:680px;}
+.cot-toma{background:linear-gradient(135deg,#0071e3,#0058b0);color:#fff;border-radius:var(--radius-sm);padding:16px 20px;text-align:center;margin-bottom:20px;display:none;box-shadow:0 8px 24px rgba(0,88,176,.25);}
+.cot-toma.visible{display:block;}
+.cot-toma-label{font-size:.7rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;opacity:.7;margin-bottom:6px;}
+.cot-toma-val{font-size:1.6rem;font-weight:800;letter-spacing:-.02em;}
+.cot-res-head{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.cot-res-sub{font-size:.82rem;color:var(--muted);margin-bottom:16px;}
+.cot-empty{background:var(--bg);border-radius:var(--radius-sm);padding:20px;text-align:center;font-size:.88rem;color:var(--muted);}
+.cot-more{width:100%;padding:12px;border-radius:999px;background:#fff;color:var(--primary);border:2px solid var(--primary);font-size:.88rem;font-weight:700;cursor:pointer;margin-top:4px;}
+.cot-more:hover{background:var(--primary-dim);}
 .modal-select{width:100%;padding:12px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:#fff;color:var(--text);font-size:.9rem;margin-bottom:20px;appearance:none;cursor:pointer;}
 .modal-result{background:linear-gradient(135deg,#0071e3,#0058b0);border-radius:var(--radius-sm);padding:24px 22px;color:#fff;text-align:center;margin-bottom:20px;display:none;box-shadow:0 10px 30px rgba(0,88,176,.28);}
 .modal-result.visible{display:block;}
@@ -377,6 +388,7 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
     </a>
     <nav class="header-nav">
       <a href="#promos" class="nav-link" id="navPromos" style="display:none;color:#ff2d55;font-weight:700;">🔥 Ofertas</a>
+      <a href="#" class="nav-link nav-cotizar" onclick="openCotizar(event)">Cotizar mi iPhone</a>
       <a href="#modelos" class="nav-link">Lista de precios</a>
       <a href="#como-funciona" class="nav-link">Cómo funciona</a>
       <a href="https://wa.me/5491171645467?text=Hola!%20Quiero%20consultar" class="nav-cta" target="_blank" onclick="fbq('track','Contact',{content_name:'Header WhatsApp'})">WhatsApp</a>
@@ -647,6 +659,36 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
 </section>
 
 <!-- MODAL CANJE DESDE CARD -->
+<!-- MODAL COTIZADOR -->
+<div class="modal-overlay" id="cotizarModal">
+  <div class="modal-box modal-box-wide">
+    <button class="modal-close" onclick="closeCotizar()">✕</button>
+    <h3 class="modal-title">Cotizá tu iPhone</h3>
+    <p class="modal-sub">Mirá a qué modelos del stock podés acceder entregando el tuyo en parte de pago</p>
+
+    <label class="modal-select-label">¿Qué iPhone tenés actualmente?</label>
+    <select class="modal-select" id="cotModelo" onchange="cotModelChange()">
+      <option value="">Seleccioná tu iPhone</option>
+    </select>
+
+    <div id="cotBatWrap" style="display:none;">
+      <label class="modal-select-label">¿Cómo está la salud de la batería?</label>
+      <select class="modal-select" id="cotBat" onchange="cotCalcular()">
+        <option value="">Seleccioná el estado de batería</option>
+      </select>
+    </div>
+
+    <div class="cot-toma" id="cotToma">
+      <div class="cot-toma-label">Te tomamos tu equipo por</div>
+      <div class="cot-toma-val" id="cotTomaVal">USD 0</div>
+    </div>
+
+    <div id="cotResultados"></div>
+
+    <p class="modal-note">* La cotización es estimada y sujeta a revisión del equipo entregado.</p>
+  </div>
+</div>
+
 <div class="modal-overlay" id="canjeModal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1233,13 +1275,22 @@ function filterProducts(f, btn){
 // ─── MODAL CANJE DESDE CARD ───
 let modalTargetPrice=0;
 
-function openModal(modelLabel, price){
-  modalTargetPrice=price;
-  document.getElementById('modalTargetModel').textContent=modelLabel+' · USD '+price;
-  const sel=document.getElementById('modalTradeSelect');
+// ── GENERACIONES (para sugerir solo upgrades) ─────────────
+const MODEL_GENERATION = {
+  "iPhone 11":1,"iPhone 11 Pro":1,"iPhone 11 Pro Max":1,
+  "iPhone 12":2,"iPhone 12 Pro":2,"iPhone 12 Pro Max":2,
+  "iPhone 13":3,"iPhone 13 Pro":3,"iPhone 13 Pro Max":3,
+  "iPhone 14":4,"iPhone 14 Plus":4,"iPhone 14 Pro":4,"iPhone 14 Pro Max":4,
+  "iPhone 15":5,"iPhone 15 Plus":5,"iPhone 15 Pro":5,"iPhone 15 Pro Max":5,
+  "iPhone 16":6,"iPhone 16 E":6,"iPhone 16 Plus":6,"iPhone 16 Pro":6,"iPhone 16 Pro Max":6,
+  "iPhone 17":7,"iPhone 17 E":7,"iPhone 17 Air":7,"iPhone 17 Pro":7,"iPhone 17 Pro Max":7,
+  "iPhone 18":8,"iPhone 18 Air":8,"iPhone 18 Pro":8,"iPhone 18 Pro Max":8,"iPhone DUO":8,
+};
+
+// Llena un <select> con los modelos de la tabla de canje, agrupados por generación
+function fillTradeModelSelect(sel){
+  if(!sel) return;
   sel.innerHTML='<option value="">Seleccioná tu iPhone</option>';
-  // Se arma en el momento, con la tabla ya actualizada desde el Sheet,
-  // agrupado por generación para que sea fácil de recorrer
   const items = Object.keys(tradeInTable).map(k=>{
     const m = k.match(/^(.*?)\s+(\d+\s*GB|\d+\s*TB)$/i);
     const modelo  = m ? m[1].trim() : k;
@@ -1258,7 +1309,6 @@ function openModal(modelLabel, price){
     if(!grupos.has(label)) grupos.set(label, []);
     grupos.get(label).push(it);
   });
-
   grupos.forEach((lista, label)=>{
     const og = document.createElement('optgroup');
     og.label = label;
@@ -1270,6 +1320,164 @@ function openModal(modelLabel, price){
     });
     sel.appendChild(og);
   });
+}
+
+// Llena un <select> con los rangos de batería del modelo elegido
+function fillBatterySelect(sel, modelo){
+  if(!sel) return false;
+  sel.innerHTML='<option value="">Seleccioná el estado de batería</option>';
+  if(!modelo || !tradeInTable[modelo]) return false;
+  tradeInTable[modelo].slice().sort((a,b)=>a.min-b.min).forEach(r=>{
+    const opt=document.createElement('option');
+    opt.value=r.val;
+    opt.textContent=(r.min===r.max ? r.min+'%' : r.min+'-'+r.max+'%')+' · USD '+r.val;
+    sel.appendChild(opt);
+  });
+  return true;
+}
+
+// ── COTIZADOR (solo desde el menú superior) ───────────────
+let cotShowing = 6;
+let cotOpciones = [];
+let cotTradeVal = 0;
+let cotModeloKey = '';
+let cotBatLabel = '';
+
+function openCotizar(e){
+  if(e) e.preventDefault();
+  fillTradeModelSelect(document.getElementById('cotModelo'));
+  document.getElementById('cotBatWrap').style.display='none';
+  document.getElementById('cotBat').innerHTML='<option value="">Seleccioná el estado de batería</option>';
+  document.getElementById('cotToma').classList.remove('visible');
+  document.getElementById('cotResultados').innerHTML='';
+  cotShowing = 6; cotOpciones = []; cotTradeVal = 0;
+  document.getElementById('cotizarModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeCotizar(){
+  document.getElementById('cotizarModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function cotModelChange(){
+  const modelo = document.getElementById('cotModelo').value;
+  const ok = fillBatterySelect(document.getElementById('cotBat'), modelo);
+  document.getElementById('cotBatWrap').style.display = ok ? 'block' : 'none';
+  document.getElementById('cotToma').classList.remove('visible');
+  document.getElementById('cotResultados').innerHTML='';
+}
+
+function cotCalcular(){
+  const modelo = document.getElementById('cotModelo').value;
+  const batSel = document.getElementById('cotBat');
+  const tradeVal = parseInt(batSel.value) || 0;
+  const cont = document.getElementById('cotResultados');
+  if(!modelo || !tradeVal){
+    document.getElementById('cotToma').classList.remove('visible');
+    cont.innerHTML=''; return;
+  }
+  cotTradeVal = tradeVal;
+  cotModeloKey = modelo;
+  cotBatLabel = batSel.options[batSel.selectedIndex].text.split('·')[0].trim();
+
+  document.getElementById('cotTomaVal').textContent = 'USD ' + tradeVal;
+  document.getElementById('cotToma').classList.add('visible');
+
+  // Generación del equipo que entrega
+  const modeloBase = modelo.replace(/\s+(\d+\s*GB|\d+\s*TB)$/i,'').trim();
+  const tradeGen = MODEL_GENERATION[modeloBase] || 0;
+
+  // Solo modelos más nuevos, con diferencia positiva, de menor a mayor
+  cotOpciones = products.filter(p=>{
+    const gen = MODEL_GENERATION[p.model] || 99;
+    if(gen <= tradeGen) return false;
+    const precio = p.priceOffer || p.priceUSD;
+    return (precio - tradeVal) > 0;
+  }).sort((a,b)=>(a.priceOffer||a.priceUSD)-(b.priceOffer||b.priceUSD));
+
+  cotShowing = 6;
+  renderCotResultados();
+}
+
+function renderCotResultados(){
+  const cont = document.getElementById('cotResultados');
+  if(!cotOpciones.length){
+    cont.innerHTML = '<div class="cot-empty">No tenemos modelos superiores en stock para ese equipo en este momento. Escribinos por WhatsApp y te avisamos cuando entren.</div>';
+    return;
+  }
+  const total = cotOpciones.length;
+  let html = '<div class="cot-res-head">Podés llevarte ' + total + (total===1?' modelo':' modelos') + '</div>'
+           + '<div class="cot-res-sub">Ordenados de menor a mayor diferencia a pagar</div>';
+
+  cotOpciones.slice(0, cotShowing).forEach((p,i)=>{
+    const precio = p.priceOffer || p.priceUSD;
+    const diff = precio - cotTradeVal;
+    const diffARS = diff * USD;
+    const c3 = Math.round(diffARS*INT3/3).toLocaleString('es-AR');
+    const c6 = Math.round(diffARS*INT6/6).toLocaleString('es-AR');
+    const c12 = Math.round(diffARS*INT12/12).toLocaleString('es-AR');
+    const badges = [p.condition, ...(badgesOf(p)||[])].filter(Boolean);
+    const badgesHTML = badges.length
+      ? '<div class="rmc-badges">'+badges.map(b=>'<span class="rmc-badge-tag">'+b+'</span>').join('')+'</div>' : '';
+    const ofertaHTML = p.priceOffer
+      ? '<span class="rmc-badge-price" style="background:#ffeceb;color:#ff2d55;">USD '+precio+' · oferta</span>'
+      : '<span class="rmc-badge-price">USD '+precio+'</span>';
+
+    html += '<div class="result-model-card">'
+      + '<div class="rmc-left">'
+      +   '<div class="rmc-model">'+p.model+' '+p.storage+'</div>'
+      +   (p.details ? '<div class="rmc-details">'+p.details+'</div>' : '')
+      +   badgesHTML
+      +   '<div class="rmc-diff-block">'
+      +     '<div class="rmc-diff-usd">↗ USD '+diff+' de diferencia</div>'
+      +     '<div class="rmc-diff-ars">ó $ '+Math.round(diffARS).toLocaleString('es-AR')+'</div>'
+      +   '</div>'
+      +   '<div class="rmc-installments">3 cuotas de $ '+c3+' · 6 de $ '+c6+' · 12 de $ '+c12+'</div>'
+      + '</div>'
+      + '<div class="rmc-right">'
+      +   ofertaHTML
+      +   '<button class="rmc-btn" onclick="cotWA('+i+')">Quiero este</button>'
+      + '</div>'
+      + '</div>';
+  });
+
+  if(cotShowing < total){
+    html += '<button class="cot-more" onclick="cotVerMas()">Ver ' + Math.min(6, total-cotShowing) + ' modelos más</button>';
+  }
+  cont.innerHTML = html;
+}
+
+function cotVerMas(){
+  cotShowing += 6;
+  renderCotResultados();
+}
+
+function cotWA(i){
+  const p = cotOpciones[i];
+  if(!p) return;
+  const precio = p.priceOffer || p.priceUSD;
+  const diff = precio - cotTradeVal;
+  const diffARS = diff * USD;
+  const fmt = n => Math.round(n).toLocaleString('es-AR');
+  const msg = 'Hola! Quiero canjear mi iPhone.\n'
+    + '📲 Entrego: ' + cotModeloKey + ' · Batería ' + cotBatLabel + ' (valor estimado USD ' + cotTradeVal + ')\n'
+    + '✅ Quiero: ' + p.model + ' ' + p.storage + (p.details ? ' (' + p.details + ')' : '') + ' · USD ' + precio + '\n'
+    + '💰 Diferencia estimada:\n'
+    + '- USD ' + diff + '\n'
+    + '- $ ' + fmt(diffARS) + '\n'
+    + '- 3 cuotas: $ ' + fmt(diffARS*INT3/3) + '\n'
+    + '- 6 cuotas: $ ' + fmt(diffARS*INT6/6) + '\n'
+    + '- 12 cuotas: $ ' + fmt(diffARS*INT12/12) + '\n'
+    + '¿Me ayudás a avanzar con el canje?';
+  if(typeof fbq === 'function') fbq('track','Contact',{content_name:'Cotizador',content_category:p.model,value:precio,currency:'USD'});
+  window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+function openModal(modelLabel, price){
+  modalTargetPrice=price;
+  document.getElementById('modalTargetModel').textContent=modelLabel+' · USD '+price;
+  fillTradeModelSelect(document.getElementById('modalTradeSelect'));
   document.getElementById('modalBatWrap').style.display='none';
   document.getElementById('modalBatSelect').innerHTML='<option value="">Seleccioná el estado de batería</option>';
   document.getElementById('modalResult').classList.remove('visible');
@@ -1286,14 +1494,7 @@ function onModalModelChange(){
   document.getElementById('modalResult').classList.remove('visible');
   document.getElementById('modalWA').style.display='none';
   if(!modelo || !tradeInTable[modelo]){ wrap.style.display='none'; return; }
-  const ranges = tradeInTable[modelo].slice().sort((a,b)=>a.min-b.min);
-  batSel.innerHTML='<option value="">Seleccioná el estado de batería</option>';
-  ranges.forEach(r=>{
-    const opt=document.createElement('option');
-    opt.value=r.val;
-    opt.textContent = (r.min===r.max ? r.min+'%' : r.min+'-'+r.max+'%') + ' · USD ' + r.val;
-    batSel.appendChild(opt);
-  });
+  fillBatterySelect(batSel, modelo);
   wrap.style.display='block';
 }
 
@@ -1336,6 +1537,7 @@ function closeModal(){
 }
 
 document.getElementById('canjeModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.getElementById('cotizarModal').addEventListener('click',function(e){if(e.target===this)closeCotizar();});
 
 // ─── FAQ ───
 function toggleFaq(btn){
