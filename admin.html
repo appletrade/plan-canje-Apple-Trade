@@ -266,6 +266,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
               <optgroup label="iPhone 15"><option>iPhone 15</option><option>iPhone 15 Plus</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option></optgroup>
               <optgroup label="iPhone 16"><option>iPhone 16</option><option>iPhone 16 E</option><option>iPhone 16 Plus</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option></optgroup>
               <optgroup label="iPhone 17"><option>iPhone 17</option><option>iPhone 17 Air</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option></optgroup>
+              <optgroup label="iPhone 18"><option>iPhone 18 Pro</option><option>iPhone 18 Pro Max</option></optgroup>
             </select>
           </div>
           <div class="form-group"><label class="form-label">Storage</label>
@@ -301,6 +302,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
               <option>iPhone 15</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option>
               <option>iPhone 16</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option>
               <option>iPhone 17</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option>
+              <option>iPhone 18 Pro</option><option>iPhone 18 Pro Max</option>
             </select>
           </div>
           <div style="align-self:flex-end;"><button class="btn btn-ghost" onclick="clearFilters()">Limpiar</button></div>
@@ -326,6 +328,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
                 <optgroup label="iPhone 15"><option>iPhone 15</option><option>iPhone 15 Plus</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option></optgroup>
                 <optgroup label="iPhone 16"><option>iPhone 16</option><option>iPhone 16 E</option><option>iPhone 16 Plus</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option></optgroup>
                 <optgroup label="iPhone 17"><option>iPhone 17</option><option>iPhone 17 Air</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option></optgroup>
+              <optgroup label="iPhone 18"><option>iPhone 18 Pro</option><option>iPhone 18 Pro Max</option></optgroup>
               </select>
             </div>
             <div class="form-group"><label class="form-label">Storage</label>
@@ -381,6 +384,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
               <optgroup label="iPhone 15"><option>iPhone 15</option><option>iPhone 15 Plus</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option></optgroup>
               <optgroup label="iPhone 16"><option>iPhone 16</option><option>iPhone 16 E</option><option>iPhone 16 Plus</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option></optgroup>
               <optgroup label="iPhone 17"><option>iPhone 17</option><option>iPhone 17 Air</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option></optgroup>
+              <optgroup label="iPhone 18"><option>iPhone 18 Pro</option><option>iPhone 18 Pro Max</option></optgroup>
             </select>
           </div>
           <div class="form-group"><label class="form-label">Condicion</label>
@@ -1215,6 +1219,11 @@ function applyBulkPrice(){
 // SORT STOCK
 function sortStock(){
   function modelTier(p){
+    // iPhone DUO no lleva número: va al final, arriba del 18 Pro Max
+    if(/\bduo\b/i.test(p.model)){
+      var condDuo=p.condition==='Seminuevo'?0:1;
+      return [condDuo, 18*10+4, p.priceUSD];
+    }
     var n=parseInt((p.model.match(/iPhone (\d+)/)||[])[1]||0);
     var tier=p.model.indexOf('Pro Max')>-1?3:p.model.indexOf('Pro')>-1?2:p.model.indexOf('Plus')>-1?1:p.model.indexOf(' E')>-1?-1:0;
     var cond=p.condition==='Seminuevo'?0:1;
