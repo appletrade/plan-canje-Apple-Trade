@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Apple Trade — Cambiá tu iPhone hoy</title>
 <style>
+
 :root {
   --primary: #0071e3;
   --primary-dark: #0058b0;
@@ -239,6 +240,61 @@ section{padding:80px 20px;}
 .pc-btn-canje:hover{background:var(--primary);color:#fff;}
 .color-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;border:1px solid rgba(0,0,0,.12);}
 
+/* ─── FLIP DE CARACTERÍSTICAS ─── */
+.product-card,.promo-card{position:relative;overflow:visible;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.15,.2,1),box-shadow .2s;}
+.product-card.flipped,.promo-card.flipped{transform:perspective(1700px) rotateY(180deg);}
+.product-card.flipped:hover,.promo-card.flipped:hover{transform:perspective(1700px) rotateY(180deg);}
+.promo-off{border-top-right-radius:16px;}
+.pc-face{backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.pc-face-front{display:flex;flex-direction:column;flex:1;border-radius:inherit;}
+.product-card.flipped > .pc-face-front,.promo-card.flipped > .pc-face-front{pointer-events:none;}
+.pc-face-back{position:absolute;inset:0;transform:rotateY(180deg);background:#fff;border-radius:inherit;padding:15px 17px;display:flex;flex-direction:column;overflow:hidden;pointer-events:none;}
+.pcs-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;}
+.pcs-c1 .pcs-foot{display:none;}
+.pcs-c1 .pcs-list{gap:5px;}
+.pcs-c1 .pcs-resumen{font-size:.74rem;margin-top:8px;}
+.pcs-c1 .pcs-foot-wrap{padding-top:11px;}
+.pcs-c2 .pcs-k{font-size:.62rem;letter-spacing:.3px;}
+.pcs-c2 .pcs-v{font-size:.76rem;}
+.pcs-c2 .pcs-ico{font-size:.84rem;width:19px;}
+.pcs-c2 .pcs-list{gap:4px;}
+.pcs-c3 .pcs-chips{display:none;}
+.pcs-c4 .pcs-resumen{display:none;}
+.pcs-c4 .pcs-list{margin-top:10px;}
+.product-card.flipped > .pc-face-back,.promo-card.flipped > .pc-face-back{pointer-events:auto;}
+.pc-head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.pc-head-row .pc-model{min-width:0;}
+.pc-btn-specs{flex-shrink:0;background:none;border:none;padding:0;margin:3px 0 0;color:var(--muted);font-size:.72rem;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;transition:color .15s;}
+.pc-btn-specs:hover{color:var(--primary);}
+.promo-card > .pc-face-front .pc-btn-specs,.promo-card .pc-header > .pc-btn-specs{display:block;margin:10px 0 0 auto;}
+.pcs-head{flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--bg);}
+.pcs-title{font-size:.98rem;font-weight:800;color:var(--text);letter-spacing:-.01em;line-height:1.2;}
+.pcs-kicker{font-size:.68rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px;}
+.pcs-x{flex-shrink:0;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);background:#fff;color:var(--muted);font-size:.8rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;}
+.pcs-x:hover{background:var(--bg);color:var(--text);}
+.pcs-resumen{font-size:.77rem;color:var(--muted);line-height:1.4;margin:9px 0 0;}
+.pcs-list{list-style:none;margin:9px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;}
+.pcs-list li{display:flex;gap:9px;align-items:flex-start;}
+.pcs-ico{flex-shrink:0;width:22px;text-align:center;font-size:.92rem;line-height:1.3;}
+.pcs-txt{display:flex;flex-direction:column;min-width:0;}
+.pcs-k{font-size:.67rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+.pcs-v{font-size:.8rem;font-weight:600;color:var(--text);line-height:1.3;}
+.pcs-v.si{color:#1f8a4c;}
+.pcs-v.no{color:#8a8a8e;}
+.pcs-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
+.pcs-chip{font-size:.67rem;font-weight:700;background:var(--bg,#f5f5f7);color:var(--muted);padding:3px 8px;border-radius:999px;}
+.pcs-foot-wrap{flex-shrink:0;padding-top:14px;}
+.pcs-back{width:100%;padding:9px;border-radius:999px;background:var(--primary);color:#fff;font-size:.78rem;font-weight:700;border:none;cursor:pointer;transition:opacity .15s;}
+.pcs-back:hover{opacity:.88;}
+.pcs-foot{font-size:.62rem;color:#a1a1a6;text-align:center;margin-top:7px;line-height:1.3;}
+@media (prefers-reduced-motion: reduce){
+  .product-card,.promo-card{transition:none;}
+  .product-card.flipped,.promo-card.flipped,.product-card.flipped:hover,.promo-card.flipped:hover{transform:none;}
+  .pc-face-back{transform:none;backface-visibility:visible;-webkit-backface-visibility:visible;opacity:0;}
+  .product-card.flipped > .pc-face-back,.promo-card.flipped > .pc-face-back{opacity:1;}
+  .product-card.flipped > .pc-face-front,.promo-card.flipped > .pc-face-front{opacity:0;}
+}
+
 /* ─── BENEFICIOS ─── */
 #beneficios{background:linear-gradient(135deg,#0071e3,#0047b3);}
 #beneficios .section-title{color:#fff;}
@@ -397,6 +453,7 @@ section{padding:80px 20px;}
   .cta-final-sub{font-size:.95rem;}
   .cta-final-btns .btn-primary,.cta-final-btns .btn-secondary{max-width:100%;}
 }
+
 </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -1142,6 +1199,7 @@ function renderProducts(filter){
 
     // Guardar variantes en el card para actualizarlo al cambiar el select
     card._variants = variants;
+    attachSpecs(card, modelName);
     grid.appendChild(card);
   });
 }
@@ -1185,6 +1243,139 @@ function updateCard(select){
 }
 
 
+
+// ── CARACTERÍSTICAS DE CADA MODELO (fuente: fichas técnicas oficiales de Apple) ──
+const SPECS = {
+  "iphone 11":{pan:'6,1" LCD Liquid Retina',hz:'60 Hz',chip:'A13 Bionic',cam:'12 MP principal + 12 MP ultra gran angular',front:'12 MP',bat:'Hasta 17 h de video',ai:0,con:'Lightning',extras:['Face ID','4G','Resistente al agua','Carga inalámbrica'],res:'La entrada más económica a iOS. Cámara doble y buena batería, pero pantalla LCD y sin 5G.'},
+  "iphone 11 pro":{pan:'5,8" OLED Super Retina XDR',hz:'60 Hz',chip:'A13 Bionic',cam:'12 MP principal + 12 MP ultra gran angular + 12 MP teleobjetivo 2x',front:'12 MP',bat:'Hasta 18 h de video',ai:0,con:'Lightning',extras:['Face ID','4G','Acero inoxidable','Resistente al agua'],res:'Pantalla OLED y tres cámaras con zoom óptico. Compacto, ideal si buscás un teléfono chico.'},
+  "iphone 11 pro max":{pan:'6,5" OLED Super Retina XDR',hz:'60 Hz',chip:'A13 Bionic',cam:'12 MP principal + 12 MP ultra gran angular + 12 MP teleobjetivo 2x',front:'12 MP',bat:'Hasta 20 h de video',ai:0,con:'Lightning',extras:['Face ID','4G','Acero inoxidable','Resistente al agua'],res:'Pantalla grande OLED y la mejor batería de su generación. Tres cámaras con zoom.'},
+  "iphone 12":{pan:'6,1" OLED Super Retina XDR',hz:'60 Hz',chip:'A14 Bionic',cam:'12 MP principal + 12 MP ultra gran angular',front:'12 MP',bat:'Hasta 17 h de video',ai:0,con:'Lightning',extras:['5G','MagSafe','Face ID','Ceramic Shield'],res:'El primero con 5G y MagSafe. Pantalla OLED y diseño de bordes rectos.'},
+  "iphone 12 pro":{pan:'6,1" OLED Super Retina XDR',hz:'60 Hz',chip:'A14 Bionic',cam:'12 MP principal + 12 MP ultra gran angular + 12 MP teleobjetivo 2x',front:'12 MP',bat:'Hasta 17 h de video',ai:0,con:'Lightning',extras:['5G','MagSafe','LiDAR','Acero inoxidable'],res:'Tres cámaras con zoom óptico y escáner LiDAR para mejores fotos de noche.'},
+  "iphone 12 pro max":{pan:'6,7" OLED Super Retina XDR',hz:'60 Hz',chip:'A14 Bionic',cam:'12 MP principal + 12 MP ultra gran angular + 12 MP teleobjetivo 2,5x',front:'12 MP',bat:'Hasta 20 h de video',ai:0,con:'Lightning',extras:['5G','MagSafe','LiDAR','Acero inoxidable'],res:'El más grande de su generación, con el sensor principal más amplio y mejor batería.'},
+  "iphone 13":{pan:'6,1" OLED Super Retina XDR',hz:'60 Hz',chip:'A15 Bionic',cam:'12 MP principal + 12 MP ultra gran angular',front:'12 MP',bat:'Hasta 19 h de video',ai:0,con:'Lightning',extras:['5G','MagSafe','Modo Cine','Face ID'],res:'Uno de los más elegidos: muy buena relación precio-batería y pantalla OLED brillante.'},
+  "iphone 13 pro":{pan:'6,1" OLED Super Retina XDR',hz:'120 Hz ProMotion',chip:'A15 Bionic',cam:'12 MP principal + 12 MP ultra gran angular + 12 MP teleobjetivo 3x',front:'12 MP',bat:'Hasta 22 h de video',ai:0,con:'Lightning',extras:['5G','MagSafe','LiDAR','Macro','Acero inoxidable'],res:'Primer iPhone con pantalla de 120 Hz: se nota mucho más fluido al usarlo.'},
+  "iphone 13 pro max":{pan:'6,7" OLED Super Retina XDR',hz:'120 Hz ProMotion',chip:'A15 Bionic',cam:'12 MP principal + 12 MP ultra gran angular + 12 MP teleobjetivo 3x',front:'12 MP',bat:'Hasta 28 h de video',ai:0,con:'Lightning',extras:['5G','MagSafe','LiDAR','Macro','Acero inoxidable'],res:'Pantalla grande de 120 Hz y una batería que rinde más de un día entero.'},
+  "iphone 14":{pan:'6,1" OLED Super Retina XDR',hz:'60 Hz',chip:'A15 Bionic',cam:'12 MP principal + 12 MP ultra gran angular',front:'12 MP con enfoque automático',bat:'Hasta 20 h de video',ai:0,con:'Lightning',extras:['5G','MagSafe','Detección de Choques','SOS por satélite'],res:'Mejor cámara frontal y modo noche más rápido que el 13. Suma funciones de seguridad.'},
+  "iphone 14 plus":{pan:'6,7" OLED Super Retina XDR',hz:'60 Hz',chip:'A15 Bionic',cam:'12 MP principal + 12 MP ultra gran angular',front:'12 MP con enfoque automático',bat:'Hasta 26 h de video',ai:0,con:'Lightning',extras:['5G','MagSafe','Detección de Choques','SOS por satélite'],res:'Pantalla grande y una de las mejores baterías por su precio, sin pagar un Pro.'},
+  "iphone 14 pro":{pan:'6,1" OLED Super Retina XDR siempre activa',hz:'120 Hz ProMotion',chip:'A16 Bionic',cam:'48 MP principal + 12 MP ultra gran angular + 12 MP teleobjetivo 3x',front:'12 MP',bat:'Hasta 23 h de video',ai:0,con:'Lightning',extras:['Isla dinámica','5G','MagSafe','LiDAR','Acero inoxidable'],res:'Primer iPhone con cámara de 48 MP e Isla dinámica. Gran salto en fotos.'},
+  "iphone 14 pro max":{pan:'6,7" OLED Super Retina XDR siempre activa',hz:'120 Hz ProMotion',chip:'A16 Bionic',cam:'48 MP principal + 12 MP ultra gran angular + 12 MP teleobjetivo 3x',front:'12 MP',bat:'Hasta 29 h de video',ai:0,con:'Lightning',extras:['Isla dinámica','5G','MagSafe','LiDAR','Acero inoxidable'],res:'Cámara de 48 MP, pantalla grande de 120 Hz y batería para dos jornadas livianas.'},
+  "iphone 15":{pan:'6,1" OLED Super Retina XDR',hz:'60 Hz',chip:'A16 Bionic',cam:'48 MP principal + 12 MP ultra gran angular (teleobjetivo 2x por sensor)',front:'12 MP',bat:'Hasta 20 h de video',ai:0,con:'USB-C',extras:['Isla dinámica','5G','MagSafe','Ceramic Shield'],res:'Primer iPhone base con USB-C, Isla dinámica y cámara de 48 MP. Carga con el mismo cable que una notebook.'},
+  "iphone 15 plus":{pan:'6,7" OLED Super Retina XDR',hz:'60 Hz',chip:'A16 Bionic',cam:'48 MP principal + 12 MP ultra gran angular (teleobjetivo 2x por sensor)',front:'12 MP',bat:'Hasta 26 h de video',ai:0,con:'USB-C',extras:['Isla dinámica','5G','MagSafe','Ceramic Shield'],res:'La versión grande del 15: misma cámara de 48 MP y mucha más batería.'},
+  "iphone 15 pro":{pan:'6,1" OLED Super Retina XDR siempre activa',hz:'120 Hz ProMotion',chip:'A17 Pro',cam:'48 MP principal + 12 MP ultra gran angular + 12 MP teleobjetivo 3x',front:'12 MP',bat:'Hasta 23 h de video',ai:1,con:'USB-C 3',extras:['Titanio','Botón de Acción','Isla dinámica','5G','MagSafe'],res:'El modelo más viejo que corre Apple Intelligence. Titanio, liviano y con botón de Acción.'},
+  "iphone 15 pro max":{pan:'6,7" OLED Super Retina XDR siempre activa',hz:'120 Hz ProMotion',chip:'A17 Pro',cam:'48 MP principal + 12 MP ultra gran angular + 12 MP teleobjetivo 5x',front:'12 MP',bat:'Hasta 29 h de video',ai:1,con:'USB-C 3',extras:['Titanio','Zoom 5x','Botón de Acción','5G','MagSafe'],res:'El primero con zoom óptico 5x. Titanio, Apple Intelligence y batería de sobra.'},
+  "iphone 16":{pan:'6,1" OLED Super Retina XDR',hz:'60 Hz',chip:'A18',cam:'48 MP Fusion + 12 MP ultra gran angular con macro',front:'12 MP',bat:'Hasta 22 h de video',ai:1,con:'USB-C',extras:['Apple Intelligence','Control de Cámara','Botón de Acción','5G','MagSafe'],res:'El punto justo hoy: Apple Intelligence, cámara de 48 MP con macro y buena batería sin pagar un Pro.'},
+  "iphone 16 plus":{pan:'6,7" OLED Super Retina XDR',hz:'60 Hz',chip:'A18',cam:'48 MP Fusion + 12 MP ultra gran angular con macro',front:'12 MP',bat:'Hasta 27 h de video',ai:1,con:'USB-C',extras:['Apple Intelligence','Control de Cámara','Botón de Acción','5G','MagSafe'],res:'Todo lo del 16 con pantalla grande y una de las mejores baterías de la línea.'},
+  "iphone 16 e":{pan:'6,1" OLED Super Retina XDR',hz:'60 Hz',chip:'A18',cam:'48 MP Fusion (hace también el 2x)',front:'12 MP',bat:'Hasta 26 h de video',ai:1,con:'USB-C',extras:['Apple Intelligence','Botón de Acción','Face ID','5G'],res:'El más barato con Apple Intelligence y muy buena batería. Trae una sola cámara y no tiene MagSafe.'},
+  "iphone 16 pro":{pan:'6,3" OLED Super Retina XDR siempre activa',hz:'120 Hz ProMotion',chip:'A18 Pro',cam:'48 MP Fusion + 48 MP ultra gran angular + 12 MP teleobjetivo 5x',front:'12 MP',bat:'Hasta 27 h de video',ai:1,con:'USB-C 3',extras:['Titanio','Zoom 5x','Control de Cámara','Video 4K 120 cps','MagSafe'],res:'Tres cámaras con zoom 5x, pantalla de 120 Hz y video 4K a 120 cps. El Pro más vendido.'},
+  "iphone 16 pro max":{pan:'6,9" OLED Super Retina XDR siempre activa',hz:'120 Hz ProMotion',chip:'A18 Pro',cam:'48 MP Fusion + 48 MP ultra gran angular + 12 MP teleobjetivo 5x',front:'12 MP',bat:'Hasta 33 h de video',ai:1,con:'USB-C 3',extras:['Titanio','Zoom 5x','Control de Cámara','Video 4K 120 cps','MagSafe'],res:'La pantalla más grande de su año y 33 h de video. Para quien quiere todo.'},
+  "iphone 17":{pan:'6,3" OLED Super Retina XDR',hz:'120 Hz ProMotion',chip:'A19',cam:'48 MP Fusion + 48 MP ultra gran angular + teleobjetivo 2x de 12 MP',front:'18 MP Center Stage',bat:'Hasta 30 h de video',ai:1,con:'USB-C',extras:['Apple Intelligence','120 Hz','Ceramic Shield 2','5G','MagSafe'],res:'Primer iPhone base con pantalla de 120 Hz y cámara frontal de 18 MP. Gran salto respecto al 16.'},
+  "iphone 17 air":{pan:'6,5" OLED Super Retina XDR',hz:'120 Hz ProMotion',chip:'A19 Pro',cam:'48 MP Fusion (hace también el 2x)',front:'18 MP Center Stage',bat:'Hasta 27 h de video',ai:1,con:'USB-C',extras:['5,6 mm de espesor','Titanio','Solo eSIM','120 Hz','MagSafe'],res:'El iPhone más delgado que hizo Apple. Pantalla grande y liviano, con una sola cámara.'},
+  "iphone 17 pro":{pan:'6,3" OLED Super Retina XDR siempre activa',hz:'120 Hz ProMotion',chip:'A19 Pro',cam:'48 MP principal + 48 MP ultra gran angular + 48 MP teleobjetivo 4x (8x de 12 MP)',front:'18 MP Center Stage',bat:'Hasta 33 h de video',ai:1,con:'USB-C 3',extras:['Zoom 8x','3.000 nits','Aluminio','Video ProRes RAW','MagSafe'],res:'Tres cámaras de 48 MP y zoom hasta 8x. La pantalla más brillante de su generación.'},
+  "iphone 17 pro max":{pan:'6,9" OLED Super Retina XDR siempre activa',hz:'120 Hz ProMotion',chip:'A19 Pro',cam:'48 MP principal + 48 MP ultra gran angular + 48 MP teleobjetivo 4x (8x de 12 MP)',front:'18 MP Center Stage',bat:'Hasta 39 h de video',ai:1,con:'USB-C 3',extras:['Zoom 8x','3.000 nits','Aluminio','Video ProRes RAW','MagSafe'],res:'39 h de video: la mejor batería que hizo Apple hasta su lanzamiento, con tres cámaras de 48 MP.'},
+  "iphone 18 pro":{pan:'6,3" OLED Super Retina XDR siempre activa',hz:'120 Hz ProMotion',chip:'A20 Pro',cam:'48 MP principal con apertura variable + 48 MP ultra gran angular + 48 MP teleobjetivo 4x',front:'18 MP Center Stage',bat:'Hasta 34 h de video',ai:1,con:'USB-C 3',extras:['Apertura variable','Zoom 4x','120 Hz','MagSafe'],res:'Estrena apertura variable en la cámara principal: controla la luz como una cámara profesional.'},
+  "iphone 18 pro max":{pan:'6,9" OLED Super Retina XDR siempre activa',hz:'120 Hz ProMotion',chip:'A20 Pro',cam:'48 MP principal con apertura variable + 48 MP ultra gran angular + 48 MP teleobjetivo 4x + 12 MP de 8x',front:'18 MP Center Stage',bat:'Hasta 45 h de video',ai:1,con:'USB-C 3',extras:['Apertura variable','Zoom óptico 8x','120 Hz','MagSafe'],res:'45 h de video y zoom óptico de 8x. El iPhone más completo del catálogo.'},
+  "iphone duo":{pan:'Plegable: 7,6" interna + 5,4" externa, OLED Super Retina XDR',hz:'120 Hz ProMotion en ambas',chip:'A20 Pro',cam:'48 MP principal + 48 MP ultra gran angular + 12 MP teleobjetivo 2x',front:'12 MP Center Stage',bat:'Hasta 44 h con la pantalla externa (31 h con la interna)',ai:1,con:'USB-C 3',extras:['Plegable','Pantalla de 7,6"','Hasta 2 TB','120 Hz','MagSafe'],res:'El primer iPhone plegable: se abre y queda del tamaño de un iPad mini. Para quien quiere lo último.'}
+};
+
+function specsFor(model){
+  var k = String(model||'').toLowerCase()
+    .replace(/\s+/g,' ')
+    .replace(/\b(\d+)\s*(gb|tb)\b/g,'')
+    .replace(/\b16e\b/,'16 e')
+    .replace(/\biphone air\b/,'iphone 17 air')
+    .trim();
+  return SPECS[k] || null;
+}
+
+function flipCard(card, on){
+  if(!card) return;
+  card.classList.toggle('flipped', !!on);
+}
+
+function specsBackHTML(modelName, sp){
+  var rows = [
+    ['📱','Pantalla', sp.pan + ' · ' + sp.hz, ''],
+    ['⚡','Procesador', sp.chip, ''],
+    ['📷','Cámaras', sp.cam, ''],
+    ['🔋','Batería', sp.bat, ''],
+    ['✨','Apple Intelligence', sp.ai ? 'Sí, compatible' : 'No compatible', sp.ai ? 'si' : 'no']
+  ];
+  var list = rows.map(function(r){
+    return '<li><span class="pcs-ico">'+r[0]+'</span><span class="pcs-txt"><span class="pcs-k">'+r[1]+'</span><span class="pcs-v '+r[3]+'">'+r[2]+'</span></span></li>';
+  }).join('');
+  var chips = ['Frontal ' + sp.front.replace(/ Center Stage| con enfoque autom[áa]tico/i,''), sp.con]
+    .concat(sp.extras||[]).slice(0,6)
+    .map(function(x){ return '<span class="pcs-chip">'+x+'</span>'; }).join('');
+  return '<div class="pcs-head"><div><div class="pcs-kicker">Características</div><div class="pcs-title">'+modelName+'</div></div>'
+       + '<button class="pcs-x" type="button" aria-label="Volver al precio">✕</button></div>'
+       + '<div class="pcs-scroll"><div class="pcs-resumen">'+sp.res+'</div>'
+       + '<ul class="pcs-list">'+list+'</ul>'
+       + (chips ? '<div class="pcs-chips">'+chips+'</div>' : '') + '</div>'
+       + '<div class="pcs-foot-wrap"><button class="pcs-back" type="button">← Volver al precio</button>'
+       + '<div class="pcs-foot">Ficha técnica oficial de Apple · batería del equipo nuevo</div></div>';
+}
+
+// Envuelve el contenido de la card, agrega el botón y la cara trasera con las características
+function attachSpecs(card, modelName){
+  if(!card || card.querySelector('.pc-face-front')) return;
+  var sp = specsFor(modelName);
+  if(!sp) return;
+
+  var btn = document.createElement('button');
+  btn.className = 'pc-btn-specs';
+  btn.type = 'button';
+  btn.textContent = 'Ver características +';
+  btn.addEventListener('click', function(){ flipCard(card, true); });
+
+  var head = card.querySelector('.pc-header');
+  var modelEl = card.querySelector('.pc-model');
+  if(card.classList.contains('promo-card') && head){
+    // En ofertas la cinta de descuento ocupa el ángulo superior derecho: va al pie del encabezado
+    head.appendChild(btn);
+  } else if(modelEl && modelEl.parentNode){
+    var row = document.createElement('div');
+    row.className = 'pc-head-row';
+    modelEl.parentNode.insertBefore(row, modelEl);
+    row.appendChild(modelEl);
+    row.appendChild(btn);
+  } else if(head){
+    head.appendChild(btn);
+  }
+
+  var front = document.createElement('div');
+  front.className = 'pc-face pc-face-front';
+  while(card.firstChild) front.appendChild(card.firstChild);
+  card.appendChild(front);
+
+  var back = document.createElement('div');
+  back.className = 'pc-face pc-face-back';
+  back.innerHTML = specsBackHTML(modelName, sp);
+  back.querySelector('.pcs-x').addEventListener('click', function(){ flipCard(card, false); });
+  back.querySelector('.pcs-back').addEventListener('click', function(){ flipCard(card, false); });
+  card.appendChild(back);
+  requestAnimationFrame(function(){ compactSpecs(card); });
+}
+
+// Achica el dorso lo justo para que entre completo sin scrollear
+var PCS_LEVELS = ['pcs-c1','pcs-c2','pcs-c3','pcs-c4'];
+function compactSpecs(card){
+  var back = card.querySelector('.pc-face-back');
+  var box  = back && back.querySelector('.pcs-scroll');
+  if(!box) return;
+  PCS_LEVELS.forEach(function(c){ back.classList.remove(c); });
+  for(var i = 0; i < PCS_LEVELS.length; i++){
+    if(box.scrollHeight <= box.clientHeight + 1) return;
+    back.classList.add(PCS_LEVELS[i]);
+  }
+}
+
+var _pcsT;
+window.addEventListener('resize', function(){
+  clearTimeout(_pcsT);
+  _pcsT = setTimeout(function(){
+    document.querySelectorAll('.product-card, .promo-card').forEach(compactSpecs);
+  }, 200);
+});
 
 function filterCondition(cond, btn){
   activeCondition = cond;
@@ -1249,8 +1440,10 @@ function updatePromoCard(select){
   const card = select.closest('.promo-card');
   const variants = card._variants;
   const v = variants[parseInt(select.value)];
+  card.classList.remove('flipped');
   card.innerHTML = promoCardHTML(v, variants);
   card._variants = variants;
+  attachSpecs(card, v.model);
   // Mantener seleccionada la variante elegida
   const sel = card.querySelector('.pc-variant-select');
   if(sel) sel.value = String(variants.indexOf(v));
@@ -1309,6 +1502,7 @@ function renderPromos(){
     card.className = 'promo-card';
     card.innerHTML = promoCardHTML(variants[0], variants);
     card._variants = variants;
+    attachSpecs(card, variants[0].model);
     grid.appendChild(card);
   });
 }
