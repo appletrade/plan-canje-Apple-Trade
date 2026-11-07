@@ -257,17 +257,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
         </div>
         <div class="bulk-grid">
           <div class="form-group"><label class="form-label">Modelo</label>
-            <select class="form-select form-input" id="bulkModel">
-              <option value="">Todos</option>
-              <optgroup label="iPhone 11"><option>iPhone 11</option><option>iPhone 11 Pro</option><option>iPhone 11 Pro Max</option></optgroup>
-              <optgroup label="iPhone 12"><option>iPhone 12</option><option>iPhone 12 Pro</option><option>iPhone 12 Pro Max</option></optgroup>
-              <optgroup label="iPhone 13"><option>iPhone 13</option><option>iPhone 13 Pro</option><option>iPhone 13 Pro Max</option></optgroup>
-              <optgroup label="iPhone 14"><option>iPhone 14</option><option>iPhone 14 Plus</option><option>iPhone 14 Pro</option><option>iPhone 14 Pro Max</option></optgroup>
-              <optgroup label="iPhone 15"><option>iPhone 15</option><option>iPhone 15 Plus</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option></optgroup>
-              <optgroup label="iPhone 16"><option>iPhone 16</option><option>iPhone 16 E</option><option>iPhone 16 Plus</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option></optgroup>
-              <optgroup label="iPhone 17"><option>iPhone 17</option><option>iPhone 17 Air</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option></optgroup>
-              <optgroup label="iPhone 18"><option>iPhone 18 Pro</option><option>iPhone 18 Pro Max</option></optgroup>
-            </select>
+            <select class="form-select form-input" id="bulkModel"><option value="">Todos</option></select>
           </div>
           <div class="form-group"><label class="form-label">Storage</label>
             <select class="form-select form-input" id="bulkStorage">
@@ -295,15 +285,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
             </select>
           </div>
           <div class="form-group"><label class="form-label">Modelo</label>
-            <select class="form-select form-input" id="filterModelo" onchange="applyFilters()">
-              <option value="">Todos</option>
-              <option>iPhone 11</option><option>iPhone 12</option><option>iPhone 13</option><option>iPhone 13 Pro</option><option>iPhone 13 Pro Max</option>
-              <option>iPhone 14</option><option>iPhone 14 Pro</option><option>iPhone 14 Pro Max</option>
-              <option>iPhone 15</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option>
-              <option>iPhone 16</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option>
-              <option>iPhone 17</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option>
-              <option>iPhone 18 Pro</option><option>iPhone 18 Pro Max</option>
-            </select>
+            <select class="form-select form-input" id="filterModelo" onchange="applyFilters()"><option value="">Todos</option></select>
           </div>
           <div style="align-self:flex-end;"><button class="btn btn-ghost" onclick="clearFilters()">Limpiar</button></div>
         </div>
@@ -320,16 +302,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
           <div class="add-row-title">+ Agregar equipo</div>
           <div class="add-form-grid">
             <div class="form-group"><label class="form-label">Modelo</label>
-              <select class="form-select form-input" id="newModel">
-                <optgroup label="iPhone 11"><option>iPhone 11</option><option>iPhone 11 Pro</option><option>iPhone 11 Pro Max</option></optgroup>
-                <optgroup label="iPhone 12"><option>iPhone 12</option><option>iPhone 12 Pro</option><option>iPhone 12 Pro Max</option></optgroup>
-                <optgroup label="iPhone 13"><option>iPhone 13</option><option>iPhone 13 Pro</option><option>iPhone 13 Pro Max</option></optgroup>
-                <optgroup label="iPhone 14"><option>iPhone 14</option><option>iPhone 14 Plus</option><option>iPhone 14 Pro</option><option>iPhone 14 Pro Max</option></optgroup>
-                <optgroup label="iPhone 15"><option>iPhone 15</option><option>iPhone 15 Plus</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option></optgroup>
-                <optgroup label="iPhone 16"><option>iPhone 16</option><option>iPhone 16 E</option><option>iPhone 16 Plus</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option></optgroup>
-                <optgroup label="iPhone 17"><option>iPhone 17</option><option>iPhone 17 Air</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option></optgroup>
-              <optgroup label="iPhone 18"><option>iPhone 18 Pro</option><option>iPhone 18 Pro Max</option></optgroup>
-              </select>
+              <select class="form-select form-input" id="newModel"></select>
             </div>
             <div class="form-group"><label class="form-label">Storage</label>
               <select class="form-select form-input" id="newStorage"><option>64GB</option><option selected>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option><option>2TB</option></select>
@@ -376,16 +349,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
         <p style="font-size:.78rem;color:var(--muted);margin-bottom:14px;">Elegí el modelo común, agregá filas por variante y confirmá todo junto.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px;">
           <div class="form-group"><label class="form-label">Modelo</label>
-            <select class="form-select form-input" id="bmModel">
-              <optgroup label="iPhone 11"><option>iPhone 11</option><option>iPhone 11 Pro</option><option>iPhone 11 Pro Max</option></optgroup>
-              <optgroup label="iPhone 12"><option>iPhone 12</option><option>iPhone 12 Pro</option><option>iPhone 12 Pro Max</option></optgroup>
-              <optgroup label="iPhone 13"><option>iPhone 13</option><option>iPhone 13 Pro</option><option>iPhone 13 Pro Max</option></optgroup>
-              <optgroup label="iPhone 14"><option>iPhone 14</option><option>iPhone 14 Plus</option><option>iPhone 14 Pro</option><option>iPhone 14 Pro Max</option></optgroup>
-              <optgroup label="iPhone 15"><option>iPhone 15</option><option>iPhone 15 Plus</option><option>iPhone 15 Pro</option><option>iPhone 15 Pro Max</option></optgroup>
-              <optgroup label="iPhone 16"><option>iPhone 16</option><option>iPhone 16 E</option><option>iPhone 16 Plus</option><option>iPhone 16 Pro</option><option>iPhone 16 Pro Max</option></optgroup>
-              <optgroup label="iPhone 17"><option>iPhone 17</option><option>iPhone 17 Air</option><option>iPhone 17 Pro</option><option>iPhone 17 Pro Max</option></optgroup>
-              <optgroup label="iPhone 18"><option>iPhone 18 Pro</option><option>iPhone 18 Pro Max</option></optgroup>
-            </select>
+            <select class="form-select form-input" id="bmModel"></select>
           </div>
           <div class="form-group"><label class="form-label">Condicion</label>
             <select class="form-select form-input" id="bmCondition"><option value="Seminuevo">Seminuevo</option><option value="Nuevo en caja sellada">Nuevo en caja sellada</option></select>
@@ -616,6 +580,46 @@ tbody td{padding:8px 10px;vertical-align:middle;}
   <button onclick="document.getElementById('sessionWarning').style.display='none'" style="margin-left:8px;background:none;border:none;color:#fff;cursor:pointer;font-size:1rem;">✕</button>
 </div>
 <script>
+// ─── LISTA ÚNICA DE MODELOS ───────────────────────────────────────────
+// Agregá acá un modelo nuevo y aparece solo en: stock, carga masiva,
+// filtros, trade-in y el modelo canjeado al registrar una venta.
+const MODELOS = [
+  ['iPhone 11', ['iPhone 11','iPhone 11 Pro','iPhone 11 Pro Max']],
+  ['iPhone 12', ['iPhone 12','iPhone 12 Pro','iPhone 12 Pro Max']],
+  ['iPhone 13', ['iPhone 13','iPhone 13 Pro','iPhone 13 Pro Max']],
+  ['iPhone 14', ['iPhone 14','iPhone 14 Plus','iPhone 14 Pro','iPhone 14 Pro Max']],
+  ['iPhone 15', ['iPhone 15','iPhone 15 Plus','iPhone 15 Pro','iPhone 15 Pro Max']],
+  ['iPhone 16', ['iPhone 16','iPhone 16 E','iPhone 16 Plus','iPhone 16 Pro','iPhone 16 Pro Max']],
+  ['iPhone 17', ['iPhone 17','iPhone 17 Air','iPhone 17 Pro','iPhone 17 Pro Max']],
+  ['iPhone 18', ['iPhone 18 Pro','iPhone 18 Pro Max','iPhone DUO']]
+];
+const STORAGES = ['64GB','128GB','256GB','512GB','1TB','2TB'];
+
+function optsModelos(){
+  return MODELOS.map(function(g){
+    return '<optgroup label="'+g[0]+'">'
+      + g[1].map(function(m){ return '<option>'+m+'</option>'; }).join('')
+      + '</optgroup>';
+  }).join('');
+}
+
+function llenarSelectsModelos(){
+  var cabecera = { bulkModel:'<option value="">Todos</option>',
+                   filterModelo:'<option value="">Todos</option>',
+                   tradeModelo:'<option value="">Seleccionar</option>' };
+  ['bulkModel','filterModelo','newModel','bmModel','tradeModelo'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    var prev = el.value;
+    el.innerHTML = (cabecera[id] || '') + optsModelos();
+    if(prev) el.value = prev;
+  });
+  var st = document.getElementById('tradeStorage');
+  if(st) st.innerHTML = STORAGES.map(function(v){
+    return '<option'+(v==='128GB'?' selected':'')+'>'+v+'</option>';
+  }).join('');
+}
+
 const API_URL  = "https://script.google.com/macros/s/AKfycbyTHEhZ0jhCjyzd9wJHWIoHxy2SyeotOpHZcaljLHGcOae-eRbWydVftIjRGCSh9PEduw/exec";
 const PASSWORD = "Budin2026";
 const DASHBOARD_PASSWORD = "Matias2026";
@@ -1351,6 +1355,9 @@ function openSaleModal(idx){
   document.getElementById('saleCanal').value='';
   document.getElementById('salePago').value='Contado USD';
   document.getElementById('saleSucursal').value='Banfield';
+  document.getElementById('tradeModelo').value='';
+  document.getElementById('tradeStorage').value='128GB';
+  document.getElementById('tradeEstadoRecibido').selectedIndex=0;
   document.getElementById('toggleCanje').checked=false;
   document.getElementById('tradeBlock').style.display='none';
   document.getElementById('saleModal').classList.add('show');
@@ -1379,7 +1386,9 @@ function confirmSale(){
     precio_usd:p.priceUSD,
     forma_pago:document.getElementById('salePago').value,
     tiene_canje:tieneCanje?'Si':'No',
-    canje_modelo:tieneCanje?document.getElementById('tradeModelo').value:'',
+    canje_modelo:tieneCanje?(document.getElementById('tradeModelo').value
+        ? document.getElementById('tradeModelo').value+' '+document.getElementById('tradeStorage').value
+        : ''):'',
     canje_bateria:tieneCanje&&batNum?'Bateria '+batNum+'%':'',
     canje_valor_usd:tieneCanje?document.getElementById('tradeValor').value:'',
     canje_estado:tieneCanje?document.getElementById('tradeEstadoRecibido').value:'',
@@ -1667,15 +1676,10 @@ function showLoading(show){document.getElementById('loadingOverlay').classList.t
     <div id="tradeBlock">
       <div class="modal-grid col3" style="margin-top:12px;">
         <div class="form-group"><label class="form-label">Modelo canjeado</label>
-          <select class="form-select form-input" id="tradeModelo">
-            <option value="">Seleccionar</option>
-            <optgroup label="iPhone 11"><option>iPhone 11 128GB</option><option>iPhone 11 Pro 256GB</option></optgroup>
-            <optgroup label="iPhone 12"><option>iPhone 12 128GB</option><option>iPhone 12 Pro 256GB</option></optgroup>
-            <optgroup label="iPhone 13"><option>iPhone 13 128GB</option><option>iPhone 13 256GB</option><option>iPhone 13 Pro 256GB</option></optgroup>
-            <optgroup label="iPhone 14"><option>iPhone 14 128GB</option><option>iPhone 14 256GB</option><option>iPhone 14 Pro 256GB</option></optgroup>
-            <optgroup label="iPhone 15"><option>iPhone 15 128GB</option><option>iPhone 15 Pro 256GB</option></optgroup>
-            <optgroup label="iPhone 16"><option>iPhone 16 128GB</option><option>iPhone 16 Pro 256GB</option></optgroup>
-          </select>
+          <select class="form-select form-input" id="tradeModelo"><option value="">Seleccionar</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Almacenamiento</label>
+          <select class="form-select form-input" id="tradeStorage"></select>
         </div>
         <div class="form-group"><label class="form-label">Bateria</label>
           <div class="bat-wrap"><span class="bat-affix">Bateria</span><input class="bat-input" id="tradeBateria" type="number" min="50" max="100" placeholder="87"><span class="bat-affix">%</span></div>
@@ -1702,5 +1706,6 @@ function showLoading(show){document.getElementById('loadingOverlay').classList.t
     </div>
   </div>
 </div>
+<script>llenarSelectsModelos();</script>
 </body>
 </html>
