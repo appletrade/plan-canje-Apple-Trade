@@ -291,7 +291,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Modelo</th><th>Color</th><th>Batería</th><th>USD</th><th>Oferta USD</th><th>Estado</th><th>Observaciones</th><th></th></tr></thead>
+            <thead><tr><th>Modelo</th><th>Condición</th><th>Color</th><th>Batería</th><th>USD</th><th>Oferta USD</th><th>Estado</th><th>Observaciones</th><th></th></tr></thead>
             <tbody id="stockBody"></tbody>
           </table>
         </div>
@@ -312,7 +312,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
             <div class="form-group"><label class="form-label">Precio USD</label><input type="number" class="form-input" id="newPrice" placeholder="650"></div>
             <div class="form-group"><label class="form-label">Precio oferta USD <span style="font-size:.7rem;color:var(--muted);font-weight:400;">(opcional)</span></label><input type="number" class="form-input" id="newPriceOffer" placeholder="—"></div>
             <div class="form-group"><label class="form-label">Condición</label>
-              <select class="form-select form-input" id="newCondition"><option value="Seminuevo">Seminuevo</option><option value="Nuevo en caja sellada">Nuevo en caja sellada</option></select>
+              <select class="form-select form-input" id="newCondition"><option value="Seminuevo">Seminuevo</option><option value="Nuevo en caja sellada">Nuevo en caja sellada</option><option value="Outlet">Outlet (detalles estéticos)</option></select>
             </div>
             <div class="form-group"><label class="form-label">Estado</label>
               <select class="form-select form-input" id="newEstado">
@@ -352,7 +352,7 @@ tbody td{padding:8px 10px;vertical-align:middle;}
             <select class="form-select form-input" id="bmModel"></select>
           </div>
           <div class="form-group"><label class="form-label">Condicion</label>
-            <select class="form-select form-input" id="bmCondition"><option value="Seminuevo">Seminuevo</option><option value="Nuevo en caja sellada">Nuevo en caja sellada</option></select>
+            <select class="form-select form-input" id="bmCondition"><option value="Seminuevo">Seminuevo</option><option value="Nuevo en caja sellada">Nuevo en caja sellada</option><option value="Outlet">Outlet (detalles estéticos)</option></select>
           </div>
           <div class="form-group"><label class="form-label">Estado inicial</label>
             <select class="form-select form-input" id="bmEstado">
@@ -1084,7 +1084,7 @@ async function loadAll(){
     }
     const resRaw = await fetch(API_URL+'?action=stockraw');
     const rawData = await resRaw.json();
-    if(rawData && rawData.length) stockData = rawData;
+    if(rawData && rawData.length) { stockData = rawData; sortStock(); }
     applyFilters();
     updateSummary();
     if(data.tradein){ tradeData=data.tradein; renderTradeTable(); }
@@ -1163,7 +1163,9 @@ function renderStockTable(rows){
     const globalIdx=stockData.indexOf(p);
     const tr=document.createElement('tr');
     const opts=['Stock en Banfield','Stock en CABA','En el técnico','Reservado','Vendido'].map(function(e){return '<option'+(p.estado===e?' selected':'')+'>'+e+'</option>';}).join('');
+    const condOpts=CONDICIONES.map(function(c){return '<option'+((p.condition||'Seminuevo')===c?' selected':'')+'>'+c+'</option>';}).join('');
     tr.innerHTML='<td class="td-model">'+p.model+' '+p.storage+'</td>'
+      +'<td><select class="form-select" style="padding:4px 8px;font-size:.78rem;border-radius:7px;" onchange="stockData['+globalIdx+'].condition=this.value;sortStock();renderStockTable();stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;updateSummary();">'+condOpts+'</select></td>'
       +'<td><input class="inline-edit" style="width:90px;" value="'+(p.color||'')+'" onchange="stockData['+globalIdx+'].color=this.value;stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;"></td>'
       +'<td><input class="inline-edit" style="width:90px;" value="'+(p.battery||'')+'" onchange="stockData['+globalIdx+'].battery=this.value;stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;"></td>'
       +'<td class="td-price"><input class="inline-edit" type="number" value="'+p.priceUSD+'" onchange="stockData['+globalIdx+'].priceUSD=parseInt(this.value);stockModified=true;document.getElementById(\'btnSaveStock\').disabled=false;updateSummary();"></td>'
@@ -1220,18 +1222,23 @@ function applyBulkPrice(){
   applyFilters();
 }
 
+// Condiciones posibles de un equipo. El orden de acá es el que se usa para ordenar la tabla.
+const CONDICIONES = ['Nuevo en caja sellada','Seminuevo','Outlet'];
+function ordenCond(c){
+  var i = CONDICIONES.indexOf(c);
+  return i < 0 ? CONDICIONES.length : i;
+}
+
 // SORT STOCK
 function sortStock(){
   function modelTier(p){
     // iPhone DUO no lleva número: va al final, arriba del 18 Pro Max
     if(/\bduo\b/i.test(p.model)){
-      var condDuo=p.condition==='Seminuevo'?0:1;
-      return [condDuo, 18*10+4, p.priceUSD];
+      return [ordenCond(p.condition), 18*10+4, p.priceUSD];
     }
     var n=parseInt((p.model.match(/iPhone (\d+)/)||[])[1]||0);
     var tier=p.model.indexOf('Pro Max')>-1?3:p.model.indexOf('Pro')>-1?2:p.model.indexOf('Plus')>-1?1:p.model.indexOf(' E')>-1?-1:0;
-    var cond=p.condition==='Seminuevo'?0:1;
-    return [cond, n*10+tier, p.priceUSD];
+    return [ordenCond(p.condition), n*10+tier, p.priceUSD];
   }
   stockData.sort(function(a,b){
     var ta=modelTier(a),tb=modelTier(b);

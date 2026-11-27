@@ -222,6 +222,12 @@ section{padding:80px 20px;}
 .pc-badge.nuevo{background:#e3f2fd;color:#1565c0;}
 .pc-badge.special{background:#fff8e1;color:#f57f17;}
 .pc-badge.sellado{background:#e8f5e9;color:#2e7d32;}
+.pc-badge.outlet{background:#fff1e0;color:#b45309;}
+.pc-outlet-note{font-size:.72rem;color:#b45309;background:#fff8f0;border:1px solid #fde3c4;border-radius:8px;padding:5px 9px;margin-top:8px;line-height:1.35;}
+.outlet-aviso{grid-column:1/-1;display:flex;gap:12px;align-items:flex-start;background:#fff8f0;border:1.5px solid #fde3c4;border-radius:14px;padding:14px 18px;margin-bottom:4px;}
+.outlet-aviso-ico{font-size:1.2rem;line-height:1.2;flex-shrink:0;}
+.outlet-aviso-t{font-size:.92rem;font-weight:800;color:#b45309;}
+.outlet-aviso-s{font-size:.83rem;color:#8a5a20;line-height:1.5;margin-top:3px;}
 .pc-body{padding:16px 20px;}
 .pc-price-usd{font-size:1.5rem;font-weight:800;color:var(--primary);letter-spacing:-.02em;}
 .pc-price-offer{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
@@ -659,8 +665,9 @@ src="https://www.facebook.com/tr?id=2494826524302407&ev=PageView&noscript=1"
     <p class="section-sub" style="margin-bottom:28px;">Stock real, actualizado constantemente.</p>
     <div class="filter-bar" style="margin-bottom:12px;">
       <button class="filter-btn active" onclick="filterCondition('all',this)" id="fcAll">Todos</button>
+      <button class="filter-btn" onclick="filterCondition('Nuevo en caja sellada',this)" id="fcNuevo">📦 Nuevos en caja sellada</button>
       <button class="filter-btn" onclick="filterCondition('Seminuevo',this)" id="fcSemi">Seminuevos</button>
-      <button class="filter-btn" onclick="filterCondition('Nuevo en caja sellada',this)" id="fcNuevo">📦 Sellados</button>
+      <button class="filter-btn" onclick="filterCondition('Outlet',this)" id="fcOutlet">Outlet</button>
     </div>
     <div class="filter-bar" id="modelFilterBar">
       <button class="filter-btn active" onclick="filterProducts('all',this)">Todos los modelos</button>
@@ -1189,6 +1196,30 @@ function getColorDots(details){
 }
 
 // Badges del producto
+// Chapita de condición: Seminuevo (verde), Nuevo en caja sellada (azul), Outlet (naranja)
+function avisoOutletHTML(){
+  return '<div class="outlet-aviso">'
+    + '<span class="outlet-aviso-ico">🏷️</span>'
+    + '<div><div class="outlet-aviso-t">Qué es un iPhone de Outlet</div>'
+    + '<div class="outlet-aviso-s">Son equipos con detalles estéticos —marcas de uso, rayones o golpes leves en la carcasa o los bordes— '
+    + 'pero <strong>100% funcionales</strong>: pantalla, cámaras, batería y todos los sensores andan perfecto. '
+    + 'Por eso quedan a un precio bastante más bajo. Te mandamos fotos reales del equipo antes de que lo compres.</div></div></div>';
+}
+
+function clasecond(cond){
+  if(cond === 'Seminuevo') return 'seminuevo';
+  if(cond === 'Outlet')    return 'outlet';
+  return 'nuevo';
+}
+function condBadgeHTML(cond){
+  return '<span class="pc-badge ' + clasecond(cond) + '">' + cond + '</span>';
+}
+// Aclaración que acompaña a los equipos de outlet
+const OUTLET_NOTA = 'Detalles estéticos (marcas o golpes leves). 100% funcional.';
+function outletNotaHTML(cond){
+  return cond === 'Outlet' ? '<div class="pc-outlet-note">' + OUTLET_NOTA + '</div>' : '';
+}
+
 function badgesOf(p){
   return (p.badges||[]).slice();
 }
@@ -1249,9 +1280,13 @@ function renderProducts(filter){
     return matchModel && matchCond;
   });
   if(!filtered.length){
-    grid.innerHTML = '<p style="color:var(--muted);padding:20px;">Sin equipos disponibles.</p>';
+    grid.innerHTML = activeCondition === 'Outlet'
+      ? avisoOutletHTML() + '<p style="color:var(--muted);padding:20px;">Ahora mismo no hay equipos de outlet. Volvé a mirar en unos días.</p>'
+      : '<p style="color:var(--muted);padding:20px;">Sin equipos disponibles.</p>';
     return;
   }
+  // Con el filtro de Outlet puesto, explicamos de entrada qué es
+  if(activeCondition === 'Outlet') grid.insertAdjacentHTML('beforeend', avisoOutletHTML());
 
   // Ordenar: primero por número de modelo iPhone ascendente, luego Pro/Max, luego precio
   filtered.sort((a,b)=>{
@@ -1278,7 +1313,7 @@ function renderProducts(filter){
   groups.forEach((variants, groupKey)=>{
     const modelName = groupKey.split('||')[0];
     const first = variants[0];
-    const condBadge=`<span class="pc-badge ${first.condition==='Seminuevo'?'seminuevo':'nuevo'}">${first.condition}</span>`;
+    const condBadge=condBadgeHTML(first.condition);
     const badgesHTML=badgesOf(first).map(b=>{
       const style = BADGE_COLORS[b.toLowerCase()] || "background:#fff8e1;color:#f57f17";
       return `<span class="pc-badge special" style="${style}">${b}</span>`;
@@ -1306,6 +1341,7 @@ function renderProducts(filter){
       <div class="pc-header">
         <div class="pc-model">${modelName}</div>
         <div class="pc-badges" style="margin-top:6px;">${condBadge}${badgesHTML}</div>
+        ${outletNotaHTML(first.condition)}
         ${variants.length>1
           ? `<label class="pc-variant-label">Elegí variante</label>
              <select class="pc-variant-select" onchange="updateCard(this)">${optionsHTML}</select>`
@@ -1378,8 +1414,14 @@ function updateCard(select){
     const style = BADGE_COLORS[b.toLowerCase()] || "background:#fff8e1;color:#f57f17";
     return `<span class="pc-badge special" style="${style}">${b}</span>`;
   }).join('');
-  const condBadge=`<span class="pc-badge ${v.condition==='Seminuevo'?'seminuevo':'nuevo'}">${v.condition}</span>`;
+  const condBadge=condBadgeHTML(v.condition);
   card.querySelector('.pc-badges').innerHTML=condBadge+badgesHTML;
+  const notaVieja = card.querySelector('.pc-outlet-note');
+  if(notaVieja) notaVieja.remove();
+  if(v.condition === 'Outlet'){
+    const badges = card.querySelector('.pc-badges');
+    badges.insertAdjacentHTML('afterend', outletNotaHTML(v.condition));
+  }
 }
 
 
@@ -1519,7 +1561,7 @@ window.addEventListener('resize', function(){
 
 function filterCondition(cond, btn){
   activeCondition = cond;
-  document.querySelectorAll('#fcAll,#fcSemi,#fcNuevo').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#fcAll,#fcSemi,#fcNuevo,#fcOutlet').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderProducts(activeModel);
 }
@@ -1534,7 +1576,7 @@ function promoCardHTML(v, variants){
   const c12    = Math.round(v.priceOffer * USD * INT12 / 12).toLocaleString('es-AR');
   const colorHTML = getColorDots(v.details || '');
   const bateria   = (String(v.details||'').match(/Bater[íi]a[^·]*/i) || [''])[0].trim();
-  const condBadge = `<span class="pc-badge ${v.condition==='Seminuevo'?'seminuevo':'nuevo'}">${v.condition}</span>`;
+  const condBadge = condBadgeHTML(v.condition);
   const badgesHTML = badgesOf(v).map(b => {
     const style = BADGE_COLORS[b.toLowerCase()] || "background:#fff8e1;color:#f57f17";
     return `<span class="pc-badge special" style="${style}">${b}</span>`;
@@ -1552,6 +1594,7 @@ function promoCardHTML(v, variants){
     <div class="pc-header">
       <div class="pc-model">${v.model}</div>
       <div class="pc-badges" style="margin-top:6px;">${condBadge}${badgesHTML}</div>
+      ${outletNotaHTML(v.condition)}
       ${variants.length > 1
         ? `<label class="pc-variant-label">Elegí variante</label>
            <select class="pc-variant-select" onchange="updatePromoCard(this)">${optionsHTML}</select>`
@@ -1657,7 +1700,7 @@ function goOfertas(e){
 function goCatalogo(e){
   if(e) e.preventDefault();
   activeCondition = 'all';
-  document.querySelectorAll('#fcAll,#fcSemi,#fcNuevo').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#fcAll,#fcSemi,#fcNuevo,#fcOutlet').forEach(b=>b.classList.remove('active'));
   const fcAll = document.getElementById('fcAll');
   if(fcAll) fcAll.classList.add('active');
   document.querySelectorAll('#modelFilterBar .filter-btn').forEach(b=>b.classList.remove('active'));
